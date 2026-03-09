@@ -12,7 +12,6 @@ body{
 
 /*haut de la page*/
 section.top {
-    background: url(../images/bg.jpg);
     height: 80vh;
     background-size: cover;
     

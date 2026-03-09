@@ -1,43 +1,12 @@
-<<<<<<< Updated upstream
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <footer id="footer">
-    {% block header %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StageHub</title>
-    <link rel="stylesheet" href="/assets/css/styles.css">
-    {% endblock %}
-</head>
-<body>
-    
+{% extends "base.html.twig" %}
 
-    <section class="top">
-            <header class="header">
-                <img src="/assets/images/logo.png" alt="">
-                <nav class="nav">
-                     <a href="index.html.twig">
-                     <li>Page d'accueil        </li></a>
-                     <li class="li1">Rechercher des offres de stages</li>
-                     <li class="li2">Rechercher des entreprises</li>
-                </nav>
-                <a class="connexion" href="/connexion" title="connexion"> 
-                Connexion</a>
+{% block title %}Accueil - StageHub{% endblock %}
 
-                
-            </header>
-    <main id="content">{% block content %}{% endblock %}</main>
-
-         <h1 class="titre">Bienvenue !</h1>
-        
-    </section>
-            <footer id="footer">
-            {% block footer %}
-                &copy; Copyright 2011 by <a href="https://example.com/">you</a>.
-            {% endblock %}
-</body>
-</html>
-=======
-Transformer ca en page accueil pas co
->>>>>>> Stashed changes
+{% block content %}
+    <div class="position-relative">
+        <h1 class="position-absolute justify-content-start text-white" style="font-size: 150px;">
+            Bienvenue !
+        </h1>
+        <img src="/assets/images/bg.jpg" alt="Image-Background" class="w-100" style="object-fit: cover; object-position:top; height: 400px; overflow:hidden;">
+    </div>
+{% endblock %}
