@@ -1,0 +1,66 @@
+@import url(https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap);
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat'; 
+    box-sizing: border-box; /*centre les boites*/
+}
+
+body {
+    background-color: white;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    height: 100vh;
+}
+
+section{
+    border: 3px solid #8FB4B0;
+    background-color: white;
+    padding: 40px;
+    width: 500px;
+    border-radius: 20px;
+}
+
+section h1{
+    
+     font-size: 30px;
+     text-align: center;
+     margin-bottom: 20px;
+
+}
+
+.input-box {
+    width: 100%;
+    position: relative;
+    margin-bottom: 25px;
+}
+.input-box input {
+    width: 100%;
+    outline: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+}
+
+.oublie {
+    display: flex;
+    text-decoration: none;
+    color: black;
+    margin-bottom: 15px;
+    margin-top: -10px;
+}
+
+.connect {
+    padding: 12px;
+    border-radius: 20px;
+    color: black;
+    background-color: #8FB4B0;
+    border: 3px #8FB4B0;
+    
+}
+
+.connect:hover {
+    background-color: #C7E7DE;
+    border-color: #C7E7DE;
+}

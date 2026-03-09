@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StageHub</title>
+    <link rel="stylesheet" href="src\Application\assets\css\style-wishlist.css">
+
+</head>
+
+<body>
+
+    <section class="top">
+            <header class="header">
+                <img src="src\Application\assets\images\logo.png" alt="StageHub" class="logo">
+
+                <nav class="nav">
+                    <a href="index.html.twig">
+                     <li>Page d'accueil        </li></a>
+                     <li class="li1">Rechercher des offres de stages</li>
+                     <li class="li2">Rechercher des entreprises</li>
+                </nav>
+
+                <div class="Icônes">
+                    <a href="wishlist.html.twig">  
+                        <svg class="Wishlist"  
+                            viewBox="0 0 512 512"
+                            aria-label="Wishlist"
+                            role="button"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M256 472
+                                    C256 472 40 312 40 160
+                                    C40 72 104 32 168 32
+                                    C216 32 256 80 256 80
+                                    C256 80 296 32 344 32
+                                    C408 32 472 72 472 160
+                                    C472 312 256 472 256 472 Z"/>
+                        </svg>
+                    </a>
+
+                    <a href="candidatures.html.twig">
+                        <svg class="Candidatures"
+                             viewBox="0 0 512 512"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M160 64 H352 L416 128 V448 H160 Z
+                                     M352 64 V128 H416
+                                     M112 96 L208 288 L176 320 L80 128 Z"/>
+                        </svg>
+                    </a>
+
+                        <svg class="Profil"
+                             viewBox="0 0 512 512"
+                             aria-label="Profil"
+                             xmlns="http://www.w3.org/2000/svg">
+                             <circle cx="256" cy="160" r="96" />
+                             <path d="M96 416
+                                      C96 336 176 304 256 304
+                                      C336 304 416 336 416 416" />
+                        </svg>
+                </div>
+            </header>
+ 
+    </section>
+
+<h1 class="wishlist-title">Wish List !</h1>
+    
+<main class="wishlist-content">
+    <img src="src\Application\assets\images\NoWishList.png" alt="Aucune wishlist" class="no-wishlist-icon">
+</main>
+
+
+<p class="aucuneoffre">Aucune offre n'a été mise en favoris</p>
+
+<main class="center-page">
+    <a href="recherche-offres-stages.html.twig">
+   <button class="search-stage-btn" type="button">
+        <span>Rechercher un stage</span>
+        <span class="arrow">→</span>
+    </button>
+    </a>
+</main>
+
+</body>
+</html>

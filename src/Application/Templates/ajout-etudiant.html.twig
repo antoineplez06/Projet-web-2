@@ -1,0 +1,63 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Ajouter un étudiant{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Nouvel étudiant</h4>
+            </div>
+            <div class="card-body">
+                <form action="/ajout-etudiant" method="POST">
+                    
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">Nom de l'étudiant</label>
+                        <input type="text" class="form-control" id="nom" name="nom" placeholder="Ex: Tonio" value="{{ nom }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="secteur" class="form-label">Type d'étude</label>
+                        <select class="form-control" id="secteur" name="secteur" required>
+                            <option value="">Choisir...</option>
+                            <option value="Informatique">Informatique</option>
+                            <option value="Généraliste">Généraliste</option>
+                            <option value="BTP">BTP</option>
+                            <option value="Mécanique">Mécanique</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Statut initial</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="statut" id="statut1" value="Actif" checked>
+                            <label class="form-check-label" for="statut1">Actif</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="statut" id="statut2" value="En attente">
+                            <label class="form-check-label" for="statut2">En attente</label>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="/entreprises" class="btn btn-light">Annuler</a>
+                        <button type="submit" class="btn btn-success">Enregistrer</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if success %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        L'étudiant a été ajoutée avec succès !
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endif %}
+
+{% endblock %}
