@@ -1,0 +1,73 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Ajouter une offre
+{% endblock %}
+
+{% block content %}
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<div class="card shadow">
+				<div class="card-header bg-primary text-white">
+					<h4 class="mb-0">Nouvel offre</h4>
+				</div>
+				<div class="card-body">
+					<form action="/ajout-etudiant" method="POST">
+
+						<div class="mb-3">
+							<label for="offre" class="form-label">Nom de l'offre</label>
+							<input type="text" class="form-control" id="offre" name="offre" placeholder="Ex: Développeur WEB Fullstack" value="{{ offre }}" required>
+						</div>
+
+						<div class="mb-3">
+							<label for="entreprise" class="form-label">Nom de l'entreprise</label>
+							<input type="text" class="form-control" id="entreprise" name="entreprise" placeholder="Ex: CESI" value="{{ entreprise }}" required>
+						</div>
+
+						<div class="mb-3">
+							<label for="lieu" class="form-label">Lieu de l'entreprise</label>
+							<input type="text" class="form-control" id="lieu" name="lieu" placeholder="Ex : Reims" value="{{ lieu }}" required>
+						</div>
+
+
+						<div class="mb-3">
+							<label for="publication" class="form-label">Publication</label>
+							<input type="date" class="form-control" id="date" name="date" placeholder="Ex: 01/01/2026" value="{{ publication }}" required>
+						</div>
+
+                        <div class="mb-3">
+							<label for="Description" class="form-label">Description</label>
+							<input type="text" class="form-control" id="description" name="description" placeholder="Entrez votre description" value="{{ description }}" required>
+						</div>
+
+                         <div class="mb-3">
+							<label for="compétences" class="form-label">Compétences</label>
+							<input type="text" class="form-control" id="compétences" name="compétences" placeholder="Ex : Autonome, HTML, CSS" value="{{ compétences }}" required>
+						</div>
+
+                        <div class="mb-3">
+							<label for="rémunération" class="form-label">Bases de la rémunération</label>
+							<input type="number" class="form-control" id="rémunération" name="rémunération" placeholder="Ex : 1000" value="{{ rémunération }}" required>
+						</div>
+
+
+						<hr>
+
+						<div class="d-flex justify-content-between">
+							<a href="/entreprises" class="btn btn-light">Annuler</a>
+							<button type="submit" class="btn btn-success">Enregistrer</button>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{% if success %}
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			L'offre a été ajoutée avec succès !
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	{% endif %}
+
+{% endblock %}
