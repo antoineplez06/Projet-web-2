@@ -1,0 +1,55 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+
+<h1 class="mt-3 fw-bold text-center" style="font-size: 50px;">Mes candidatures</h1> 
+
+<hr class="border border-dark opacity-100">
+
+
+<h2 class="mt-2 fw-bold ms-4">Réponses</h2>
+
+<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative">
+ <h3 class="float-none w-auto fw-bold">Nom de l'offre</h3>
+ <p class="mb-0" >Nom de l'entreprise</p>
+ <p class="mb-0">Lieu de l'entreprise</p>
+ <p class="mt-5">Date de publication</p>
+
+ <h3 class="border border-dark px-5 py-2 position-absolute top-0 end-0 mt-3 me-3 bg-danger">Refusé</h3>
+ <button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-success">Voir l'offre</button>
+ </div>
+
+ <div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative">
+ <h3 class="float-none w-auto fw-bold">Nom de l'offre</h3>
+ <p class="mb-0" >Nom de l'entreprise</p>
+ <p class="mb-0">Lieu de l'entreprise</p>
+ <p class="mt-5">Date de publication</p>
+
+ <h3 class="border border-dark px-5 py-2 position-absolute top-0 end-0 mt-3 me-3 bg-success">Accepté</h3>
+ <button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-success">Voir l'offre</button>
+ </div>
+
+
+ <h2 class="mt-5 fw-bold ms-4">En cours de traitement</h2>
+
+ <div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative">
+ <h3 class="float-none w-auto fw-bold">Nom de l'offre</h3>
+ <p class="mb-0" >Nom de l'entreprise</p>
+ <p class="mb-0">Lieu de l'entreprise</p>
+ <p class="mt-5">Date de publication</p>
+
+ <h3 class="border border-dark px-5 py-2 position-absolute top-0 end-0 mt-3 me-3 bg-light">En cours de traitement</h3>
+ <button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-success">Voir l'offre</button>
+ </div>
+
+ <div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative">
+ <h3 class="float-none w-auto fw-bold">Nom de l'offre</h3>
+ <p class="mb-0" >Nom de l'entreprise</p>
+ <p class="mb-0">Lieu de l'entreprise</p>
+ <p class="mt-5">Date de publication</p>
+
+ <h3 class="border border-dark px-5 py-2 position-absolute top-0 end-0 mt-3 me-3 bg-light">En cours de traitement</h3>
+ <button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-success">Voir l'offre</button>
+ </div>
+
+ {% endblock %}
