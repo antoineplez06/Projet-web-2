@@ -9,7 +9,7 @@
 
 	<div class="d-flex justify-content-center mt-3 gap-3">
 		<button class="btn btn-outline-dark bg-secondary text-white fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#filtreModal">Filtrer</button>
-		<button class="btn btn-success fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#ajouterOffreModal">+ Ajouter une offre</button>
+		<a href="/ajout-offre" class="btn btn-success fw-bold">+ Ajouter une offre</a>
 	</div>
 
 	{% if filtres.search or filtres.lieu or filtres.candidats_max %}
@@ -54,40 +54,7 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="ajouterOffreModal" tabindex="-1" aria-labelledby="ajouterOffreModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<form method="POST" action="/offres/ajouter">
-					<div class="modal-header">
-						<h2 class="modal-title fs-5" href="/ajout-offre" id="ajouterOffreModalLabel">Ajouter une nouvelle offre  </h2>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<div class="mb-3">
-							<label class="form-label fw-semibold">Titre de l'offre</label>
-							<input type="text" name="titre" class="form-control" required>
-						</div>
-						<div class="mb-3">
-							<label class="form-label fw-semibold">Nom de l'entreprise</label>
-							<input type="text" name="entreprise" class="form-control" required>
-						</div>
-						<div class="mb-3">
-							<label class="form-label fw-semibold">Lieu</label>
-							<input type="text" name="lieu" class="form-control" required>
-						</div>
-						<div class="mb-3">
-							<label class="form-label fw-semibold">Description</label>
-							<textarea name="description" class="form-control" rows="3" required></textarea>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-						<button type="submit" class="btn btn-success">Publier l'offre</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+	
 
 	{% for offre in offres %}
 		<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white">

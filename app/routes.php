@@ -28,7 +28,7 @@ return function (App $app) {
     $app->get('/connexion', [HomeController::class, 'connexion'])->setName('connexion');
     $app->post('/connexion', [HomeController::class, 'connexion'])->setName('connexion');
     $app->get('/offres[/{page:\d+}]', [OffreController::class, 'liste'])->setName('Offres');
-    $app->post('/ajout-offre', [OffreController::class, 'ajoute'])->setName('ajout-offre');
+    $app->get('/ajout-offre', [OffreController::class, 'ajoute'])->setName('ajout-offre');
 
     /*
     $app->group('/users', function (Group $group) {

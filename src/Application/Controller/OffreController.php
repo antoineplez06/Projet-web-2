@@ -158,31 +158,7 @@ class OffreController
 
     }
     
-    public function ajoute(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
-    {
-        $view = Twig::fromRequest($request);
-        $parsedBody = $request->getParsedBody();
 
-        $success = false;
-
-        // Si la modale d'ajout a été soumise en POST
-        if ($request->getMethod() === 'POST') {
-            // C'est ici que tu feras ta requête SQL pour ajouter l'offre en base de données
-            // Exemple : 
-            // $titre = $parsedBody['titre'];
-            // $entreprise = $parsedBody['entreprise'];
-
-            $success = true;
-
-            // Décommente la ligne ci-dessous si tu veux rediriger vers la liste après l'ajout
-            // return $response->withHeader('Location', '/offres')->withStatus(302);
-        }
-
-        return $view->render($response, 'ajout-offre.html.twig', [
-            "titre" => $parsedBody['titre'] ?? '',
-            "success" => $success
-        ]);
-    }
 
     public function edit(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
