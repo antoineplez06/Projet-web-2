@@ -1,0 +1,26 @@
+ {% extends "base.html.twig" %}
+
+{% block content %}
+
+<h1 class="mt-4 text-center fw-bold">Nom de l'offre</h1>
+  <hr class="border border-dark">
+
+<div class="mb-3 w-50 mx-auto">
+  <label class="form-label fw-bold">Lettre de motivation</label>
+  <textarea class="form-control" rows="20" placeholder="Écrivez votre message"></textarea>
+</div>
+
+<div class="mb-3 w-50 mx-auto">
+      <label for="cv" class="form-label fw-bold">Choisir votre CV</label>
+      <input class="form-control border border-dark" type="file" id="cv" name="cv" accept=".pdf,.doc,.docx">
+</div>
+
+<div class="text-end" style="margin-right: 350px;">
+<a href="Accueil-co.html">
+<button type="submit" class="btn btn-primary text-end">
+  Postuler
+</button>
+</a>
+</div>
+
+{% endblock %}
