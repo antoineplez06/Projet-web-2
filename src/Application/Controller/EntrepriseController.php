@@ -42,7 +42,7 @@ class EntrepriseController
             ],
             [
                 "id" => 6,
-                "nom" => "Horizon Digital",
+                "nom" => "Vody",
                 "secteur" => "Bordeaux"
             ],
             [
@@ -52,7 +52,7 @@ class EntrepriseController
             ],
             [
                 "id" => 8,
-                "nom" => "Alpes Innovation",
+                "nom" => "PAKPAK",
                 "secteur" => "Grenoble"
             ],
             [
@@ -64,18 +64,29 @@ class EntrepriseController
                 "id" => 10,
                 "nom" => "Cosmétiques Azur",
                 "secteur" => "Nice"
-            ]
+            ],
+
+            ['id' => 11, 'nom' => 'CESI', 'secteur' => 'IA', 'statut' => 'Actif'],
+            ['id' => 12, 'nom' => 'GreenLeaf', 'secteur' => 'Écologie', 'statut' => 'En attente'],
+            ['id' => 13, 'nom' => 'CyberShield', 'secteur' => 'Sécurité', 'statut' => 'Actif'],
+            ['id' => 14, 'nom' => 'BlueHorizon', 'secteur' => 'Logistique', 'statut' => 'Inactif'],
         ];
 
-        if (isset($args['page'])) {
-            $page = (int) $args['page'];
-            $perPage = 2;
-            $offset = ($page - 1) * $perPage;
-            $entreprises = array_slice($entreprises, $offset, $perPage);
-        }
+        $page = isset($args['page']) ? (int) $args['page'] : 1;
+        if ($page < 1)
+            $page = 1;
+
+        $perPage = 5; // On va dire 5 par page pour tester
+        $totalItems = count($entreprises);
+        $nombrePages = ceil($totalItems / $perPage);
+
+        $offset = ($page - 1) * $perPage;
+        $entreprisesAffichees = array_slice($entreprises, $offset, $perPage);
 
         return $view->render($response, 'liste-entreprises.html.twig', [
-            'entreprises' => $entreprises
+            'entreprises' => $entreprisesAffichees,
+            'pageActuelle' => $page,
+            'nombrePages' => $nombrePages
         ]);
     }
 

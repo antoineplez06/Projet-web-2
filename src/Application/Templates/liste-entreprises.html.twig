@@ -46,13 +46,23 @@
 </div>
 
 
-<nav aria-label="Page navigation example">
+<nav aria-label="Page navigation">
   <ul class="pagination">
-    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-    <li class="page-item"><a class="page-link" href="{{ url_for('liste-entreprises', { 'page': '1' }) }}">1</a></li>
-    <li class="page-item"><a class="page-link" href="{{ url_for('liste-entreprises', { 'page': '2' }) }}">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+    
+    <li class="page-item {{ pageActuelle <= 1 ? 'disabled' }}">
+      <a class="page-link" href="{{ url_for('liste-entreprises', { 'page': pageActuelle - 1 }) }}">Précédent</a>
+    </li>
+
+    {% for i in 1..nombrePages %}
+      <li class="page-item {{ i == pageActuelle ? 'active' }}">
+        <a class="page-link" href="{{ url_for('liste-entreprises', { 'page': i }) }}">{{ i }}</a>
+      </li>
+    {% endfor %}
+
+    <li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' }}">
+      <a class="page-link" href="{{ url_for('liste-entreprises', { 'page': pageActuelle + 1 }) }}">Suivant</a>
+    </li>
+
   </ul>
 </nav>
 
