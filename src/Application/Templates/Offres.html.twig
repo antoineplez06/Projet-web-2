@@ -112,7 +112,7 @@
 						</div>
 
 						<div class="modal-footer">
-							<a href="/postuler/{{ offre.id }}" class="btn btn-primary btn-lg">Postuler maintenant</a>
+							<a href="{{ url_for("/Postuler", { 'id': offre.id }) }}" class="btn btn-primary btn-lg">Postuler maintenant</a>
 						</div>
 					</div>
 				</div>

@@ -168,4 +168,17 @@ class OffreController
             // Données pour l'édition de l'offre
         ]);
     }
+    public function afficherFormulairePostuler(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+{
+    $view = Twig::fromRequest($request);
+    
+    // On récupère l'ID depuis l'URL (le {id} de la route)
+    $idOffre = $args['id'];
+
+    // Plus tard, tu chercheras l'offre en base de données avec cet ID
+    // Pour l'instant, on peut simplement passer l'ID à la vue
+    return $view->render($response, 'postuler.html.twig', [
+        'id' => $idOffre
+    ]);
+}
 }
