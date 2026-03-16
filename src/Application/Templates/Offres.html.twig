@@ -2,422 +2,146 @@
 
 {% block content %}
 
-<form class="d-flex  mt-4  mx-auto w-50" role="search">
-        <input class="form-control me-4 border border-dark border-2" type="search" placeholder="Rechercher une offre" aria-label="Rechercher une offre"/>
-        <button class="btn btn-outline-secondary" type="submit">Rechercher</button>
-    </form>
+<form class="d-flex mt-4 mx-auto w-50" role="search">
+    <input class="form-control me-4 border border-dark border-2" type="search" placeholder="Rechercher une offre" aria-label="Rechercher une offre"/>
+    <button class="btn btn-outline-secondary" type="submit">Rechercher</button>
+</form>
 
-    <button class="btn btn-outline-dark d-flex mt-3 bg-secondary fw-bold" style="margin-left:355px" type="button" data-bs-toggle="modal" data-bs-target="#filtreModal">Filtrer</button> 
+<div class="d-flex justify-content-center mt-3 gap-3">
+    <button class="btn btn-outline-dark bg-secondary text-white fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#filtreModal">Filtrer</button> 
+    <button class="btn btn-success fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#ajouterOffreModal">+ Ajouter une offre</button>
+</div>
 
-    <div class="modal fade" id="filtreModal" tabindex="-1" aria-labelledby="filtreModal" aria-hidden="true">
+<div class="modal fade" id="filtreModal" tabindex="-1" aria-labelledby="filtreModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title fs-5" id="exampleModalLabel">Filtrer</h2>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-            <label class="form-label fw-semibold">
-                Date début stage
-            </label>
-            <input type="date" class="form-control">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="filtreModalLabel">Filtrer</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Date début stage</label>
+                    <input type="date" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Durée minimum (semaines)</label>
+                    <input type="number" class="form-control" placeholder="en semaines">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Appliquer</button>
+            </div>
         </div>
-
-        <div class="mb-3">
-            <label class="form-label fw-semibold">
-                Durée minimum (semaines)
-            </label>
-            <input type="number" class="form-control" placeholder="en semaines">
-        </div>
-
-      </div>
-      
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Appliquer</button>
-      </div>
     </div>
-  </div>
 </div>
 
+<div class="modal fade" id="ajouterOffreModal" tabindex="-1" aria-labelledby="ajouterOffreModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="/ajouter-offre">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5" id="ajouterOffreModalLabel">Ajouter une nouvelle offre</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Titre de l'offre</label>
+                        <input type="text" name="titre" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Nom de l'entreprise</label>
+                        <input type="text" name="entreprise" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Lieu</label>
+                        <input type="text" name="lieu" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Description</label>
+                        <textarea name="description" class="form-control" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-success">Publier l'offre</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% for offre in offres %}
 <div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative">
- <h3 class="float-none w-auto fw-bold">Nom de l'offre</h3>
- <p class="mb-0" >Nom de l'entreprise</p>
- <p class="mb-0">Lieu de l'entreprise</p>
- <p class="mt-5">Date de publication</p>
+    <h3 class="float-none w-auto fw-bold">{{ offre.nom }}</h3>
+    <p class="mb-0">{{ offre.entreprise }}</p>
+    <p class="mb-0">{{ offre.lieu }}</p>
+    <p class="mt-5">Publié le : {{ offre.date_publication }}</p>
  
-<div class="position-absolute top-0 end-0 mt-3 me-3">
-                    <a>  
-                        <svg class="Wishlist" height="45" fill="none" stroke="black" stroke-width="30"
-                            viewBox="0 0 512 512"
-                            aria-label="Wishlist"
-                            role="button"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M256 472
-                                    C256 472 40 312 40 160
-                                    C40 72 104 32 168 32
-                                    C216 32 256 80 256 80
-                                    C256 80 296 32 344 32
-                                    C408 32 472 72 472 160
-                                    C472 312 256 472 256 472 Z"/>
-                        </svg>
-                    </a>
-
-</div>
-
-<button type="button" class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-1 me-3 bg-light" data-bs-toggle="modal" data-bs-target="#VoirOffre">
-  Voir l'offre
-</button>
-
- 
-<div class="modal fade" id="VoirOffre" tabindex="-1">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <div class="container-fluid">
-          <div class="row w-100">
-            <div class="col-md-8">
-              <h2 class="fw-bold">Nom de l'offre</h2>
-              <p class="mb-1 text-muted">Nom de l'entreprise</p>
-              <p class="mt-0 mb-1 text-muted">Lieu de l'entreprise</p>
-              <p class="mt-5 text-muted">Date de publication</p>
-            </div>
-
-            <div class="col-md-4 text-center">
-              <h2 class="text-dark text-muted">10 personnes ont déjà postulé pour cette offre</h2>
-            </div>
-
-          </div>
-        </div>
-
-        <button type="button" class="btn-close  position-absolute top-0 end-0 me-2 mt-2" data-bs-dismiss="modal"></button>
-
-      </div>
-
-      <div class="modal-body">
-
-        <h4>Description de l'offre</h4>
-
-        <h4>Compétences</h4>
-
-        <h4>Base de rémunération</h4>
-
-
-      <div class="modal-footer">
-        <button href=Postuler.html.twig class="btn btn-primary btn-lg">Postuler</button>
-      </div>
-
+    <div class="position-absolute top-0 end-0 mt-3 me-3">
+        <a>  
+            <svg class="Wishlist" height="45" fill="none" stroke="black" stroke-width="30" viewBox="0 0 512 512" role="button">
+                <path d="M256 472 C256 472 40 312 40 160 C40 72 104 32 168 32 C216 32 256 80 256 80 C256 80 296 32 344 32 C408 32 472 72 472 160 C472 312 256 472 256 472 Z"/>
+            </svg>
+        </a>
     </div>
-  </div>
-</div>
-</div>
-</div>
 
-<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative">
- <h3 class="float-none w-auto fw-bold">Nom de l'offre</h3>
- <p class="mb-0" >Nom de l'entreprise</p>
- <p class="mb-0">Lieu de l'entreprise</p>
- <p class="mt-5">Date de publication</p>
+    <button type="button" class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-1 me-3 bg-light" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.id }}">
+        Voir l'offre
+    </button>
  
-<div class="position-absolute top-0 end-0 mt-3 me-3">
-                    <a>  
-                        <svg class="Wishlist" height="45" fill="none" stroke="black" stroke-width="30"
-                            viewBox="0 0 512 512"
-                            aria-label="Wishlist"
-                            role="button"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M256 472
-                                    C256 472 40 312 40 160
-                                    C40 72 104 32 168 32
-                                    C216 32 256 80 256 80
-                                    C256 80 296 32 344 32
-                                    C408 32 472 72 472 160
-                                    C472 312 256 472 256 472 Z"/>
-                        </svg>
-                    </a>
+    <div class="modal fade" id="VoirOffre{{ offre.id }}" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="container-fluid">
+                        <div class="row w-100">
+                            <div class="col-md-8">
+                                <h2 class="fw-bold">{{ offre.nom }}</h2>
+                                <p class="mb-1 text-muted">{{ offre.entreprise }}</p>
+                                <p class="mt-0 mb-1 text-muted">{{ offre.lieu }}</p>
+                                <p class="mt-5 text-muted">Publié le : {{ offre.date_publication }}</p>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <h2 class="text-dark text-muted">{{ offre.candidats }} personnes ont déjà postulé pour cette offre</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close position-absolute top-0 end-0 me-2 mt-2" data-bs-dismiss="modal"></button>
+                </div>
 
-</div>
+                <div class="modal-body">
+                    <h4>Description de l'offre</h4>
+                    <p>{{ offre.description }}</p>
 
-<button type="button" class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-1 me-3 bg-light" data-bs-toggle="modal" data-bs-target="#VoirOffre">
-  Voir l'offre
-</button>
+                    <h4>Compétences</h4>
+                    <p>{{ offre.competences }}</p>
 
- 
-<div class="modal fade" id="VoirOffre" tabindex="-1">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
+                    <h4>Base de rémunération</h4>
+                    <p>{{ offre.remuneration }}</p>
+                </div>
 
-      <div class="modal-header">
-        <div class="container-fluid">
-          <div class="row w-100">
-            <div class="col-md-8">
-              <h2 class="fw-bold">Nom de l'offre</h2>
-              <p class="mb-1 text-muted">Nom de l'entreprise</p>
-              <p class="mt-0 mb-1 text-muted">Lieu de l'entreprise</p>
-              <p class="mt-5 text-muted">Date de publication</p>
+                <div class="modal-footer">
+                    <a href="/postuler/{{ offre.id }}" class="btn btn-primary btn-lg">Postuler</a>
+                </div>
             </div>
-
-            <div class="col-md-4 text-center">
-              <h2 class="text-dark text-muted">10 personnes ont déjà postulé pour cette offre</h2>
-            </div>
-
-          </div>
         </div>
-
-        <button type="button" class="btn-close  position-absolute top-0 end-0 me-2 mt-2" data-bs-dismiss="modal"></button>
-
-      </div>
-
-      <div class="modal-body">
-
-        <h4>Description de l'offre</h4>
-
-        <h4>Compétences</h4>
-
-        <h4>Base de rémunération</h4>
-
-
-      <div class="modal-footer">
-        <button href=Postuler.html.twig class="btn btn-primary btn-lg">Postuler</button>
-      </div>
-
     </div>
-  </div>
 </div>
-</div>
-</div>
-
-<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative">
- <h3 class="float-none w-auto fw-bold">Nom de l'offre</h3>
- <p class="mb-0" >Nom de l'entreprise</p>
- <p class="mb-0">Lieu de l'entreprise</p>
- <p class="mt-5">Date de publication</p>
- 
-<div class="position-absolute top-0 end-0 mt-3 me-3">
-                    <a>  
-                        <svg class="Wishlist" height="45" fill="none" stroke="black" stroke-width="30"
-                            viewBox="0 0 512 512"
-                            aria-label="Wishlist"
-                            role="button"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M256 472
-                                    C256 472 40 312 40 160
-                                    C40 72 104 32 168 32
-                                    C216 32 256 80 256 80
-                                    C256 80 296 32 344 32
-                                    C408 32 472 72 472 160
-                                    C472 312 256 472 256 472 Z"/>
-                        </svg>
-                    </a>
-
-</div>
-
-<button type="button" class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-1 me-3 bg-light" data-bs-toggle="modal" data-bs-target="#VoirOffre">
-  Voir l'offre
-</button>
-
- 
-<div class="modal fade" id="VoirOffre" tabindex="-1">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <div class="container-fluid">
-          <div class="row w-100">
-            <div class="col-md-8">
-              <h2 class="fw-bold">Nom de l'offre</h2>
-              <p class="mb-1 text-muted">Nom de l'entreprise</p>
-              <p class="mt-0 mb-1 text-muted">Lieu de l'entreprise</p>
-              <p class="mt-5 text-muted">Date de publication</p>
-            </div>
-
-            <div class="col-md-4 text-center">
-              <h2 class="text-dark text-muted">10 personnes ont déjà postulé pour cette offre</h2>
-            </div>
-
-          </div>
-        </div>
-
-        <button type="button" class="btn-close  position-absolute top-0 end-0 me-2 mt-2" data-bs-dismiss="modal"></button>
-
-      </div>
-
-      <div class="modal-body">
-
-        <h4>Description de l'offre</h4>
-
-        <h4>Compétences</h4>
-
-        <h4>Base de rémunération</h4>
-
-
-      <div class="modal-footer">
-        <button href=Postuler.html.twig class="btn btn-primary btn-lg">Postuler</button>
-      </div>
-
+{% else %}
+    <div class="text-center mt-5">
+        <p class="fw-bold">Aucune offre disponible pour le moment.</p>
     </div>
-  </div>
-</div>
-</div>
-</div>
+{% endfor %}
 
-<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative">
- <h3 class="float-none w-auto fw-bold">Nom de l'offre</h3>
- <p class="mb-0" >Nom de l'entreprise</p>
- <p class="mb-0">Lieu de l'entreprise</p>
- <p class="mt-5">Date de publication</p>
- 
-<div class="position-absolute top-0 end-0 mt-3 me-3">
-                    <a>  
-                        <svg class="Wishlist" height="45" fill="none" stroke="black" stroke-width="30"
-                            viewBox="0 0 512 512"
-                            aria-label="Wishlist"
-                            role="button"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M256 472
-                                    C256 472 40 312 40 160
-                                    C40 72 104 32 168 32
-                                    C216 32 256 80 256 80
-                                    C256 80 296 32 344 32
-                                    C408 32 472 72 472 160
-                                    C472 312 256 472 256 472 Z"/>
-                        </svg>
-                    </a>
-
-</div>
-
-<button type="button" class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-1 me-3 bg-light" data-bs-toggle="modal" data-bs-target="#VoirOffre">
-  Voir l'offre
-</button>
-
- 
-<div class="modal fade" id="VoirOffre" tabindex="-1">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <div class="container-fluid">
-          <div class="row w-100">
-            <div class="col-md-8">
-              <h2 class="fw-bold">Nom de l'offre</h2>
-              <p class="mb-1 text-muted">Nom de l'entreprise</p>
-              <p class="mt-0 mb-1 text-muted">Lieu de l'entreprise</p>
-              <p class="mt-5 text-muted">Date de publication</p>
-            </div>
-
-            <div class="col-md-4 text-center">
-              <h2 class="text-dark text-muted">10 personnes ont déjà postulé pour cette offre</h2>
-            </div>
-
-          </div>
-        </div>
-
-        <button type="button" class="btn-close  position-absolute top-0 end-0 me-2 mt-2" data-bs-dismiss="modal"></button>
-
-      </div>
-
-      <div class="modal-body">
-
-        <h4>Description de l'offre</h4>
-
-        <h4>Compétences</h4>
-
-        <h4>Base de rémunération</h4>
-
-
-      <div class="modal-footer">
-        <button href=Postuler.html.twig class="btn btn-primary btn-lg">Postuler</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-</div>
-</div>
-
-<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative">
- <h3 class="float-none w-auto fw-bold">Nom de l'offre</h3>
- <p class="mb-0" >Nom de l'entreprise</p>
- <p class="mb-0">Lieu de l'entreprise</p>
- <p class="mt-5">Date de publication</p>
- 
-<div class="position-absolute top-0 end-0 mt-3 me-3">
-                    <a>  
-                        <svg class="Wishlist" height="45" fill="none" stroke="black" stroke-width="30"
-                            viewBox="0 0 512 512"
-                            aria-label="Wishlist"
-                            role="button"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M256 472
-                                    C256 472 40 312 40 160
-                                    C40 72 104 32 168 32
-                                    C216 32 256 80 256 80
-                                    C256 80 296 32 344 32
-                                    C408 32 472 72 472 160
-                                    C472 312 256 472 256 472 Z"/>
-                        </svg>
-                    </a>
-
-</div>
-
-<button type="button" class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-1 me-3 bg-light" data-bs-toggle="modal" data-bs-target="#VoirOffre">
-  Voir l'offre
-</button>
-
- 
-<div class="modal fade" id="VoirOffre" tabindex="-1">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <div class="container-fluid">
-          <div class="row w-100">
-            <div class="col-md-8">
-              <h2 class="fw-bold">Nom de l'offre</h2>
-              <p class="mb-1 text-muted">Nom de l'entreprise</p>
-              <p class="mt-0 mb-1 text-muted">Lieu de l'entreprise</p>
-              <p class="mt-5 text-muted">Date de publication</p>
-            </div>
-
-            <div class="col-md-4 text-center">
-              <h2 class="text-dark text-muted">10 personnes ont déjà postulé pour cette offre</h2>
-            </div>
-
-          </div>
-        </div>
-
-        <button type="button" class="btn-close  position-absolute top-0 end-0 me-2 mt-2" data-bs-dismiss="modal"></button>
-
-      </div>
-
-      <div class="modal-body">
-
-        <h4>Description de l'offre</h4>
-
-        <h4>Compétences</h4>
-
-        <h4>Base de rémunération</h4>
-
-
-      <div class="modal-footer">
-        <button href=Postuler.html.twig class="btn btn-primary btn-lg">Postuler</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-</div>
-</div>
-
-
- <nav aria-label="Page navigation example" class="text-dark">
-  <ul class="pagination justify-content-center mt-4">
-    <li class="page-item"><a class="page-link text-dark" href="#">Précédent</a></li>
-    <li class="page-item"><a class="page-link text-dark" href="#">1</a></li>
-    <li class="page-item"><a class="page-link text-dark" href="#">2</a></li>
-    <li class="page-item"><a class="page-link text-dark" href="#">3</a></li>
-    <li class="page-item"><a class="page-link text-dark" href="#">Suivant</a></li>
-  </ul>
+<nav aria-label="Page navigation example" class="text-dark">
+    <ul class="pagination justify-content-center mt-4">
+        <li class="page-item"><a class="page-link text-dark" href="#">Précédent</a></li>
+        <li class="page-item"><a class="page-link text-dark" href="#">1</a></li>
+        <li class="page-item"><a class="page-link text-dark" href="#">2</a></li>
+        <li class="page-item"><a class="page-link text-dark" href="#">3</a></li>
+        <li class="page-item"><a class="page-link text-dark" href="#">Suivant</a></li>
+    </ul>
 </nav>
 
+{% endblock %}
