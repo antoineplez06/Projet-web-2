@@ -9,6 +9,7 @@ use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 use App\Application\Controller\HomeController;
 use App\Application\Controller\EntrepriseController;
 use App\Application\Controller\EtudiantController;
+use App\Application\Controller\OffreController;
 
 return function (App $app) {
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
