@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Application\Controller;
-
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
@@ -11,7 +9,13 @@ use Slim\Views\Twig;
 
 class OffreController
 {
+    public function ajoute(ServerRequestInterface $request, ResponseInterface $response)
+{
+       $view = Twig::fromRequest($request);
+       return $view->render($response, 'ajout-offre.html.twig');
+    
 
+}
     public function liste(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
@@ -86,27 +90,74 @@ class OffreController
             ]
         ];
 
-        // Logique de pagination identique à ton EntrepriseController
-        $page = isset($args['page']) ? (int) $args['page'] : 1;
-        if ($page < 1) {
-            $page = 1;
+        // ==========================================
+        // 1. RÉCUPÉRATION DES FILTRES DEPUIS L'URL (GET)
+        // ==========================================
+        $params = $request->getQueryParams();
+
+        $search = $params['search'] ?? '';
+        $lieu = $params['lieu'] ?? '';
+        $candidatsMax = $params['candidats_max'] ?? '';
+
+        // ==========================================
+        // 2. APPLICATION DES FILTRES
+        // ==========================================
+        if (!empty($search) || !empty($lieu) || !empty($candidatsMax)) {
+
+            $offres = array_filter($offres, function ($offre) use ($search, $lieu, $candidatsMax) {
+                $match = true;
+
+                // Recherche texte (nom de l'offre ou entreprise)
+                if (!empty($search)) {
+                    $searchLower = strtolower($search);
+                    $nomMatch = strpos(strtolower($offre['nom']), $searchLower) !== false;
+                    $entrepriseMatch = strpos(strtolower($offre['entreprise']), $searchLower) !== false;
+
+                    if (!$nomMatch && !$entrepriseMatch) {
+                        $match = false;
+                    }
+                }
+
+                // Filtre par Lieu
+                if (!empty($lieu) && strtolower($offre['lieu']) !== strtolower($lieu)) {
+                    $match = false;
+                }
+
+                // Filtre par Candidats maximum
+                if (!empty($candidatsMax) && $offre['candidats'] > (int) $candidatsMax) {
+                    $match = false;
+                }
+
+                return $match;
+            });
+
+            // On réindexe le tableau de 0 à X après avoir supprimé les éléments filtrés
+            $offres = array_values($offres);
         }
 
-        $perPage = 5; // 5 offres par page
+        // ==========================================
+        // 3. PAGINATION
+        // ==========================================
+        $page = isset($args['page']) ? (int) $args['page'] : 1;
+        if ($page < 1)
+            $page = 1;
+
+        $perPage = 5; // On va dire 5 par page pour tester
         $totalItems = count($offres);
         $nombrePages = ceil($totalItems / $perPage);
 
         $offset = ($page - 1) * $perPage;
         $offresAffichees = array_slice($offres, $offset, $perPage);
 
-        // Assure-toi que le nom du template correspond à ton fichier twig
         return $view->render($response, 'Offres.html.twig', [
             'offres' => $offresAffichees,
             'pageActuelle' => $page,
-            'nombrePages' => $nombrePages
+            'nombrePages' => $nombrePages,
+            'filtres' => $params,
         ]);
-    }
 
+    }
+    
     public function ajoute(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
@@ -114,21 +165,19 @@ class OffreController
 
         $success = false;
 
-        // Si le formulaire d'ajout (la modale) a été soumis en POST
+        // Si la modale d'ajout a été soumise en POST
         if ($request->getMethod() === 'POST') {
-            // Ici, tu feras ton $db->insert() avec PDO ou ton ORM plus tard
-            // Ex: $titre = $parsedBody['titre'] ?? '';
-            // Ex: $entreprise = $parsedBody['entreprise'] ?? '';
+            // C'est ici que tu feras ta requête SQL pour ajouter l'offre en base de données
+            // Exemple : 
+            // $titre = $parsedBody['titre'];
+            // $entreprise = $parsedBody['entreprise'];
 
             $success = true;
 
-            // ASTUCE SLIM : Après un ajout via POST, on redirige souvent vers la liste 
-            // pour éviter que l'utilisateur renvoie le formulaire en faisant F5
+            // Décommente la ligne ci-dessous si tu veux rediriger vers la liste après l'ajout
             // return $response->withHeader('Location', '/offres')->withStatus(302);
         }
 
-        // Si tu as gardé la modale sur la même page que la liste, tu pourrais rediriger.
-        // Si tu as une page dédiée à l'ajout (comme pour Entreprise), on affiche la vue d'ajout :
         return $view->render($response, 'ajout-offre.html.twig', [
             "titre" => $parsedBody['titre'] ?? '',
             "success" => $success
