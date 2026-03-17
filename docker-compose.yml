@@ -1,18 +1,40 @@
 version: '3.7'
 
 volumes:
-    logs:
-        driver: local
+  logs:
+    driver: local
+  db_data: # Ajouté pour ne pas perdre tes données MySQL au redémarrage
 
 services:
-    slim:
-        image: php:8.2-alpine
-        working_dir: /var/www
-        command: php -S 0.0.0.0:8080 -t public
-        environment:
-            docker: "true"
-        ports:
-            - "8080:8080"
-        volumes:
-            - .:/var/www
-            - logs:/var/www/logs
+#   slim:
+#     image: php:8.2-alpine
+#     working_dir: /var/www
+#     command: php -S 0.0.0.0:8080 -t public
+#     environment:
+#       docker: "true"
+#     ports:
+#       - "8080:8080"
+#     volumes:  
+#       - .:/var/www
+#       - logs:/var/www/logs
+
+  db:
+    image: mysql:8.0 # Il est préférable de préciser une version
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: toto
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - "99:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: example
