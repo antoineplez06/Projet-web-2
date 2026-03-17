@@ -76,7 +76,7 @@ class EntrepriseController
         if ($page < 1)
             $page = 1;
 
-        $perPage = 5; // On va dire 5 par page pour tester
+        $perPage = 5; // 5 par page
         $totalItems = count($entreprises);
         $nombrePages = ceil($totalItems / $perPage);
 

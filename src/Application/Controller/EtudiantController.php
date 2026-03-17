@@ -181,7 +181,7 @@ class EtudiantController
         if ($page < 1)
             $page = 1;
 
-        $perPage = 5; // On va dire 5 par page pour tester
+        $perPage = 5; 
         $totalItems = count($etudiants);
         $nombrePages = ceil($totalItems / $perPage);
 
@@ -201,12 +201,10 @@ class EtudiantController
         $view = Twig::fromRequest($request);
 
         $parsedBody = $request->getParsedBody();
-        //var_dump($parsedBody); 
-
-        //Vérifier l'id
+ 
         $success = false;
         if ($request->getMethod() === 'POST') {
-            //Ici, on ajouterait l'entreprise à la base de données
+            
             $success = true;
         }
 

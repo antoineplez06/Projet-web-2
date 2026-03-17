@@ -90,18 +90,18 @@ class OffreController
             ]
         ];
 
-        // ==========================================
-        // 1. RÉCUPÉRATION DES FILTRES DEPUIS L'URL (GET)
-        // ==========================================
+
+        // RÉCUPÉRATION DES FILTRES DEPUIS LE GET
+
         $params = $request->getQueryParams();
 
         $search = $params['search'] ?? '';
         $lieu = $params['lieu'] ?? '';
         $candidatsMax = $params['candidats_max'] ?? '';
 
-        // ==========================================
-        // 2. APPLICATION DES FILTRES
-        // ==========================================
+        
+        // APPLICATION DES FILTRES
+        
         if (!empty($search) || !empty($lieu) || !empty($candidatsMax)) {
 
             $offres = array_filter($offres, function ($offre) use ($search, $lieu, $candidatsMax) {
@@ -135,14 +135,12 @@ class OffreController
             $offres = array_values($offres);
         }
 
-        // ==========================================
-        // 3. PAGINATION
-        // ==========================================
+
         $page = isset($args['page']) ? (int) $args['page'] : 1;
         if ($page < 1)
             $page = 1;
 
-        $perPage = 5; // On va dire 5 par page pour tester
+        $perPage = 5; 
         $totalItems = count($offres);
         $nombrePages = ceil($totalItems / $perPage);
 
@@ -165,18 +163,17 @@ class OffreController
         $view = Twig::fromRequest($request);
 
         return $view->render($response, 'offre_formulaire.html.twig', [
-            // Données pour l'édition de l'offre
+           
         ]);
     }
     public function afficherFormulairePostuler(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
 {
     $view = Twig::fromRequest($request);
     
-    // On récupère l'ID depuis l'URL (le {id} de la route)
+
     $idOffre = $args['id'];
 
-    // Plus tard, tu chercheras l'offre en base de données avec cet ID
-    // Pour l'instant, on peut simplement passer l'ID à la vue
+
     return $view->render($response, 'postuler.html.twig', [
         'id' => $idOffre
     ]);

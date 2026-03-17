@@ -31,7 +31,7 @@ class HomeController
         $identifiant = $data['identifiant'] ?? '';
         $password = $data['password'] ?? '';
 
-        // traitement login ici
+       
     }
 
     return $twig->render($response, 'connexion.html.twig');
