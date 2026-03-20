@@ -63,7 +63,7 @@ class OffreController
                 $parsedBody['duree'] ?? '',
                 $parsedBody['exigence_etude'] ?? '',
                 $parsedBody['entreprise'] ?? '',
-                new DateTimeImmutable($parsedBody['date'] ?? 'now'),
+                new DateTimeImmutable($parsedBody['date']),
                 (float) ($parsedBody['remuneration'] ?? 0),
                 $parsedBody['description'] ?? '',
                 $parsedBody['presentiel_ou_distanciel'] ?? ''

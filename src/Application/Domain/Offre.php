@@ -30,8 +30,8 @@ final class Offre
     #[Column(type: 'string', length: 255)]
     private string $entreprise;
 
-    #[Column(type: 'date')]
-    private date $date;
+    #[Column(type: 'date_immutable')]
+    private DateTimeImmutable $date;
 
     #[Column(type: 'float')]
     private float $remuneration;
