@@ -46,7 +46,7 @@ return function (ContainerBuilder $containerBuilder) {
                     'connection' => [
                         'driver' => 'pdo_mysql',
                         'host' => '127.0.0.1',
-                        'port' => 3306,
+                        'port' => 3307,
                         'dbname' => 'toto',
                         'user' => 'root',
                         'password' => 'example',
@@ -57,6 +57,3 @@ return function (ContainerBuilder $containerBuilder) {
         }
     ]);
 };
-
-
-

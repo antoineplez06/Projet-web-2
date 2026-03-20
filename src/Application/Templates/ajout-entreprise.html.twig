@@ -1,63 +1,75 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Ajouter une Entreprise{% endblock %}
+{% block title %}Ajouter une Entreprise
+{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Nouvelle Entreprise</h4>
-            </div>  
-            <div class="card-body">
-                <form action="/ajout-entreprise" method="POST">
-                    
-                    <div class="mb-3">
-                        <label for="nom" class="form-label">Nom de l'entreprise</label>
-                        <input type="text" class="form-control" id="nom" name="nom" placeholder="Ex: TechCorp" value="{{ nom }}" required>
-                    </div>
+	<div class="row justify-content-center">
+		<div class="col-md-8 col-lg-6">
+			<div class="card shadow">
+				<div class="card-header bg-primary text-white">
+					<h4 class="mb-0">Nouvelle Entreprise</h4>
+				</div>
+				<div class="card-body">
+					<form
+						action="/ajout-entreprise" method="POST">
 
-                    <div class="mb-3">
-                        <label for="secteur" class="form-label">Secteur d'activité</label>
-                        <select class="form-control" id="secteur" name="secteur" required>
-                            <option value="">Choisir...</option>
-                            <option value="IA">Intelligence Artificielle</option>
-                            <option value="Écologie">Écologie</option>
-                            <option value="Sécurité">Sécurité</option>
-                            <option value="Logistique">Logistique</option>
-                        </select>
-                    </div>
+						{# Nom de l'entreprise #}
+						<div class="mb-3">
+							<label for="nom" class="form-label font-weight-bold">Nom de l'entreprise</label>
+							<input type="text" class="form-control" id="nom" name="nom" placeholder="Ex: TechCorp" value="{{ nom }}" required>
+						</div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Statut initial</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="statut" id="statut1" value="Actif" checked>
-                            <label class="form-check-label" for="statut1">Actif</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="statut" id="statut2" value="En attente">
-                            <label class="form-check-label" for="statut2">En attente</label>
-                        </div>
-                    </div>
+						{# Adresse #}
+						<div class="mb-3">
+							<label for="adresse" class="form-label">Adresse postale</label>
+							<input type="text" class="form-control" id="adresse" name="adresse" placeholder="123 Rue de l'Innovation, Paris" required>
+						</div>
 
-                    <hr>
+						<div
+							class="row">
+							{# SIRET #}
+							<div class="col-md-6 mb-3">
+								<label for="siret" class="form-label">N° SIRET</label>
+								<input type="text" class="form-control" id="siret" name="siret" placeholder="14 chiffres" pattern="[0-9]{14}" title="Le SIRET doit contenir 14 chiffres" required>
+							</div>
 
-                    <div class="d-flex justify-content-between">
-                        <a href="/entreprises" class="btn btn-light">Annuler</a>
-                        <button type="submit" class="btn btn-success">Enregistrer</button>
-                    </div>
+							{# Taille de l'entreprise #}
+							<div class="col-md-6 mb-3">
+								<label for="taille" class="form-label">Taille (Effectif)</label>
+								<input type="text" class="form-control" id="taille" name="taille" placeholder="Ex: 15 personnes ou PME" required>
+							</div>
 
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+							{# Domaine (Anciennement Secteur) #}
+							<div class="mb-3">
+								<label for="domaine" class="form-label">Domaine d'activité</label>
+								<input type="text" class="form-control" id="domaine" name="domaine" list="domaines-suggest" placeholder="Ex: Développement Web, Industrie...">
+								<datalist id="domaines-suggest">
+									<option value="Informatique"></option>
+									<option value="Énergie"></option>
+									<option value="Santé"></option>
+									<option value="Transport"></option>
+								</datalist>
+							</div>
 
-{% if success %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        L'entreprise a été ajoutée avec succès !
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-{% endif %}
+							<hr>
 
-{% endblock %}
+							<div class="d-flex justify-content-between">
+								<a href="/entreprises" class="btn btn-outline-secondary">Annuler</a>
+								<button type="submit" class="btn btn-success px-4">Enregistrer</button>
+							</div>
+
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% if success %}
+			<div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+				<strong>Succès !</strong>
+				L'entreprise a été ajoutée.
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		{% endif %}
+	{% endblock %}

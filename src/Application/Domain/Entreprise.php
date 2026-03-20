@@ -1,0 +1,82 @@
+<?php
+
+
+
+namespace App\Application\Domain; 
+
+use DateTimeImmutable;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
+
+#[Entity, Table(name: 'entreprises')]
+final class Entreprise
+{
+    #[Id, Column(type: 'integer'), GeneratedValue(strategy: 'AUTO')]
+    private int $id;
+
+    #[Column(type: 'string', length: 255, nullable: false)]
+    private string $nom;
+
+    #[Column(type: 'string', length: 255, nullable: false)]
+    private string $adresse;
+
+    #[Column(type: 'string', length: 14, nullable: false)]
+    private string $siret;
+
+    #[Column(type: 'string', length: 100, nullable: false)]
+    private string $domaine;
+
+    #[Column(type: 'string', length: 100, nullable: false)]
+    private string $taille;
+
+
+    public function __construct(
+        string $nom,
+        string $adresse,
+        string $siret,
+        string $domaine,
+        string $taille,
+    ) {
+        $this->nom = $nom;
+        $this->adresse = $adresse;
+        $this->siret = $siret;
+        $this->domaine = $domaine;
+        $this->taille = $taille;
+    }
+
+    // --- Getters ---
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getNom(): string
+    {
+        return $this->nom;
+    }
+
+    public function getAdresse(): string
+    {
+        return $this->adresse;
+    }
+
+    public function getSiret(): string
+    {
+        return $this->siret;
+    }
+
+    public function getDomaine(): string
+    {
+        return $this->domaine;
+    }
+
+    public function getTaille(): string
+    {
+        return $this->taille;
+    }
+
+}

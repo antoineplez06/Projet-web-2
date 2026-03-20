@@ -15,29 +15,36 @@
                 <tr>
                     <th>ID</th>
                     <th>Nom</th>
-                    <th>Secteur</th>
-                    <th>Statut</th>
-                    <th class="text-end">Actions</th>
+                    <th>Adresse</th>
+                    <th>SIRET</th>
+                    <th>Domaine</th>
+                    <th>Taille</th>
+                    <th class="text-end px-3">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for ent in entreprises %}
                 <tr>
-                    <td>{{ ent.id }}</td>
+                    <td class="text-muted">{{ ent.id }}</td>
                     <td><strong>{{ ent.nom }}</strong></td>
-                    <td>{{ ent.secteur }}</td>
+                    <td>{{ ent.adresse }}</td>
+                    <td><code>{{ ent.siret }}</code></td>
+                    <td>{{ ent.domaine }}</td>
                     <td>
-                        <span class="badge {% if ent.statut == 'Actif' %}bg-success{% else %}bg-secondary{% endif %}">
-                            {{ ent.statut }}
-                        </span>
+                        <span class="badge border text-dark bg-light">{{ ent.taille }}</span>
                     </td>
-                    <td class="text-end">
-                        <a href="#" class="btn btn-sm btn-outline-info">Voir</a>
+                    <td class="text-end px-3">
+                        <div class="btn-group">
+                            <a href="#" class="btn btn-sm btn-outline-info">Voir</a>
+                            <a href="#" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                        </div>
                     </td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="5" class="text-center py-4">Aucune entreprise trouvée.</td>
+                    <td colspan="7" class="text-center py-4 text-muted">
+                        Aucune entreprise trouvée dans la base de données.
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -45,10 +52,10 @@
     </div>
 </div>
 
-
-<nav aria-label="Page navigation">
-  <ul class="pagination">
-    
+{# Pagination #}
+{% if nombrePages > 1 %}
+<nav aria-label="Page navigation" class="mt-4">
+  <ul class="pagination justify-content-center">
     <li class="page-item {{ pageActuelle <= 1 ? 'disabled' }}">
       <a class="page-link" href="{{ url_for('liste-entreprises', { 'page': pageActuelle - 1 }) }}">Précédent</a>
     </li>
@@ -62,8 +69,8 @@
     <li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' }}">
       <a class="page-link" href="{{ url_for('liste-entreprises', { 'page': pageActuelle + 1 }) }}">Suivant</a>
     </li>
-
   </ul>
 </nav>
+{% endif %}
 
 {% endblock %}
