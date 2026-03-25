@@ -129,7 +129,7 @@
 			{# Bouton Précédent #}
 			<li class="page-item {{ pageActuelle <= 1 ? 'disabled' : '' }}">
 				<a class="page-link text-dark" href="{{ url_for('Offres', { 'page': pageActuelle - 1 }, filtres) }}">Précédent</a>
-			</li>
+			</li> 
 
 			{# Numéros de pages #}
 			{% for i in 1..nombrePages %}
