@@ -40,6 +40,7 @@ return function (App $app) {
     $app->post('/ajout-offre', [OffreController::class, 'ajoute'])->setName('ajout-offre');
     $app->get('/postuler/{id}', [OffreController::class, 'afficherFormulairePostuler'])->setName('page-postuler');
     $app->get('/accueil-co', [HomeController::class, 'accueilCo'])->setName('accueil-co');
+    $app->get('/deconnexion', [HomeController::class, 'deconnexion'])->setName('deconnexion');
 
 
     /*

@@ -36,4 +36,19 @@ class HomeController
     return $view->render($response, 'Accueil-co.html.twig');
 }
 
+public function deconnexion(Request $request, Response $response): ResponseInterface
+{
+
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+
+    $_SESSION = [];
+    session_destroy();
+
+
+    return $response->withHeader('Location', '/')->withStatus(302);
+}
+
 }   
