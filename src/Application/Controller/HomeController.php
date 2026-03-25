@@ -16,24 +16,24 @@ class HomeController
     {
        $view = Twig::fromRequest($request);
     
-        return $view->render($response, 'Accueil-co.html.twig', [
+        return $view->render($response, 'Accueil-an.html.twig', [
             'name' => 'John',
         ]);
     }
     public function connexion(Request $request, Response $response)
 {
-    $twig = \Slim\Views\Twig::fromRequest($request);
+    $twig = Twig::fromRequest($request);
 
     if ($request->getMethod() === 'POST') {
-
-        $data = $request->getParsedBody();
-
-        $identifiant = $data['identifiant'] ?? '';
-        $password = $data['password'] ?? '';
-
-       
+        return $response->withHeader('Location', '/accueil-co')->withStatus(302);
     }
 
-    return $twig->render($response, 'connexion.html.twig');
+    return $twig->render($response, 'Connexion.html.twig');
 }
+    public function accueilCo(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+{
+    $view = Twig::fromRequest($request);
+    return $view->render($response, 'Accueil-co.html.twig');
+}
+
 }   

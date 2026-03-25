@@ -13,43 +13,7 @@
 		</div>
 	{% endif %}
 
-	<div class="modal fade" id="filtreModal" tabindex="-1" aria-labelledby="filtreModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<form method="GET" action="">
-					<input type="hidden" name="search" value="{{ filtres.search|default('') }}">
 
-					<div class="modal-header">
-						<h2 class="modal-title fs-5" id="filtreModalLabel">Filtrer les offres</h2>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<div class="mb-3">
-							<label class="form-label fw-semibold">Lieu</label>
-							<select name="lieu" class="form-select">
-								<option value="">Tous les lieux</option>
-								<option value="Paris" {% if filtres.lieu|default('') == 'Paris' %} selected {% endif %}>Paris</option>
-								<option value="Lyon" {% if filtres.lieu|default('') == 'Lyon' %} selected {% endif %}>Lyon</option>
-								<option value="Toulouse" {% if filtres.lieu|default('') == 'Toulouse' %} selected {% endif %}>Toulouse</option>
-								<option value="Marseille" {% if filtres.lieu|default('') == 'Marseille' %} selected {% endif %}>Marseille</option>
-								<option value="Strasbourg" {% if filtres.lieu|default('') == 'Strasbourg' %} selected {% endif %}>Strasbourg</option>
-							</select>
-						</div>
-						<div class="mb-3">
-							<label class="form-label fw-semibold">Candidats maximum</label>
-							<input type="number" name="candidats_max" class="form-control" placeholder="Ex: 10" value="{{ filtres.candidats_max|default('') }}">
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-						<button type="submit" class="btn btn-primary">Appliquer les filtres</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
-	
 
 	{% for offre in offres %}
 		<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white">

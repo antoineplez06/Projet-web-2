@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
 use DateTimeImmutable;
 
+
 class OffreController
 {
     private EntityManager $entityManager;
@@ -89,4 +90,5 @@ class OffreController
             'id' => $idOffre
         ]);
     }
+
 }
