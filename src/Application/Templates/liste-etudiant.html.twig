@@ -16,6 +16,9 @@
                     <th>ID</th>
                     <th>prenom</th>
                     <th>nom</th>
+                    <th>genre</th>
+                    <th>numéro</th>
+                    <th>date de naissance</th>
                     <th>mail</th>
                     <th>campus</th>
                     <th>promo</th>
@@ -28,7 +31,10 @@
                     <td>{{ etu.id }}</td>
                     <td>{{ etu.prenom }}</td>
                     <td><strong>{{ etu.nom }}</strong></td>
-                    <td>{{ etu.mail }}</td>
+                    <td>{{ etu.genre }}</td>
+                    <td>{{ etu.numeroTelephone }}</td>
+                    <td>{{ etu.dateNaissance|date("d/m/Y") }}</td>
+                    <td>{{ etu.email }}</td>
                     <td>{{ etu.campus }}</td>
                     <td>{{ etu.promo }}</td>
 
