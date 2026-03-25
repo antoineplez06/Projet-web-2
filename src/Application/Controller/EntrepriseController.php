@@ -74,4 +74,33 @@ class EntrepriseController
         'success' => $success
     ]);
     }
+
+    public function listean(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $view = Twig::fromRequest($request);
+    $page = isset($args['page']) ? (int) $args['page'] : 1;
+    $perPage = 5;
+    $offset = ($page - 1) * $perPage;
+
+    
+    $repository = $this->entityManager->getRepository(Entreprise::class);
+
+
+    $entreprisesAffichees = $repository->findBy(
+        [],                         
+        ['id' => 'DESC'],    
+        $perPage,                   
+        $offset                     
+    );
+
+
+    $totalEntreprises = $repository->count([]);
+    $nombrePages = ceil($totalEntreprises / $perPage);
+
+    return $view->render($response, 'Entreprises-an.html.twig', [
+        'entreprises' => $entreprisesAffichees,
+        'pageActuelle' => $page,
+        'nombrePages' => $nombrePages
+    ]);
+    }
 }

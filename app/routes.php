@@ -19,6 +19,7 @@ return function (App $app) {
 
     $app->get('/', [HomeController::class, 'home']);
     $app->get('/entreprises[/{page:\d+}]', [EntrepriseController::class, 'liste'])->setName('liste-entreprises');
+    $app->get('/entreprises-an[/{page:\d+}]', [EntrepriseController::class, 'listean'])->setName('entreprises-an');
     $app->get('/ajout-entreprise', [EntrepriseController::class, 'ajoute'])->setName('ajout-entreprise');
     $app->post('/ajout-entreprise', [EntrepriseController::class, 'ajoute'])->setName('ajout-entreprise');
     $app->get('/entreprise/edit/{idEntreprise:\d+}', [EntrepriseController::class, 'edit'])->setName('edit-entreprise');
@@ -28,10 +29,12 @@ return function (App $app) {
     $app->get('/connexion', [HomeController::class, 'connexion'])->setName('connexion');
     $app->post('/connexion', [HomeController::class, 'connexion'])->setName('connexion');
     $app->get('/offres[/{page:\d+}]', [OffreController::class, 'liste'])->setName('Offres');
+    $app->get('/offres-an[/{page:\d+}]', [OffreController::class, 'listean'])->setName('offres-an');
     $app->get('/ajout-offre', [OffreController::class, 'ajoute'])->setName('ajout-offre');
     $app->post('/ajout-offre', [OffreController::class, 'ajoute'])->setName('ajout-offre');
     $app->get('/postuler/{id}', [OffreController::class, 'afficherFormulairePostuler'])->setName('page-postuler');
     $app->get('/accueil-co', [HomeController::class, 'accueilCo'])->setName('accueil-co');
+
 
     /*
     $app->group('/users', function (Group $group) {

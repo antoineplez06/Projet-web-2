@@ -91,4 +91,35 @@ class OffreController
         ]);
     }
 
+        public function listean(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $view = Twig::fromRequest($request);
+
+        $params = $request->getQueryParams();
+
+        $page = isset($args['page']) ? (int) $args['page'] : 1;
+        $perPage = 5;
+        $offset = ($page - 1) * $perPage;
+
+        $repository = $this->entityManager->getRepository(Offre::class);
+
+        // Récupération des offres avec pagination (comme dans EntrepriseController)
+        $offresAffichees = $repository->findBy(
+            [],
+            ['idOffre' => 'DESC'], // Tri par ID décroissant
+            $perPage,
+            $offset
+        );
+
+        $totalOffres = $repository->count([]);
+        $nombrePages = ceil($totalOffres / $perPage);
+
+        return $view->render($response, 'Offres-an.html.twig', [
+            'offres' => $offresAffichees,
+            'pageActuelle' => $page,
+            'nombrePages' => $nombrePages,
+            'filtres'        => $params
+        ]);
+    }
+
 }
