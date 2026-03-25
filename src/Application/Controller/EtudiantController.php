@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Application\Controller;
-use App\Application\Domain\Etudiant;
+use App\Application\Domain\User;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
@@ -24,7 +24,7 @@ class EtudiantController
 
 
         $Etudiant = $this->entityManager
-            ->getRepository(Etudiant::class)
+            ->getRepository(user::class)
             ->findAll();
 
         $page = isset($args['page']) ? (int) $args['page'] : 1;
@@ -61,6 +61,7 @@ class EtudiantController
             $email = trim($data['email'] ?? '');
             $mdp = password_hash(trim($data['motDePasse'] ?? ''), PASSWORD_BCRYPT); // Toujours hasher les MDP !
             $promo = trim($data['promo'] ?? '');
+            $role = 'etudiant';
 
             // Gestion de la date de naissance (DateTimeImmutable requis)
             $dateNaissanceRaw = $data['dateNaissance'] ?? 'now';
@@ -71,7 +72,7 @@ class EtudiantController
             }
 
 
-            $nouvelEtudiant = new etudiant(
+            $nouvelEtudiant = new user(
                 $prenom,
                 $nom,
                 $tel,
@@ -79,11 +80,19 @@ class EtudiantController
                 $email,
                 $mdp,
                 $dateNaissance,
-                $promo
+                $promo,
+                $role
             );
 
             $this->entityManager->persist($nouvelEtudiant);
             $this->entityManager->flush();
+            
+            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+            $url = $routeParser->urlFor('liste-etudiant');
+
+            return $response
+                ->withHeader('Location', $url)
+                ->withStatus(302);
 
             $success = true;
         }
@@ -98,7 +107,7 @@ class EtudiantController
     {
         $view = Twig::fromRequest($request);
         $id = (int) $args['id'];
-        $Etudiant = $this->entityManager->find(Etudiant::class, $id);
+        $Etudiant = $this->entityManager->find(user::class, $id);
 
         if (!$Etudiant) {
             return $response->withStatus(404);
@@ -131,17 +140,26 @@ class EtudiantController
             // On sauvegarde tout en base de données
             $this->entityManager->flush();
             $success = true;
+
+            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+            $url = $routeParser->urlFor('liste-etudiant');
+
+            return $response
+                ->withHeader('Location', $url)
+                ->withStatus(302);
         }
 
         return $view->render($response, 'modifier-etudiant.html.twig', [
             'etudiant' => $Etudiant,
             'success' => $success,
+
         ]);
+
     }
     public function supprimer(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $id = (int) $args['id'];
-        $Etudiant = $this->entityManager->find(Etudiant::class, $id);
+        $Etudiant = $this->entityManager->find(user::class, $id);
 
         if ($Etudiant) {
             $this->entityManager->remove($Etudiant);

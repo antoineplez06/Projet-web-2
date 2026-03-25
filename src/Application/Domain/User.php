@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity, Table(name: 'etudiant')]
-class etudiant
+class user
 {
     #[Id, Column(type: 'integer'), GeneratedValue(strategy: 'AUTO')]
     private int $id;
@@ -40,6 +40,10 @@ class etudiant
     private string $promo;
 
 
+    #[Column(type: 'string', length: 50)]
+    private string $role;
+
+
 
     public function __construct(
         string $prenom,
@@ -49,7 +53,8 @@ class etudiant
         string $email,
         string $motDePasse,
         DateTimeImmutable $dateNaissance,
-        string $promo
+        string $promo,
+        string $role
     ) {
         $this->prenom = $prenom;
         $this->nom = $nom;
@@ -59,6 +64,7 @@ class etudiant
         $this->motDePasse = $motDePasse;
         $this->dateNaissance = $dateNaissance;
         $this->promo = $promo;
+        $this->role = $role;
     }
 
     public function getId(): int
@@ -106,9 +112,19 @@ class etudiant
         return $this->promo;
     }
 
+    public function getrole(): string
+    {
+        return $this->role;
+    }
+
     public function setPrenom(string $prenom): void
     {
         $this->prenom = $prenom;
+    }
+
+    public function setrole(string $role): void
+    {
+        $this->prenom = $role;
     }
 
     public function setNom(string $nom): void
