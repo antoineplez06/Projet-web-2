@@ -2,7 +2,7 @@
 
 {% block content %}
 
-	<form class="d-flex mt-4 mx-auto w-50" method="GET" action="">
+	<form class="d-flex mt-4 mx-auto w-50" method="GET" action="/offres-an">
 		<input class="form-control me-4 border border-dark border-2" type="search" name="search" value="{{ filtres.search|default('') }}" placeholder="Rechercher par nom d'offre ou entreprise" aria-label="Rechercher une offre"/>
 		<button class="btn btn-outline-secondary" type="submit">Rechercher</button>
 	</form>
@@ -13,8 +13,7 @@
 		</div>
 	{% endif %}
 
-
-
+	
 	{% for offre in offres %}
 		<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white">
 			<h3 class="float-none w-auto fw-bold">{{ offre.nom }}</h3>
