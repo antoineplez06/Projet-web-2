@@ -86,7 +86,7 @@ class OffreController
         $view = Twig::fromRequest($request);
         $idOffre = $args['id'];
 
-        return $view->render($response, 'postuler.html.twig', [
+        return $view->render($response, 'Postuler.html.twig', [
             'id' => $idOffre
         ]);
     }

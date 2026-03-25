@@ -7,6 +7,11 @@
 		<button class="btn btn-outline-secondary" type="submit">Rechercher</button>
 	</form>
 
+	<div class="d-flex justify-content-center mt-3 gap-3">
+		<button class="btn btn-outline-dark bg-secondary text-white fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#filtreModal">Filtrer</button>
+		<a href="/ajout-offre" class="btn btn-success fw-bold">+ Ajouter une offre</a>
+	</div>
+
 	{% if filtres.search or filtres.lieu or filtres.candidats_max %}
 		<div class="text-center mt-3">
 			<a href="/offres" class="btn btn-sm btn-outline-danger">Réinitialiser les filtres</a>
@@ -106,7 +111,7 @@
 						</div>
 
 						<div class="modal-footer">
-							<a href="{{ url_for("page-postuler", { 'id': offre.id }) }}" class="btn btn-primary btn-lg">Postuler maintenant</a>
+							<a href="{{ url_for("page-postuler", { 'id': offre.id }) }}"  class="btn btn-primary btn-lg">Postuler maintenant</a>
 						</div>
 					</div>
 				</div>

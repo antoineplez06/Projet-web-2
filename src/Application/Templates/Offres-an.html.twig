@@ -22,14 +22,6 @@
 			<p class="mt-4 text-muted">Publié le :
 				{{ offre.date_publication }}</p>
 
-			<div class="position-absolute top-0 end-0 mt-3 me-3">
-				<a>
-					<svg class="Wishlist" height="45" fill="none" stroke="black" stroke-width="30" viewbox="0 0 512 512" role="button" style="cursor: pointer;">
-						<path d="M256 472 C256 472 40 312 40 160 C40 72 104 32 168 32 C216 32 256 80 256 80 C256 80 296 32 344 32 C408 32 472 72 472 160 C472 312 256 472 256 472 Z"/>
-					</svg>
-				</a>
-			</div>
-
 			<button type="button" class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-light hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.id }}">
 				Voir l'offre
 			</button>
@@ -70,7 +62,7 @@
 						</div>
 
 						<div class="modal-footer">
-							<a href="/connexion{{ offre.id }}" class="btn btn-primary btn-lg">Postuler maintenant</a>
+							<a href="/connexion" class="btn btn-primary btn-lg">Se connecter pour postuler</a>
 						</div>
 					</div>
 				</div>
