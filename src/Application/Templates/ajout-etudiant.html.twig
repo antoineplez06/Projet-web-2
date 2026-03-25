@@ -1,88 +1,82 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Ajouter un étudiant
-{% endblock %}
+{% block title %}Ajouter un étudiant{% endblock %}
 
 {% block content %}
-	<div class="row justify-content-center">
-		<div class="col-md-6">
-			<div class="card shadow">
-				<div class="card-header bg-primary text-white">
-					<h4 class="mb-0">Nouvel étudiant</h4>
-				</div>
-				<div class="card-body">
-					<form action="/ajout-etudiant" method="POST">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Nouvel étudiant</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('ajout-etudiant') }}" method="POST">
 
-						<div class="mb-3">
-							<label for="prenom" class="form-label">Prénom</label>
-							<input type="text" class="form-control" id="prenom" name="prenom" placeholder="Ex: Tonio" value="{{ prenom }}" required>
-						</div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="prenom" class="form-label">Prénom</label>
+                                <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Ex: Tonio" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="nom" class="form-label">Nom</label>
+                                <input type="text" class="form-control" id="nom" name="nom" placeholder="Ex: Montana" required>
+                            </div>
+                        </div>
 
-						<div class="mb-3">
-							<label for="nom" class="form-label">Nom</label>
-							<input type="text" class="form-control" id="nom" name="nom" placeholder="Ex: Mantana" value="{{ nom }}" required>
-						</div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Adresse Mail</label>
+                            {# Changé 'mail' en 'email' pour correspondre au contrôleur et à l'entité #}
+                            <input type="email" class="form-control" id="email" name="email" placeholder="etudiant@viacesi.fr" required>
+                        </div>
 
-						<div class="mb-3">
-							<label for="mail" class="form-label">Adresse Mail</label>
-							<input type="email" class="form-control" id="mail" name="mail" placeholder="jean.dupont@viacesi.fr" value="{{ mail }}" required>
-						</div>
+                        <div class="mb-3">
+                            <label for="motDePasse" class="form-label">Mot de passe</label>
+                            <input type="password" class="form-control" id="motDePasse" name="motDePasse" required>
+                        </div>
 
-						<div class="mb-3">
-							<label for="campus" class="form-label">Campus</label>
-							<select class="form-control" id="campus" name="campus" required>
-								<option value="">Choisir un campus...</option>
-								<option value="Aix‑en‑Provence">Aix‑en‑Provence</option>
-								<option value="Angoulême">Angoulême</option>
-								<option value="Arras">Arras</option>
-								<option value="Bordeaux">Bordeaux</option>
-								<option value="Brest">Brest</option>
-								<option value="Caen">Caen</option>
-								<option value="Dijon">Dijon</option>
-								<option value="Grenoble">Grenoble</option>
-								<option value="La Rochelle">La Rochelle</option>
-								<option value="Le Mans">Le Mans</option>
-								<option value="Lille">Lille</option>
-								<option value="Lyon">Lyon</option>
-								<option value="Montpellier">Montpellier</option>
-								<option value="Nancy">Nancy</option>
-								<option value="Nantes">Nantes</option>
-								<option value="Nice">Nice</option>
-								<option value="Orléans">Orléans</option>
-								<option value="Paris">Paris</option>
-								<option value="Pau">Pau</option>
-								<option value="Reims">Reims</option>
-								<option value="Rouen">Rouen</option>
-								<option value="Saint‑Nazaire">Saint‑Nazaire</option>
-								<option value="Strasbourg">Strasbourg</option>
-								<option value="Toulouse">Toulouse</option>
-								<option value="Tours">Tours</option>
-							</select>
-						</div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="numeroTelephone" class="form-label">Téléphone</label>
+                                <input type="tel" class="form-control" id="numeroTelephone" name="numeroTelephone" placeholder="06XXXXXXXX" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="genre" class="form-label">Genre</label>
+                                <select class="form-select" id="genre" name="genre" required>
+                                    <option value="" selected disabled>Choisir...</option>
+                                    <option value="M">Masculin</option>
+                                    <option value="F">Féminin</option>
+                                    <option value="Autre">Autre</option>
+                                </select>
+                            </div>
+                        </div>
 
-						<div class="mb-3">
-							<label for="promo" class="form-label">Promotion</label>
-							<input type="text" class="form-control" id="promo" name="promo" placeholder="Ex: 2026-2027..." pattern="[0-9]{4}-[0-9]{4}" value="{{ promo }}" required>
-						</div>
+                        <div class="mb-3">
+                            <label for="dateNaissance" class="form-label">Date de naissance</label>
+                            <input type="date" class="form-control" id="dateNaissance" name="dateNaissance" required>
+                        </div>
 
-						<hr>
+                        <div class="mb-3">
+                            <label for="promo" class="form-label">Promotion</label>
+                            <input type="text" class="form-control" id="promo" name="promo" placeholder="Ex: 2024-2025" pattern="[0-9]{4}-[0-9]{4}" required>
+                        </div>
 
-						<div class="d-flex justify-content-between">
-							<a href="/entreprises" class="btn btn-light">Annuler</a>
-							<button type="submit" class="btn btn-success">Enregistrer</button>
-						</div>
+                        <hr>
 
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('liste-etudiant') }}" class="btn btn-light">Annuler</a>
+                            <button type="submit" class="btn btn-success">Créer l'étudiant</button>
+                        </div>
 
-	{% if success %}
-		<div class="alert alert-success alert-dismissible fade show" role="alert">
-			L'étudiant a été ajoutée avec succès !
-			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-		</div>
-	{% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    {% if success %}
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            L'étudiant a été ajouté avec succès !
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
 {% endblock %}

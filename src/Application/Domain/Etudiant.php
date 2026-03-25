@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 
-#[Entity, Table(name: 'users')]
-final class User
+#[Entity, Table(name: 'etudiant')]
+class etudiant
 {
     #[Id, Column(type: 'integer'), GeneratedValue(strategy: 'AUTO')]
     private int $id;
@@ -37,9 +37,6 @@ final class User
     private DateTimeImmutable $dateNaissance;
 
     #[Column(type: 'string', length: 50)]
-    private string $role;
-
-    #[Column(type: 'string', length: 50)]
     private string $promo;
 
 
@@ -52,7 +49,6 @@ final class User
         string $email,
         string $motDePasse,
         DateTimeImmutable $dateNaissance,
-        string $role,
         string $promo
     ) {
         $this->prenom = $prenom;
@@ -62,7 +58,6 @@ final class User
         $this->email = $email;
         $this->motDePasse = $motDePasse;
         $this->dateNaissance = $dateNaissance;
-        $this->role = $role;
         $this->promo = $promo;
     }
 
@@ -106,13 +101,48 @@ final class User
         return $this->dateNaissance;
     }
 
-    public function getRole(): string
-    {
-        return $this->role;
-    }
-
     public function getpromo(): string
     {
         return $this->promo;
+    }
+
+    public function setPrenom(string $prenom): void
+    {
+        $this->prenom = $prenom;
+    }
+
+    public function setNom(string $nom): void
+    {
+        $this->nom = $nom;
+    }
+
+    public function setNumeroTelephone(string $numeroTelephone): void
+    {
+        $this->numeroTelephone = $numeroTelephone;
+    }
+
+    public function setGenre(string $genre): void
+    {
+        $this->genre = $genre;
+    }
+
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function setMotDePasse(string $motDePasse): void
+    {
+        $this->motDePasse = $motDePasse;
+    }
+
+    public function setDateNaissance(DateTimeImmutable $dateNaissance): void
+    {
+        $this->dateNaissance = $dateNaissance;
+    }
+
+    public function setPromo(string $promo): void
+    {
+        $this->promo = $promo;
     }
 }
