@@ -31,6 +31,7 @@ return function (App $app) {
     $app->get('/ajout-offre', [OffreController::class, 'ajoute'])->setName('ajout-offre');
     $app->post('/ajout-offre', [OffreController::class, 'ajoute'])->setName('ajout-offre');
     $app->get('/postuler/{id}', [OffreController::class, 'afficherFormulairePostuler'])->setName('page-postuler');
+    $app->get('/accueil-co', [HomeController::class, 'accueilCo'])->setName('accueil-co');
 
     /*
     $app->group('/users', function (Group $group) {
