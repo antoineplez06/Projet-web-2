@@ -10,6 +10,7 @@ use App\Application\Controller\HomeController;
 use App\Application\Controller\EntrepriseController;
 use App\Application\Controller\EtudiantController;
 use App\Application\Controller\OffreController;
+use App\Application\Controller\WishlistController;
 
 return function (App $app) {
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
@@ -34,6 +35,10 @@ return function (App $app) {
     $app->post('/ajout-offre', [OffreController::class, 'ajoute'])->setName('ajout-offre');
     $app->get('/postuler/{id}', [OffreController::class, 'afficherFormulairePostuler'])->setName('page-postuler');
     $app->get('/accueil-co', [HomeController::class, 'accueilCo'])->setName('accueil-co');
+    $app->get('/wishlist', [WishlistController::class, 'list'])->setName('wishlist');
+    $app->get('/wishlist/add/{idOffre}', [WishlistController::class, 'add'])->setName('app_wishlist_add');
+    $app->get('/wishlist/remove/{id}', [WishlistController::class, 'remove']);
+    
 
 
     /*
