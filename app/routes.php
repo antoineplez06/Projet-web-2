@@ -28,7 +28,8 @@ return function (App $app) {
     $app->get('/entreprise/edit/{idEntreprise:\d+}', [EntrepriseController::class, 'edit'])->setName('edit-entreprise');
     $app->get('/supprimer-entreprise/{id}', [EntrepriseController::class, 'supprimer'])->setName('supprimer-entreprise');
     $app->post('/supprimer-entreprise/{id}', [EntrepriseController::class, 'supprimer'])->setName('supprimer-entreprise');
-
+    $app->get('/modifier-entreprise/{id}', [EntrepriseController::class, 'modifier'])->setName('modifier-entreprise');
+    $app->post('/modifier-entreprise/{id}', [EntrepriseController::class, 'modifier'])->setName('modifier-entreprise');
 
     $app->get('/etudiants[/{page:\d+}]', [EtudiantController::class, 'liste'])->setName('liste-etudiant');
     $app->get('/ajout-etudiant', [EtudiantController::class, 'ajoute'])->setName('ajout-etudiant');

@@ -22,116 +22,131 @@ class EntrepriseController
     public function liste(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
-    $page = isset($args['page']) ? (int) $args['page'] : 1;
-    $perPage = 5;
-    $offset = ($page - 1) * $perPage;
-
-    
-    $repository = $this->entityManager->getRepository(Entreprise::class);
+        $page = isset($args['page']) ? (int) $args['page'] : 1;
+        $perPage = 5;
+        $offset = ($page - 1) * $perPage;
 
 
-    $entreprisesAffichees = $repository->findBy(
-        [],                         
-        ['id' => 'DESC'],    
-        $perPage,                   
-        $offset                     
-    );
+        $repository = $this->entityManager->getRepository(Entreprise::class);
 
 
-    $totalEntreprises = $repository->count([]);
-    $nombrePages = ceil($totalEntreprises / $perPage);
+        $entreprisesAffichees = $repository->findBy(
+            [],
+            ['id' => 'DESC'],
+            $perPage,
+            $offset
+        );
 
-    return $view->render($response, 'liste-entreprises.html.twig', [
-        'entreprises' => $entreprisesAffichees,
-        'pageActuelle' => $page,
-        'nombrePages' => $nombrePages
-    ]);
+
+        $totalEntreprises = $repository->count([]);
+        $nombrePages = ceil($totalEntreprises / $perPage);
+
+        return $view->render($response, 'liste-entreprises.html.twig', [
+            'entreprises' => $entreprisesAffichees,
+            'pageActuelle' => $page,
+            'nombrePages' => $nombrePages
+        ]);
     }
 
     public function ajoute(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
-    $parsedBody = $request->getParsedBody();
-    $success = false;
+        $parsedBody = $request->getParsedBody();
+        $success = false;
 
-    if ($request->getMethod() === 'POST') {
+        if ($request->getMethod() === 'POST') {
 
-        $nouvelleEntreprise = new Entreprise(
-            $parsedBody['nom'] ?? '',
-            $parsedBody['adresse'] ?? '',
-            $parsedBody['siret'] ?? '',
-            $parsedBody['domaine'] ?? '',
-            $parsedBody['taille'] ?? '',
-        );
+            $nouvelleEntreprise = new Entreprise(
+                $parsedBody['nom'] ?? '',
+                $parsedBody['adresse'] ?? '',
+                $parsedBody['siret'] ?? '',
+                $parsedBody['domaine'] ?? '',
+                $parsedBody['taille'] ?? '',
+            );
 
 
-        $this->entityManager->persist($nouvelleEntreprise);
-        $this->entityManager->flush();
+            $this->entityManager->persist($nouvelleEntreprise);
+            $this->entityManager->flush();
 
-        $success = true;
-    }
+            $success = true;
+        }
 
-    return $view->render($response, 'ajout-entreprise.html.twig', [
-        'success' => $success
-    ]);
+        return $view->render($response, 'ajout-entreprise.html.twig', [
+            'success' => $success
+        ]);
     }
 
     public function listean(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
-    $page = isset($args['page']) ? (int) $args['page'] : 1;
-    $perPage = 5;
-    $offset = ($page - 1) * $perPage;
-
-    
-    $repository = $this->entityManager->getRepository(Entreprise::class);
+        $page = isset($args['page']) ? (int) $args['page'] : 1;
+        $perPage = 5;
+        $offset = ($page - 1) * $perPage;
 
 
-    $entreprisesAffichees = $repository->findBy(
-        [],                         
-        ['id' => 'DESC'],    
-        $perPage,                   
-        $offset                     
-    );
+        $repository = $this->entityManager->getRepository(Entreprise::class);
 
 
-    $totalEntreprises = $repository->count([]);
-    $nombrePages = ceil($totalEntreprises / $perPage);
+        $entreprisesAffichees = $repository->findBy(
+            [],
+            ['id' => 'DESC'],
+            $perPage,
+            $offset
+        );
 
-    return $view->render($response, 'Entreprises-an.html.twig', [
-        'entreprises' => $entreprisesAffichees,
-        'pageActuelle' => $page,
-        'nombrePages' => $nombrePages
-    ]);
+
+        $totalEntreprises = $repository->count([]);
+        $nombrePages = ceil($totalEntreprises / $perPage);
+
+        return $view->render($response, 'Entreprises-an.html.twig', [
+            'entreprises' => $entreprisesAffichees,
+            'pageActuelle' => $page,
+            'nombrePages' => $nombrePages
+        ]);
     }
 
-        public function listeAdmin(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    public function listeAdmin(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
-    $page = isset($args['page']) ? (int) $args['page'] : 1;
-    $perPage = 5;
-    $offset = ($page - 1) * $perPage;
+        $queryParams = $request->getQueryParams();
+        $search = $queryParams['q'] ?? null; // Récupère le terme de recherche
 
-    
-    $repository = $this->entityManager->getRepository(Entreprise::class);
+        $page = isset($args['page']) ? (int) $args['page'] : 1;
+        $perPage = 5;
+        $offset = ($page - 1) * $perPage;
 
+        $repository = $this->entityManager->getRepository(Entreprise::class);
+        $queryBuilder = $repository->createQueryBuilder('e');
 
-    $entreprisesAffichees = $repository->findBy(
-        [],                         
-        ['id' => 'DESC'],    
-        $perPage,                   
-        $offset                     
-    );
+        // Si une recherche est effectuée
+        if ($search) {
+            $queryBuilder->where('e.nom LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
 
+        $queryBuilder->orderBy('e.id', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($perPage);
 
-    $totalEntreprises = $repository->count([]);
-    $nombrePages = ceil($totalEntreprises / $perPage);
+        $entreprisesAffichees = $queryBuilder->getQuery()->getResult();
 
-    return $view->render($response, 'liste-entreprises-admin.html.twig', [
-        'entreprises' => $entreprisesAffichees,
-        'pageActuelle' => $page,
-        'nombrePages' => $nombrePages
-    ]);
+        // Calcul du total pour la pagination (en tenant compte du filtre)
+        $countBuilder = $repository->createQueryBuilder('e')
+            ->select('count(e.id)');
+        if ($search) {
+            $countBuilder->where('e.nom LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+        $totalEntreprises = $countBuilder->getQuery()->getSingleScalarResult();
+
+        $nombrePages = ceil($totalEntreprises / $perPage);
+
+        return $view->render($response, 'liste-entreprises-admin.html.twig', [
+            'entreprises' => $entreprisesAffichees,
+            'pageActuelle' => $page,
+            'nombrePages' => $nombrePages,
+            'searchTerm' => $search // On renvoie le terme pour l'afficher dans l'input
+        ]);
     }
     public function modifier(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
@@ -150,21 +165,10 @@ class EntrepriseController
 
             // On remplit l'objet avec les nouvelles valeurs
             $Entreprise->setNom(trim($data['nom'] ?? ''));
-            $Entreprise->setNumeroTelephone(trim($data['numeroTelephone'] ?? ''));
-            $Entreprise->setGenre(trim($data['genre'] ?? ''));
-            $Entreprise->setEmail(trim($data['email'] ?? ''));
-            $Entreprise->setPromo(trim($data['promo'] ?? ''));
-
-            // On ajoute la gestion du mot de passe
-            if (!empty($data['motDePasse'])) {
-                $Entreprise->setMotDePasse($data['motDePasse']);
-            }
-
-            // On ajoute la gestion de la date
-            if (!empty($data['dateNaissance'])) {
-                $date = new \DateTimeImmutable($data['dateNaissance']);
-                $Entreprise->setDateNaissance($date);
-            }
+            $Entreprise->setAdresse(trim($data['adresse'] ?? ''));
+            $Entreprise->setSiret(trim($data['siret'] ?? ''));
+            $Entreprise->setDomaine(trim($data['domaine'] ?? ''));
+            $Entreprise->setTaille(trim($data['taille'] ?? ''));
 
             // On sauvegarde tout en base de données
             $this->entityManager->flush();
@@ -178,13 +182,13 @@ class EntrepriseController
                 ->withStatus(302);
         }
 
-        return $view->render($response, 'modifier-Entreprise.html.twig', [
+        return $view->render($response, 'modifier-entreprise.html.twig', [
             'Entreprise' => $Entreprise,
             'success' => $success,
 
         ]);
     }
-        public function supprimer(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    public function supprimer(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $id = (int) $args['id'];
         $Entreprise = $this->entityManager->find(Entreprise::class, $id);

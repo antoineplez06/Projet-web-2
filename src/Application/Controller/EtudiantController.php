@@ -25,7 +25,7 @@ class EtudiantController
 
         $Etudiant = $this->entityManager
             ->getRepository(user::class)
-            ->findAll();
+            ->findBy(['role' => 'etudiant']);
 
         $page = isset($args['page']) ? (int) $args['page'] : 1;
         if ($page < 1)
