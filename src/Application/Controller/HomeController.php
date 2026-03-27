@@ -10,7 +10,7 @@ use App\Application\Domain\User;
 class HomeController
 {
     private EntityManager $entityManager;
-    
+
     // Le constructeur reçoit l'EntityManager grâce au container de Slim
     public function __construct(EntityManager $entityManager)
     {
@@ -40,7 +40,7 @@ class HomeController
 
             // 2. Vérifier si l'utilisateur existe et si le mot de passe est correct
             if ($user && password_verify($password, $user->getMotDePasse())) {
-                
+
                 // 3. Initialiser la session
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
@@ -67,13 +67,6 @@ class HomeController
 
     public function accueilCo(Request $request, Response $response, array $args): Response
     {
-        // Sécurité : Vérifier si l'utilisateur est bien connecté
-        if (session_status() === PHP_SESSION_NONE) session_start();
-        
-        if (!isset($_SESSION['user_id'])) {
-            return $response->withHeader('Location', '/connexion')->withStatus(302);
-        }
-
         $view = Twig::fromRequest($request);
         return $view->render($response, 'Accueil-co.html.twig', [
             'user_roles' => $_SESSION['user_roles']

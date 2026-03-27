@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 
-#[Entity, Table(name: 'etudiant')]
+#[Entity, Table(name: 'user')]
 class user
 {
     #[Id, Column(type: 'integer'), GeneratedValue(strategy: 'AUTO')]
@@ -124,7 +124,7 @@ class user
 
     public function setrole(string $role): void
     {
-        $this->prenom = $role;
+        $this->role = $role;
     }
 
     public function setNom(string $nom): void

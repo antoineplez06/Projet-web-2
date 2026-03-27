@@ -4,6 +4,13 @@
 {% endblock %}
 
 {% block content %}
+
+	<form class="d-flex mt-4 mx-auto w-50" method="GET" action="">
+		<input class="form-control me-4 border border-dark border-2" type="search" name="search" value="{{ filtres.search|default('') }}" placeholder="Rechercher une entreprise..." aria-label="Rechercher">
+		<button class="btn btn-outline-secondary" type="submit">Rechercher</button>
+	</form>
+
+
 	<div class="d-flex justify-content-between align-items-center mb-4">
 		<h1>Liste des Entreprises</h1>
 		<a class="btn btn-primary" href="{{ url_for('ajout-entreprise') }}">Ajouter une entreprise</a>
