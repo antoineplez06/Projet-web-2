@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 
-#[Entity, Table(name: 'users')]
-final class User
+#[Entity, Table(name: 'etudiant')]
+class user
 {
     #[Id, Column(type: 'integer'), GeneratedValue(strategy: 'AUTO')]
     private int $id;
@@ -37,10 +37,11 @@ final class User
     private DateTimeImmutable $dateNaissance;
 
     #[Column(type: 'string', length: 50)]
-    private string $role;
+    private string $promo;
+
 
     #[Column(type: 'string', length: 50)]
-    private string $promo;
+    private string $role;
 
 
 
@@ -52,8 +53,8 @@ final class User
         string $email,
         string $motDePasse,
         DateTimeImmutable $dateNaissance,
-        string $role,
-        string $promo
+        string $promo,
+        string $role
     ) {
         $this->prenom = $prenom;
         $this->nom = $nom;
@@ -62,8 +63,8 @@ final class User
         $this->email = $email;
         $this->motDePasse = $motDePasse;
         $this->dateNaissance = $dateNaissance;
-        $this->role = $role;
         $this->promo = $promo;
+        $this->role = $role;
     }
 
     public function getId(): int
@@ -106,13 +107,58 @@ final class User
         return $this->dateNaissance;
     }
 
-    public function getRole(): string
+    public function getpromo(): string
+    {
+        return $this->promo;
+    }
+
+    public function getrole(): string
     {
         return $this->role;
     }
 
-    public function getpromo(): string
+    public function setPrenom(string $prenom): void
     {
-        return $this->promo;
+        $this->prenom = $prenom;
+    }
+
+    public function setrole(string $role): void
+    {
+        $this->prenom = $role;
+    }
+
+    public function setNom(string $nom): void
+    {
+        $this->nom = $nom;
+    }
+
+    public function setNumeroTelephone(string $numeroTelephone): void
+    {
+        $this->numeroTelephone = $numeroTelephone;
+    }
+
+    public function setGenre(string $genre): void
+    {
+        $this->genre = $genre;
+    }
+
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function setMotDePasse(string $motDePasse): void
+    {
+        $this->motDePasse = $motDePasse;
+    }
+
+    public function setDateNaissance(DateTimeImmutable $dateNaissance): void
+    {
+        $this->dateNaissance = $dateNaissance;
+    }
+
+    public function setPromo(string $promo): void
+    {
+        $this->promo = $promo;
     }
 }

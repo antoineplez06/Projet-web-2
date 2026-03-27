@@ -1,0 +1,77 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Modifier un étudiant{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Modifier l'étudiant : {{ etudiant.prenom }} {{ etudiant.nom }}</h4>
+                </div>
+                <div class="card-body">
+                    {# On laisse l'action vide pour poster sur l'URL actuelle qui contient l'ID #}
+                    <form action="" method="POST">
+
+                        <div class="mb-3">
+                            <label for="prenom" class="form-label">Prénom</label>
+                            <input type="text" class="form-control" id="prenom" name="prenom" value="{{ etudiant.prenom }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="nom" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="nom" name="nom" value="{{ etudiant.nom }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Adresse Mail</label>
+                            {# Attention : ton contrôleur cherche 'email', j'ai corrigé le name ci-dessous #}
+                            <input type="email" class="form-control" id="email" name="email" value="{{ etudiant.email }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="genre" class="form-label">Genre</label>
+                            <select class="form-control" id="genre" name="genre">
+                                <option value="M" {{ etudiant.genre == 'M' ? 'selected' : '' }}>Masculin</option>
+                                <option value="F" {{ etudiant.genre == 'F' ? 'selected' : '' }}>Féminin</option>
+                                <option value="Autre" {{ etudiant.genre == 'Autre' ? 'selected' : '' }}>Autre</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="promo" class="form-label">Promotion</label>
+                            <input type="text" class="form-control" id="promo" name="promo" placeholder="Ex: 2026-2027" value="{{ etudiant.promo }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="dateNaissance" class="form-label">Date de Naissance</label>
+                            {# On formate la date pour l'input HTML (Y-m-d) #}
+                            <input type="date" class="form-control" id="dateNaissance" name="dateNaissance" value="{{ etudiant.dateNaissance ? etudiant.dateNaissance|date('Y-m-d') : '' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="motDePasse" class="form-label">Nouveau mot de passe (laisser vide pour ne pas changer)</label>
+                            <input type="password" class="form-control" id="motDePasse" name="motDePasse">
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('liste-etudiant') }}" class="btn btn-light">Annuler</a>
+                            <button type="submit" class="btn btn-success" onclick="history.back()">Enregistrer les modifications</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if success %}
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            Les modifications ont été enregistrées avec succès !
+            <button href="{{ url_for('liste-etudiant') }}" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>
+        </div>
+    {% endif %}
+
+{% endblock %}
