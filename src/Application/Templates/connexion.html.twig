@@ -12,28 +12,28 @@
 <body style="font-family: Inter; height:100vh" class="align-items-center justify-content-center d-flex bg-light">
 
     <form action="/connexion" method="POST" class="w-50">
-        <section class="border border-success border-3 rounded-2 px-5 py-3 bg-white shadow-sm">
+    <section class="border border-success border-3 rounded-2 px-5 py-3 bg-white shadow-sm">
+        <h1 class="text-center fs-1 mb-4 fw-bold">Connexion</h1>
 
-            <h1 class="text-center fs-1 mb-4 fw-bold" style="font-family:'Trebuchet MS', sans-serif">Connexion</h1>
+        {# AJOUTE CECI POUR VOIR L'ERREUR #}
+        {% if error %}
+            <div class="alert alert-danger text-center">{{ error }}</div>
+        {% endif %}
 
-            <div class="input-box position-relative mb-4">
-                <input type="text" name="identifiant" placeholder="Identifiant" class="border border-dark border-2 form-control rounded-pill px-3 py-2" required>
-            </div>
+        <div class="input-box mb-4">
+            {# Vérifie bien name="email" #}
+            <input type="text" name="email" placeholder="Email" class="form-control rounded-pill border-2 border-dark px-3" required>
+        </div>
 
-            <div class="input-box position-relative mb-4">
-                <input type="password" name="password" placeholder="Mot de passe" class="border border-dark border-2 form-control rounded-pill px-3 py-2" required>
-            </div>
+        <div class="input-box mb-4">
+            <input type="password" name="password" placeholder="Mot de passe" class="form-control rounded-pill border-2 border-dark px-3" required>
+        </div>
 
-            <div>
-                <a class="d-flex text-dark justify-content-start mb-4 text-decoration-none" href="#">Mot de passe oublié ?</a>
-            </div>
-
-            <button type="submit" class="form-control rounded-pill px-4 py-2 bg-success text-white fw-bold w-25">
-                Se connecter
-            </button>
-
-        </section>
-    </form>
+        <button type="submit" class="btn btn-success rounded-pill fw-bold w-100">
+            Se connecter
+        </button>
+    </section>
+</form>
 
 </body>
 </html>
