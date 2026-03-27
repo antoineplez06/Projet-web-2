@@ -41,7 +41,9 @@
 							<td class="text-end px-3">
 								<div class="btn-group">
 									<a href="#" class="btn btn-sm btn-outline-info">Voir</a>
-									<a href="#" class="btn btn-sm btn-outline-danger">Supprimer</a>
+									<form action="{{ url_for('supprimer-entreprise', { 'id': ent.id }) }}" method="POST" class="d-inline" onsubmit="return confirm('Supprimer cette etudiant ?')">
+										<button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+									</form>
 								</div>
 							</td>
 						</tr>

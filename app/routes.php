@@ -25,6 +25,9 @@ return function (App $app) {
     $app->get('/ajout-entreprise', [EntrepriseController::class, 'ajoute'])->setName('ajout-entreprise');
     $app->post('/ajout-entreprise', [EntrepriseController::class, 'ajoute'])->setName('ajout-entreprise');
     $app->get('/entreprise/edit/{idEntreprise:\d+}', [EntrepriseController::class, 'edit'])->setName('edit-entreprise');
+    $app->get('/supprimer-entreprise/{id}', [EntrepriseController::class, 'supprimer'])->setName('supprimer-entreprise');
+    $app->post('/supprimer-entreprise/{id}', [EntrepriseController::class, 'supprimer'])->setName('supprimer-entreprise');
+
 
     $app->get('/etudiants[/{page:\d+}]', [EtudiantController::class, 'liste'])->setName('liste-etudiant');
     $app->get('/ajout-etudiant', [EtudiantController::class, 'ajoute'])->setName('ajout-etudiant');
@@ -33,7 +36,7 @@ return function (App $app) {
     $app->post('/modifier-etudiant/{id}', [EtudiantController::class, 'modifier'])->setName('modifier-etudiant');
     $app->get('/supprimer-etudiant/{id}', [EtudiantController::class, 'supprimer'])->setName('supprimer-etudiant');
     $app->post('/supprimer-etudiant/{id}', [EtudiantController::class, 'supprimer'])->setName('supprimer-etudiant');
-    
+
     $app->get('/connexion', [HomeController::class, 'connexion'])->setName('connexion');
     $app->post('/connexion', [HomeController::class, 'connexion'])->setName('connexion');
     $app->get('/offres[/{page:\d+}]', [OffreController::class, 'liste'])->setName('Offres');
@@ -45,7 +48,7 @@ return function (App $app) {
     $app->get('/wishlist', [WishlistController::class, 'list'])->setName('wishlist');
     $app->get('/wishlist/add/{idOffre}', [WishlistController::class, 'add'])->setName('app_wishlist_add');
     $app->get('/wishlist/remove/{id}', [WishlistController::class, 'remove']);
-    
+
     $app->get('/deconnexion', [HomeController::class, 'deconnexion'])->setName('deconnexion');
 
 

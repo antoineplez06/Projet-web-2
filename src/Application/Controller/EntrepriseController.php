@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
+use Slim\Routing\RouteContext;
 
 class EntrepriseController
 {
@@ -132,5 +133,72 @@ class EntrepriseController
         'nombrePages' => $nombrePages
     ]);
     }
-}
+    public function modifier(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $view = Twig::fromRequest($request);
+        $id = (int) $args['id'];
+        $Entreprise = $this->entityManager->find(Entreprise::class, $id);
 
+        if (!$Entreprise) {
+            return $response->withStatus(404);
+        }
+
+        $success = false;
+
+        if ($request->getMethod() === 'POST') {
+            $data = $request->getParsedBody();
+
+            // On remplit l'objet avec les nouvelles valeurs
+            $Entreprise->setNom(trim($data['nom'] ?? ''));
+            $Entreprise->setNumeroTelephone(trim($data['numeroTelephone'] ?? ''));
+            $Entreprise->setGenre(trim($data['genre'] ?? ''));
+            $Entreprise->setEmail(trim($data['email'] ?? ''));
+            $Entreprise->setPromo(trim($data['promo'] ?? ''));
+
+            // On ajoute la gestion du mot de passe
+            if (!empty($data['motDePasse'])) {
+                $Entreprise->setMotDePasse($data['motDePasse']);
+            }
+
+            // On ajoute la gestion de la date
+            if (!empty($data['dateNaissance'])) {
+                $date = new \DateTimeImmutable($data['dateNaissance']);
+                $Entreprise->setDateNaissance($date);
+            }
+
+            // On sauvegarde tout en base de données
+            $this->entityManager->flush();
+            $success = true;
+
+            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+            $url = $routeParser->urlFor('entreprises-admin');
+
+            return $response
+                ->withHeader('Location', $url)
+                ->withStatus(302);
+        }
+
+        return $view->render($response, 'modifier-Entreprise.html.twig', [
+            'Entreprise' => $Entreprise,
+            'success' => $success,
+
+        ]);
+    }
+        public function supprimer(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $id = (int) $args['id'];
+        $Entreprise = $this->entityManager->find(Entreprise::class, $id);
+
+        if ($Entreprise) {
+            $this->entityManager->remove($Entreprise);
+            $this->entityManager->flush();
+        }
+
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+        $url = $routeParser->urlFor('entreprises-admin');
+
+        return $response
+            ->withHeader('Location', $url)
+            ->withStatus(302);
+    }
+}
