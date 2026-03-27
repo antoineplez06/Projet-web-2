@@ -1,0 +1,62 @@
+{% extends "base-admin.html.twig" %}
+
+{% block title %}Modifier une entreprise{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Modifier l'entreprise : {{ Entreprise.nom }}</h4>
+                </div>
+                <div class="card-body">
+                    {# L'action reste vide pour poster sur l'URL actuelle #}
+                    <form action="" method="POST">
+
+                        <div class="mb-3">
+                            <label for="nom" class="form-label">Nom de l'entreprise</label>
+                            <input type="text" class="form-control" id="nom" name="nom" value="{{ Entreprise.nom }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="adresse" class="form-label">Adresse postale</label>
+                            <input type="text" class="form-control" id="adresse" name="adresse" value="{{ Entreprise.adresse }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="siret" class="form-label">Numéro SIRET</label>
+                            <input type="text" class="form-control" id="siret" name="siret" value="{{ Entreprise.siret }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="domaine" class="form-label">Domaine d'activité</label>
+                            <input type="text" class="form-control" id="domaine" name="domaine" value="{{ Entreprise.domaine }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="taille" class="form-label">Taille de l'entreprise</label>
+                            <input type="text" class="form-control" id="taille" name="taille" value="{{ Entreprise.taille }}" required>
+
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('entreprises-admin') }}" class="btn btn-light">Annuler</a>
+                            <button type="submit" class="btn btn-success">Enregistrer les modifications</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if success %}
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            Les informations de l'entreprise ont été mises à jour !
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+
+{% endblock %}

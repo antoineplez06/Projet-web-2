@@ -2,7 +2,7 @@
 
 
 
-namespace App\Application\Domain; 
+namespace App\Application\Domain;
 
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping\Column;
@@ -78,5 +78,38 @@ final class Entreprise
     {
         return $this->taille;
     }
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom;
 
+        return $this;
+    }
+
+    public function setAdresse(string $adresse): self
+    {
+        $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    public function setSiret(string $siret): self
+    {
+        $this->siret = $siret;
+
+        return $this;
+    }
+
+    public function setDomaine(string $domaine): self
+    {
+        $this->domaine = $domaine;
+
+        return $this;
+    }
+
+    public function setTaille(string $taille): self
+    {
+        $this->taille = $taille;
+
+        return $this;
+    }
 }

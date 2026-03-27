@@ -133,57 +133,46 @@ class EntrepriseController
         'nombrePages' => $nombrePages
     ]);
     }
-    public function modifier(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
-    {
-        $view = Twig::fromRequest($request);
-        $id = (int) $args['id'];
-        $Entreprise = $this->entityManager->find(Entreprise::class, $id);
+        public function modifier(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+        {
+            $view = Twig::fromRequest($request);
+            $id = (int) $args['id'];
+            $Entreprise = $this->entityManager->find(Entreprise::class, $id);
 
-        if (!$Entreprise) {
-            return $response->withStatus(404);
-        }
-
-        $success = false;
-
-        if ($request->getMethod() === 'POST') {
-            $data = $request->getParsedBody();
-
-            // On remplit l'objet avec les nouvelles valeurs
-            $Entreprise->setNom(trim($data['nom'] ?? ''));
-            $Entreprise->setNumeroTelephone(trim($data['numeroTelephone'] ?? ''));
-            $Entreprise->setGenre(trim($data['genre'] ?? ''));
-            $Entreprise->setEmail(trim($data['email'] ?? ''));
-            $Entreprise->setPromo(trim($data['promo'] ?? ''));
-
-            // On ajoute la gestion du mot de passe
-            if (!empty($data['motDePasse'])) {
-                $Entreprise->setMotDePasse($data['motDePasse']);
+            if (!$Entreprise) {
+                return $response->withStatus(404);
             }
 
-            // On ajoute la gestion de la date
-            if (!empty($data['dateNaissance'])) {
-                $date = new \DateTimeImmutable($data['dateNaissance']);
-                $Entreprise->setDateNaissance($date);
+            $success = false;
+
+            if ($request->getMethod() === 'POST') {
+                $data = $request->getParsedBody();
+
+                // On remplit l'objet avec les nouvelles valeurs
+                $Entreprise->setNom(trim($data['nom'] ?? ''));
+                $Entreprise->setAdresse(trim($data['adresse'] ?? ''));
+                $Entreprise->setSiret(trim($data['siret'] ?? ''));
+                $Entreprise->setDomaine(trim($data['domaine'] ?? ''));
+                $Entreprise->setTaille(trim($data['taille'] ?? ''));
+
+                // On sauvegarde tout en base de données
+                $this->entityManager->flush();
+                $success = true;
+
+                $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+                $url = $routeParser->urlFor('entreprises-admin');
+
+                return $response
+                    ->withHeader('Location', $url)
+                    ->withStatus(302);
             }
 
-            // On sauvegarde tout en base de données
-            $this->entityManager->flush();
-            $success = true;
+            return $view->render($response, 'modifier-entreprise.html.twig', [
+                'Entreprise' => $Entreprise,
+                'success' => $success,
 
-            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-            $url = $routeParser->urlFor('entreprises-admin');
-
-            return $response
-                ->withHeader('Location', $url)
-                ->withStatus(302);
+            ]);
         }
-
-        return $view->render($response, 'modifier-Entreprise.html.twig', [
-            'Entreprise' => $Entreprise,
-            'success' => $success,
-
-        ]);
-    }
         public function supprimer(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $id = (int) $args['id'];
