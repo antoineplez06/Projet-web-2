@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="/assets/css/style-Accueil.css">
+		<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+	</head>
+
+	<title>
+		{% block title %}StageHub
+		{% endblock %}
+	</title>
+</html>
+<html lang="fr">
+
+	<body class="bg-light" style="font-family: Inter;">
+
+		<header class="header d-flex justify-content-start align-items-center gap-4">
+
+			<img src="/assets/images/logo.png" alt="StageHub" style="height:100px;">
+
+			<nav class="d-flex justify-content-center align-items-start gap-4 list-unstyled fs-5">
+				<a class="text-decoration-none text-dark" href="/accueil-co">
+					<li>Page d'accueil</li>
+				</a>
+				<li class="Rechercher dropdown">
+					<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						Rechercher
+					</a>
+					<ul class="dropdown-menu">
+						<li>
+							<a class="dropdown-item" href="/offres">Offres</a>
+						</li>
+						<li>
+							<a class="dropdown-item" href="/entreprises">Entreprises</a>
+						</li>
+						<li>
+							<a class="dropdown-item" href="/etudiants">Etudiants</a>
+						</li>
+						<li>
+							<a class="dropdown-item" href="/etudiants">Pilotes</a>
+						</li>
+					</ul>
+				</li>
+			</nav>
+
+			<div class="d-flex justify-content-end align-items-center ms-auto gap-0">
+
+				<a href="" class="d-flex align-items-center text-center text-dark text-decoration-none" id="Profildéroulant" data-bs-toggle="dropdown" aria-expanded="false">
+					<svg class="Profil me-5" height="58" stroke="black" stroke-width="35" viewbox="0 0 512 512" aria-label="Profil" xmlns="http://www.w3.org/2000/svg">
+						<circle cx="256" cy="160" r="96"/>
+						<path d="M96 416
+																								                                      C96 336 176 304 256 304
+																								                                      C336 304 416 336 416 416"/>
+					</svg>
+				</a>
+
+
+				<ul class="dropdown-menu">
+					<li class="text-center fw-bold border-bottom border-dark px-2">Nom Prénom</li>
+					<li>
+						<a class="dropdown-item text-center text-danger fw-bold" href="{{ url_for('deconnexion') }}">
+							Me déconnecter
+						</a>
+					</li>
+				</ul>
+			</div>
+		</header>
+		{% block content %}{% endblock %}
+		<footer id="footer" class="text-center">
+			{% block footer %}
+				&copy; Copyright 2011 by
+				<a href="https://example.com/">you</a>.
+			{% endblock %}
+		</footer>
+	</body>
+</html>
