@@ -11,6 +11,7 @@ use App\Application\Controller\EntrepriseController;
 use App\Application\Controller\EtudiantController;
 use App\Application\Controller\OffreController;
 use App\Application\Controller\WishlistController;
+use App\Application\Controller\CandidatureController;
 
 return function (App $app) {
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
@@ -45,8 +46,9 @@ return function (App $app) {
     $app->get('/wishlist', [WishlistController::class, 'list'])->setName('wishlist');
     $app->get('/wishlist/add/{idOffre}', [WishlistController::class, 'add'])->setName('app_wishlist_add');
     $app->get('/wishlist/remove/{id}', [WishlistController::class, 'remove']);
-    
     $app->get('/deconnexion', [HomeController::class, 'deconnexion'])->setName('deconnexion');
+    $app->get('/candidatures', [CandidatureController::class, 'list'])->setName('candidatures');
+    $app->post('/candidature/enregistrer/{id}', [CandidatureController::class, 'add'])->setName('action-enregistrer-candidature');
 
 
     /*

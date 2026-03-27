@@ -6,50 +6,70 @@
 
 <hr class="border border-dark opacity-100">
 
-
 <h2 class="mt-2 fw-bold ms-4">Réponses</h2>
 
-<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative">
- <h3 class="float-none w-auto fw-bold">Nom de l'offre</h3>
- <p class="mb-0" >Nom de l'entreprise</p>
- <p class="mb-0">Lieu de l'entreprise</p>
- <p class="mt-5">Date de publication</p>
+{% set a_reponse = false %}
+{% for candidature in candidatures %}
+    {% if candidature.statut == 'Accepté' or candidature.statut == 'Refusé' %}
+        {% set a_reponse = true %}
+        {% set offre = candidature.offre %}
+        
+        <div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white">
+            <h3 class="float-none w-auto fw-bold">{{ offre.nom }}</h3>
+            <p class="mb-0">{{ offre.entreprise }}</p>
+            <p class="mb-0">{{ offre.lieu }}</p>
+            <p class="mt-5">Publié le : {{ offre.date|date("d/m/Y") }}</p>
 
- <h3 class="border border-dark px-5 py-2 position-absolute top-0 end-0 mt-3 me-3 bg-danger">Refusé</h3>
- <button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-success">Voir l'offre</button>
- </div>
+        <h3 class="border border-dark px-5 py-2 position-absolute top-0 end-0 mt-3 me-3 
+            {% if candidature.statut == 'Refusé' %}
+                bg-danger
+            {% elseif candidature.statut == 'Accepté' %}
+                bg-success
+            {% else %}
+                bg-light
+            {% endif %}">
+            
+            {{ candidature.statut }}
+        </h3>
+            
+            <button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-success text-white" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.idOffre }}">
+                Voir l'offre
+            </button>
+        </div>
+    {% endif %}
+{% endfor %}
 
- <div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative">
- <h3 class="float-none w-auto fw-bold">Nom de l'offre</h3>
- <p class="mb-0" >Nom de l'entreprise</p>
- <p class="mb-0">Lieu de l'entreprise</p>
- <p class="mt-5">Date de publication</p>
+{% if not a_reponse %}
+    <p class="ms-5 text-muted">Aucune réponse pour le moment.</p>
+{% endif %}
 
- <h3 class="border border-dark px-5 py-2 position-absolute top-0 end-0 mt-3 me-3 bg-success">Accepté</h3>
- <button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-success">Voir l'offre</button>
- </div>
+<h2 class="mt-5 fw-bold ms-4">En cours de traitement</h2>
 
+{% set a_en_cours = false %}
+{% for candidature in candidatures %}
+    {% if candidature.statut == 'En cours de traitement' %}
+        {% set a_en_cours = true %}
+        {% set offre = candidature.offre %}
 
- <h2 class="mt-5 fw-bold ms-4">En cours de traitement</h2>
+        <div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white">
+            <h3 class="float-none w-auto fw-bold">{{ offre.nom }}</h3>
+            <p class="mb-0">{{ offre.entreprise }}</p>
+            <p class="mb-0">{{ offre.lieu }}</p>
+            <p class="mt-5">Publié le : {{ offre.date|date("d/m/Y") }}</p>
 
- <div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative">
- <h3 class="float-none w-auto fw-bold">Nom de l'offre</h3>
- <p class="mb-0" >Nom de l'entreprise</p>
- <p class="mb-0">Lieu de l'entreprise</p>
- <p class="mt-5">Date de publication</p>
+            <h3 class="border border-dark px-4 py-2 position-absolute top-0 end-0 mt-3 me-3 bg-light" style="font-size: 1.2rem;">
+                En cours de traitement
+            </h3>
+            
+            <button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-success text-white" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.idOffre }}">
+                Voir l'offre
+            </button>
+        </div>
+    {% endif %}
+{% endfor %}
 
- <h3 class="border border-dark px-5 py-2 position-absolute top-0 end-0 mt-3 me-3 bg-light">En cours de traitement</h3>
- <button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-success">Voir l'offre</button>
- </div>
+{% if not a_en_cours %}
+    <p class="ms-5 text-muted">Aucune candidature en cours.</p>
+{% endif %}
 
- <div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative">
- <h3 class="float-none w-auto fw-bold">Nom de l'offre</h3>
- <p class="mb-0" >Nom de l'entreprise</p>
- <p class="mb-0">Lieu de l'entreprise</p>
- <p class="mt-5">Date de publication</p>
-
- <h3 class="border border-dark px-5 py-2 position-absolute top-0 end-0 mt-3 me-3 bg-light">En cours de traitement</h3>
- <button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-success">Voir l'offre</button>
- </div>
-
- {% endblock %}
+{% endblock %}

@@ -1,26 +1,27 @@
 {% extends "base.html.twig" %}
 
 {% block content %}
+<h1 class="mt-4 text-center fw-bold">Postuler à l'offre n°{{ id }}</h1>
+<hr class="border border-dark">
 
-<h1 class="mt-4 text-center fw-bold">Nom de l'offre</h1>
-  <hr class="border border-dark">
+<form action="/candidature/enregistrer/{{ id }}" method="POST">
+    
+    <div class="mb-3 w-50 mx-auto">
+        <label class="form-label fw-bold">Lettre de motivation</label>
+        <textarea class="form-control border border-dark" rows="10" name="lettre" placeholder="Écrivez votre message ici..."></textarea>
+    </div>
 
-<div class="mb-3 w-50 mx-auto">
-  <label class="form-label fw-bold">Lettre de motivation</label>
-  <textarea class="form-control" rows="20" placeholder="Écrivez votre message"></textarea>
-</div>
+    <div class="mb-3 w-50 mx-auto">
+        <label for="cv" class="form-label fw-bold">Choisir votre CV</label>
+        <input class="form-control border border-dark" type="file" id="cv" name="cv">
+    </div>
 
-<div class="mb-3 w-50 mx-auto">
-      <label for="cv" class="form-label fw-bold">Choisir votre CV</label>
-      <input class="form-control border border-dark" type="file" id="cv" name="cv" accept=".pdf,.doc,.docx">
-</div>
+    <div class="text-center mt-4 mb-5">
+        <button type="submit" class="btn btn-primary btn-lg px-5">
+            Postuler maintenant
+        </button>
+        <a href="/offres" class="btn btn-outline-secondary btn-lg ms-3">Annuler</a>
+    </div>
 
-<div class="text-end" style="margin-right: 350px;">
-<a href="Accueil-co.html.twig">
-<button type="submit" class="btn btn-primary text-end">
-  Postuler
-</button>
-</a>
-</div>
-
+</form>
 {% endblock %}
