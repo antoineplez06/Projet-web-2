@@ -29,41 +29,40 @@ class HomeController
     {
         $twig = Twig::fromRequest($request);
 
-        // Si l'utilisateur soumet le formulaire (POST)
         if ($request->getMethod() === 'POST') {
             $data = $request->getParsedBody();
             $email = $data['email'] ?? '';
             $password = $data['password'] ?? '';
 
-            // 1. Chercher l'utilisateur dans la base de données via Doctrine
-            $user = $this->entityManager->getRepository(user::class)->findOneBy(['email' => $email]);
+            // 1. On cherche l'utilisateur (on utilise User::class avec majuscule)
+            $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
-            // 2. Vérifier si l'utilisateur existe et si le mot de passe est correct
+            // 2. LA VÉRIFICATION
+            // Pour tester si c'est ça, remplace temporairement par : if ($user && $password === $user->getMotDePasse())
             if ($user && password_verify($password, $user->getMotDePasse())) {
 
-                // 3. Initialiser la session
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
                 }
 
-                // 4. Stocker les informations importantes
                 $_SESSION['user_id'] = $user->getId();
                 $_SESSION['user_email'] = $user->getEmail();
-                $_SESSION['user_roles'] = $user->getrole(); // Récupère le tableau JSON de PHPMyAdmin
+                $_SESSION['user_roles'] = $user->getrole();
 
                 // Redirection vers l'accueil connecté
                 return $response->withHeader('Location', '/accueil-co')->withStatus(302);
             }
 
-            // Si erreur, on réaffiche le formulaire avec un message d'erreur
+            // 3. Si on arrive ici, c'est que ça a échoué (on renvoie l'erreur)
             return $twig->render($response, 'Connexion.html.twig', [
-                'error' => 'Identifiants incorrects.'
+                'error' => 'Identifiants incorrects ou mot de passe non haché.'
             ]);
         }
 
-        // Affichage simple du formulaire (GET)
         return $twig->render($response, 'Connexion.html.twig');
     }
+
+
 
     public function accueilCo(Request $request, Response $response, array $args): Response
     {
