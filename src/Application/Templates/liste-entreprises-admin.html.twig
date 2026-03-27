@@ -9,6 +9,18 @@
 		<a class="btn btn-primary" href="{{ url_for('ajout-entreprise') }}">Ajouter une entreprise</a>
 	</div>
 
+	<div class="row mb-3">
+        <div class="col-md-6">
+            <form method="GET" action="{{ url_for('entreprises-admin') }}" class="d-flex">
+                <input type="text" name="q" class="form-control me-2" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
+                <button type="submit" class="btn btn-outline-secondary">Rechercher</button>
+                {% if searchTerm %}
+                    <a href="{{ url_for('entreprises-admin') }}" class="btn btn-link">Réinitialiser</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
 	<div class="card shadow-sm">
 		<div class="card-body p-0">
 			<table class="table table-hover mb-0">
