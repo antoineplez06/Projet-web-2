@@ -22,7 +22,6 @@ class WishlistController
     {
         $view = Twig::fromRequest($request);
         
-        // On récupère toutes les entrées de la wishlist
         $favoris = $this->entityManager->getRepository(Wishlist::class)->findAll();
 
         return $view->render($response, 'Wishlist-list.html.twig', [
@@ -34,11 +33,9 @@ class WishlistController
     {
         $idOffre = (int)$args['idOffre'];
         
-        // 1. On récupère l'objet Offre correspondant
         $offre = $this->entityManager->getRepository(Offre::class)->find($idOffre);
 
         if ($offre) {
-            // 2. On crée l'entité Wishlist avec l'objet Offre
             $wishlist = new Wishlist($offre);
             $this->entityManager->persist($wishlist);
             $this->entityManager->flush();
@@ -49,10 +46,8 @@ class WishlistController
 
     public function remove(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
 {
-    // On récupère l'ID de la ligne wishlist (id_wishlist)
     $id = (int)$args['id'];
 
-    // On cherche l'élément dans la base
     $item = $this->entityManager->getRepository(Wishlist::class)->find($id);
 
     if ($item) {
@@ -60,7 +55,6 @@ class WishlistController
         $this->entityManager->flush();
     }
 
-    // On redirige vers la page wishlist pour voir le changement
     return $response->withHeader('Location', '/wishlist')->withStatus(302);
 }
 }
