@@ -16,6 +16,18 @@
 		<a class="btn btn-primary" href="{{ url_for('ajout-entreprise') }}">Ajouter une entreprise</a>
 	</div>
 
+	<div class="row mb-3">
+        <div class="col-md-6">
+            <form method="GET" action="{{ url_for('entreprises-admin') }}" class="d-flex">
+                <input type="text" name="q" class="form-control me-2" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
+                <button type="submit" class="btn btn-outline-secondary">Rechercher</button>
+                {% if searchTerm %}
+                    <a href="{{ url_for('entreprises-admin') }}" class="btn btn-link">Réinitialiser</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
 	<div class="card shadow-sm">
 		<div class="card-body p-0">
 			<table class="table table-hover mb-0">
@@ -47,7 +59,6 @@
 							</td>
 							<td class="text-end px-3">
 								<div class="btn-group">
-									<a href="#" class="btn btn-sm btn-outline-info">Voir</a>
 									<a href="{{ url_for('modifier-entreprise', { 'id': ent.id }) }}" class="btn btn-sm btn-outline-warning">Modifier</a>
 									<form action="{{ url_for('supprimer-entreprise', { 'id': ent.id }) }}" method="POST" class="d-inline" onsubmit="return confirm('Supprimer cette etudiant ?')">
 										<button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
