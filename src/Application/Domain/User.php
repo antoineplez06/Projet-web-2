@@ -3,6 +3,7 @@
 namespace App\Application\Domain;
 
 use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -40,8 +41,8 @@ class user
     private string $promo;
 
 
-    #[Column(type: 'string', length: 50)]
-    private string $role;
+    #[Column(type: Types::STRING, enumType: Role::class)]
+    private Role $role = Role::ETUDIANT;
 
 
 
@@ -112,7 +113,7 @@ class user
         return $this->promo;
     }
 
-    public function getrole(): string
+    public function getRole(): Role
     {
         return $this->role;
     }
@@ -122,10 +123,7 @@ class user
         $this->prenom = $prenom;
     }
 
-    public function setrole(string $role): void
-    {
-        $this->role = $role;
-    }
+   public function setRole(Role $role): void { $this->role = $role; }
 
     public function setNom(string $nom): void
     {

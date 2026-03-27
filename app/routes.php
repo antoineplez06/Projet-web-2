@@ -12,12 +12,19 @@ use App\Application\Controller\EtudiantController;
 use App\Application\Controller\OffreController;
 use App\Application\Controller\WishlistController;
 use App\Application\Controller\CandidatureController;
+use App\Application\Middleware\LoggedMiddleware;
+use App\Application\Middleware\RoleCheckMiddleware;
+use App\Application\Domain\Role;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Slim\Routing\RouteCollectorProxy;
 
 return function (App $app) {
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
         // CORS Pre-Flight OPTIONS Request Handler
         return $response;
     });
+
+    $factory = $app->getContainer()->get(ResponseFactoryInterface::class);
 
     $app->get('/', [HomeController::class, 'home']);
     $app->get('/entreprises[/{page:\d+}]', [EntrepriseController::class, 'liste'])->setName('liste-entreprises');
@@ -31,13 +38,16 @@ return function (App $app) {
     $app->get('/modifier-entreprise/{id}', [EntrepriseController::class, 'modifier'])->setName('modifier-entreprise');
     $app->post('/modifier-entreprise/{id}', [EntrepriseController::class, 'modifier'])->setName('modifier-entreprise');
 
-    $app->get('/etudiants[/{page:\d+}]', [EtudiantController::class, 'liste'])->setName('liste-etudiant');
-    $app->get('/ajout-etudiant', [EtudiantController::class, 'ajoute'])->setName('ajout-etudiant');
-    $app->post('/ajout-etudiant', [EtudiantController::class, 'ajoute'])->setName('ajout-etudiant');
-    $app->get('/modifier-etudiant/{id}', [EtudiantController::class, 'modifier'])->setName('modifier-etudiant');
-    $app->post('/modifier-etudiant/{id}', [EtudiantController::class, 'modifier'])->setName('modifier-etudiant');
-    $app->get('/supprimer-etudiant/{id}', [EtudiantController::class, 'supprimer'])->setName('supprimer-etudiant');
-    $app->post('/supprimer-etudiant/{id}', [EtudiantController::class, 'supprimer'])->setName('supprimer-etudiant');
+    $app->group('/etudiant', function (RouteCollectorProxy $group) use ($factory) {
+        $group->get('/inscription', [EtudiantController::class, 'ajoute'])->setName('ajoute');
+        $group->post('/inscription', [EtudiantController::class, 'ajoute']);
+        $group->get('/liste', [EtudiantController::class, 'liste'])->setName('liste-etudiants');
+
+        $group->get('/modifier/{id}', [EtudiantController::class, 'modifier']);
+        $group->post('/modifier/{id}', [EtudiantController::class, 'modifier']);
+        $group->post('/supprimer/{id}', [EtudiantController::class, 'supprimer']);
+
+    })->add(new RoleCheckMiddleware($factory, [Role::PILOTE, Role::ADMIN]));
 
     $app->get('/connexion', [HomeController::class, 'connexion'])->setName('connexion');
     $app->post('/connexion', [HomeController::class, 'connexion'])->setName('connexion');
@@ -53,6 +63,10 @@ return function (App $app) {
     $app->get('/deconnexion', [HomeController::class, 'deconnexion'])->setName('deconnexion');
     $app->get('/candidatures', [CandidatureController::class, 'list'])->setName('candidatures');
     $app->post('/candidature/enregistrer/{id}', [CandidatureController::class, 'add'])->setName('action-enregistrer-candidature');
+
+    // --- Login ---
+    $app->get('/Login', [LoginController::class, 'login']);
+    $app->post('/Login', [LoginController::class, 'login']);
 
 
     /*

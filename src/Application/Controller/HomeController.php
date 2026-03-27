@@ -61,7 +61,7 @@ class HomeController
 
         return $twig->render($response, 'Connexion.html.twig');
     }
-
+    
 
 
     public function accueilCo(Request $request, Response $response, array $args): Response
