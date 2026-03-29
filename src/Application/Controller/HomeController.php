@@ -39,7 +39,8 @@ class HomeController
 
             // 2. LA VÉRIFICATION
             // Pour tester si c'est ça, remplace temporairement par : if ($user && $password === $user->getMotDePasse())
-            if ($user && password_verify($password, $user->getMotDePasse())) {
+            // Remplace ton IF actuel par celui-ci :
+if ($user && (password_verify($password, $user->getMotDePasse()) || $password === $user->getMotDePasse())) {
 
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
