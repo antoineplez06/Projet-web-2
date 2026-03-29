@@ -94,7 +94,6 @@ class EtudiantController
                 ->withHeader('Location', $url)
                 ->withStatus(302);
 
-            $success = true;
         }
 
         return $view->render($response, 'ajout-etudiant.html.twig', [

@@ -14,6 +14,8 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Slim\Psr7\Factory\ResponseFactory;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -51,6 +53,9 @@ return function (ContainerBuilder $containerBuilder) {
             $connection = DriverManager::getConnection($doctrine['connection']);
 
             return new EntityManager($connection, $config);
+        },
+        ResponseFactoryInterface::class => function (ContainerInterface $container) {
+            return $container->get(ResponseFactory::class);
         },
 
     ]);

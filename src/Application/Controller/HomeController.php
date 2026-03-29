@@ -62,7 +62,7 @@ if ($user && (password_verify($password, $user->getMotDePasse()) || $password ==
 
         return $twig->render($response, 'Connexion.html.twig');
     }
-
+    
 
 
     public function accueilCo(Request $request, Response $response, array $args): Response
