@@ -21,7 +21,7 @@ class RoleCheckMiddleware
         $user = $request->getAttribute('user') ?? null;
         if($user === null || !in_array($user->getRole(), $this->roles)) {
             $response = $this->responseFactory->createResponse();
-            return $response->withHeader('Location', '/Login')->withStatus(302);
+            return $response->withHeader('Location', '/connexion')->withStatus(302);
         }
         return $handler->handle($request);
     }

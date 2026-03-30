@@ -7,6 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Views\Twig;
 use Doctrine\ORM\EntityManager;
 use App\Application\Domain\User;
+
 class HomeController
 {
     private EntityManager $entityManager;
@@ -29,51 +30,62 @@ class HomeController
     {
         $twig = Twig::fromRequest($request);
 
+        // --- SI LA REQUÊTE EST EN POST (Soumission du formulaire) ---
         if ($request->getMethod() === 'POST') {
             $data = $request->getParsedBody();
             $email = $data['email'] ?? '';
             $password = $data['password'] ?? '';
 
-            // 1. On cherche l'utilisateur (on utilise User::class avec majuscule)
+            // 1. On cherche l'utilisateur
             $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
-            // 2. LA VÉRIFICATION
-            // Pour tester si c'est ça, remplace temporairement par : if ($user && $password === $user->getMotDePasse())
-            // Remplace ton IF actuel par celui-ci :
-if ($user && (password_verify($password, $user->getMotDePasse()) || $password === $user->getMotDePasse())) {
+            // 2. Vérification du mot de passe
+            if ($user && (password_verify($password, $user->getMotDePasse()) || $password === $user->getMotDePasse())) {
 
-                if (session_status() === PHP_SESSION_NONE) {
-                    session_start();
-                }
-
+                // Hydratation de la session
                 $_SESSION['user_id'] = $user->getId();
                 $_SESSION['user_email'] = $user->getEmail();
                 $_SESSION['user_roles'] = $user->getRole();
 
-                // Redirection vers l'accueil connecté
-                return $response->withHeader('Location', '/accueil-co')->withStatus(302);
+                // Définir l'URL de redirection par défaut
+                $redirectUrl = '/accueil-co';
+
+                // Vérifier si on a mémorisé une page précédente en session
+                if (!empty($_SESSION['redirect_after_login'])) {
+                    $redirectUrl = $_SESSION['redirect_after_login'];
+                    // On nettoie la variable pour ne pas boucler indéfiniment dessus plus tard
+                    unset($_SESSION['redirect_after_login']);
+                }
+
+                // Redirection vers la page précédente ou l'accueil connecté
+                return $response->withHeader('Location', $redirectUrl)->withStatus(302);
             }
 
-            // 3. Si on arrive ici, c'est que ça a échoué (on renvoie l'erreur)
+            // Échec de la connexion
             return $twig->render($response, 'authentification/connexion.html.twig', [
                 'error' => 'Identifiants incorrects ou mot de passe non haché.'
             ]);
         }
 
+        // --- SI LA REQUÊTE EST EN GET (Affichage du formulaire de connexion) ---
+
+        // On capture la page d'où vient l'utilisateur (HTTP_REFERER)
+        $referer = $request->getHeaderLine('Referer');
+
+        // On s'assure que le referer existe et qu'il n'est pas déjà la page de connexion
+        if ($referer && !str_contains($referer, '/connexion')) {
+            $_SESSION['redirect_after_login'] = $referer;
+        }
+
         return $twig->render($response, 'authentification/connexion.html.twig');
     }
-    
-
 
     public function accueilCo(Request $request, Response $response, array $args): Response
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        // Puisque UserTwigMiddleware ne voit pas la session, on récupère l'user manuellement
+        // La session est déjà démarrée dans public/index.php, on y accède directement
         $userId = $_SESSION['user_id'] ?? null;
         $user = null;
+        
         if ($userId) {
             $user = $this->entityManager->getRepository(User::class)->find($userId);
         }
@@ -87,14 +99,11 @@ if ($user && (password_verify($password, $user->getMotDePasse()) || $password ==
 
     public function deconnexion(Request $request, Response $response): Response
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
         // Nettoyage complet de la session
         $_SESSION = [];
         session_destroy();
 
+        // Redirection vers l'accueil public
         return $response->withHeader('Location', '/')->withStatus(302);
     }
 }

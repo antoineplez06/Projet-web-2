@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Importation des classes nécessaires
 use App\Application\ResponseEmitter\ResponseEmitter;
 use App\Application\Settings\SettingsInterface;
