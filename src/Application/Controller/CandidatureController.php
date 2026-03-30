@@ -20,7 +20,7 @@ class CandidatureController
     public function list(Request $request, Response $response): Response {
         $view = Twig::fromRequest($request);
         $candidatures = $this->entityManager->getRepository(Candidature::class)->findAll();
-        return $view->render($response, 'Candidatures.html.twig', [
+        return $view->render($response, 'candidature/liste.html.twig', [
             'candidatures' => $candidatures
         ]);
     }

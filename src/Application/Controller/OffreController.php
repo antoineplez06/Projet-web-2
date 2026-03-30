@@ -42,7 +42,7 @@ class OffreController
         $totalOffres = $repository->count([]);
         $nombrePages = ceil($totalOffres / $perPage);
 
-        return $view->render($response, 'Offres.html.twig', [
+        return $view->render($response, 'offre/liste.html.twig', [
             'offres' => $offresAffichees,
             'pageActuelle' => $page,
             'nombrePages' => $nombrePages,
@@ -76,7 +76,7 @@ class OffreController
             $success = true;
         }
 
-        return $view->render($response, 'ajout-offre.html.twig', [
+        return $view->render($response, 'offre/ajout.html.twig', [
             'success' => $success
         ]);
     }
@@ -86,7 +86,7 @@ class OffreController
         $view = Twig::fromRequest($request);
         $idOffre = $args['id'];
 
-        return $view->render($response, 'Postuler.html.twig', [
+        return $view->render($response, 'offre/postuler.html.twig', [
             'id' => $idOffre
         ]);
     }
@@ -114,7 +114,7 @@ class OffreController
         $totalOffres = $repository->count([]);
         $nombrePages = ceil($totalOffres / $perPage);
 
-        return $view->render($response, 'Offres-an.html.twig', [
+        return $view->render($response, 'offre/liste_anonyme.html.twig', [
             'offres' => $offresAffichees,
             'pageActuelle' => $page,
             'nombrePages' => $nombrePages,

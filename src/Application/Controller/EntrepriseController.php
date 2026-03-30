@@ -41,7 +41,7 @@ class EntrepriseController
         $totalEntreprises = $repository->count([]);
         $nombrePages = ceil($totalEntreprises / $perPage);
 
-        return $view->render($response, 'liste-entreprises.html.twig', [
+        return $view->render($response, 'entreprise/liste.html.twig', [
             'entreprises' => $entreprisesAffichees,
             'pageActuelle' => $page,
             'nombrePages' => $nombrePages
@@ -71,7 +71,7 @@ class EntrepriseController
             $success = true;
         }
 
-        return $view->render($response, 'ajout-entreprise.html.twig', [
+        return $view->render($response, 'entreprise/ajout.html.twig', [
             'success' => $success
         ]);
     }
@@ -98,7 +98,7 @@ class EntrepriseController
         $totalEntreprises = $repository->count([]);
         $nombrePages = ceil($totalEntreprises / $perPage);
 
-        return $view->render($response, 'Entreprises-an.html.twig', [
+        return $view->render($response, 'entreprise/liste_anonyme.html.twig', [
             'entreprises' => $entreprisesAffichees,
             'pageActuelle' => $page,
             'nombrePages' => $nombrePages
@@ -141,7 +141,7 @@ class EntrepriseController
 
         $nombrePages = ceil($totalEntreprises / $perPage);
 
-        return $view->render($response, 'liste-entreprises-admin.html.twig', [
+        return $view->render($response, 'entreprise/liste_admin.html.twig', [
             'entreprises' => $entreprisesAffichees,
             'pageActuelle' => $page,
             'nombrePages' => $nombrePages,
@@ -182,7 +182,7 @@ class EntrepriseController
                 ->withStatus(302);
         }
 
-        return $view->render($response, 'modifier-entreprise.html.twig', [
+        return $view->render($response, 'entreprise/modifier.html.twig', [
             'Entreprise' => $Entreprise,
             'success' => $success,
 

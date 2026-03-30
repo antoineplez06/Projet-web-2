@@ -2,6 +2,7 @@
 
 namespace App\Application\Controller;
 use App\Application\Domain\User;
+use App\Application\Domain\Role;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
@@ -38,7 +39,7 @@ class EtudiantController
         $offset = ($page - 1) * $perPage;
         $etudiantAffichees = array_slice($Etudiant, $offset, $perPage);
 
-        return $view->render($response, 'liste-etudiant.html.twig', [
+        return $view->render($response, 'etudiant/liste.html.twig', [
             'etudiant' => $etudiantAffichees,
             'pageActuelle' => $page,
             'nombrePages' => $nombrePages
@@ -61,7 +62,7 @@ class EtudiantController
             $email = trim($data['email'] ?? '');
             $mdp = password_hash(trim($data['motDePasse'] ?? ''), PASSWORD_BCRYPT); // Toujours hasher les MDP !
             $promo = trim($data['promo'] ?? '');
-            $role = 'etudiant';
+            $role = Role::ETUDIANT;
 
             // Gestion de la date de naissance (DateTimeImmutable requis)
             $dateNaissanceRaw = $data['dateNaissance'] ?? 'now';
@@ -96,7 +97,7 @@ class EtudiantController
 
         }
 
-        return $view->render($response, 'ajout-etudiant.html.twig', [
+        return $view->render($response, 'etudiant/ajout.html.twig', [
             "success" => $success
         ]);
     }
@@ -148,7 +149,7 @@ class EtudiantController
                 ->withStatus(302);
         }
 
-        return $view->render($response, 'modifier-etudiant.html.twig', [
+        return $view->render($response, 'etudiant/modifier.html.twig', [
             'etudiant' => $Etudiant,
             'success' => $success,
 

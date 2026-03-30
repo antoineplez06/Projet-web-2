@@ -24,7 +24,7 @@ class WishlistController
         
         $favoris = $this->entityManager->getRepository(Wishlist::class)->findAll();
 
-        return $view->render($response, 'Wishlist-list.html.twig', [
+        return $view->render($response, 'favoris/liste.html.twig', [
             'favoris' => $favoris
         ]);
     }

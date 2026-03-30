@@ -37,6 +37,6 @@ class LoginController
             }
         }
         $view = Twig::fromRequest($request);
-        return $view->render($response, 'connexion.html.twig', $model);
+        return $view->render($response, 'authentification/connexion.html.twig', $model);
     }
 }

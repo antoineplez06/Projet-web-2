@@ -65,8 +65,7 @@ return function (App $app) {
     $app->post('/candidature/enregistrer/{id}', [CandidatureController::class, 'add'])->setName('action-enregistrer-candidature');
 
     // --- Login ---
-    $app->get('/Login', [LoginController::class, 'login']);
-    $app->post('/Login', [LoginController::class, 'login']);
+    // (Routes /connexion are handled by HomeController)
 
 
     /*
