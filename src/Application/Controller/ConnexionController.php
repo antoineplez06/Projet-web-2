@@ -25,7 +25,7 @@ class ConnexionController
 
         // 2. Si l'utilisateur est déjà connecté, on le redirige directement vers l'accueil connecté
         if (isset($_SESSION['user_id'])) {
-            return $response->withHeader('Location', '/accueil-co')->withStatus(302);
+            return $response->withHeader('Location', '/accueil')->withStatus(302);
         }
 
         // 3. On prépare les données pour Twig. 
@@ -50,7 +50,7 @@ class ConnexionController
                 $_SESSION['user_id'] = $user->getId();
                 
                 // Redirection vers l'accueil connecté
-                return $response->withHeader('Location', '/accueil-co')->withStatus(302);
+                return $response->withHeader('Location', '/accueil')->withStatus(302);
             } else {
                 $model['error'] = "Mot de passe incorrect";
             }

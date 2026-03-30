@@ -1,7 +1,7 @@
 <?php
 namespace App\Application\Middleware;
-use App\Domain\Role;
-use App\Domain\User;
+use App\Application\Domain\Role;
+use App\Application\Domain\User;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
