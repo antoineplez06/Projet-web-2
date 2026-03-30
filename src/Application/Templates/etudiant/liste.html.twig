@@ -6,7 +6,7 @@
 {% block content %}
 	<div class="d-flex justify-content-between align-items-center mb-4">
 		<h1>Liste des étudiants</h1>
-		<a class="btn btn-primary" href="{{ url_for('ajout-etudiant') }}">Ajouter un étudiant</a>
+		<a class="btn btn-primary" href="{{ url_for('ajoute') }}">Ajouter un étudiant</a>
 	</div>
 
 	<div class="card shadow-sm">
@@ -64,17 +64,17 @@
 		<ul class="pagination">
 
 			<li class="page-item {{ pageActuelle <= 1 ? 'disabled' }}">
-				<a class="page-link" href="{{ url_for('liste-etudiant', { 'page': pageActuelle - 1 }) }}">Précédent</a>
+				<a class="page-link" href="{{ url_for('liste-etudiants', { 'page': pageActuelle - 1 }) }}">Précédent</a>
 			</li>
 
 			{% for i in 1..nombrePages %}
 				<li class="page-item {{ i == pageActuelle ? 'active' }}">
-					<a class="page-link" href="{{ url_for('liste-etudiant', { 'page': i }) }}">{{ i }}</a>
+					<a class="page-link" href="{{ url_for('liste-etudiants', { 'page': i }) }}">{{ i }}</a>
 				</li>
 			{% endfor %}
 
 			<li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' }}">
-				<a class="page-link" href="{{ url_for('liste-etudiant', { 'page': pageActuelle + 1 }) }}">Suivant</a>
+				<a class="page-link" href="{{ url_for('liste-etudiants', { 'page': pageActuelle + 1 }) }}">Suivant</a>
 			</li>
 
 		</ul>

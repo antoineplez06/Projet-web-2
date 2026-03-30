@@ -12,6 +12,7 @@ use App\Application\Controller\EtudiantController;
 use App\Application\Controller\OffreController;
 use App\Application\Controller\WishlistController;
 use App\Application\Controller\CandidatureController;
+use App\Application\Controller\ConnexionController;
 use App\Application\Middleware\LoggedMiddleware;
 use App\Application\Middleware\RoleCheckMiddleware;
 use App\Application\Domain\Role;
@@ -49,8 +50,8 @@ return function (App $app) {
 
     })->add(new RoleCheckMiddleware($factory, [Role::PILOTE, Role::ADMIN]));
 
-    $app->get('/connexion', [HomeController::class, 'connexion'])->setName('connexion');
-    $app->post('/connexion', [HomeController::class, 'connexion'])->setName('connexion');
+    $app->get('/connexion', [ConnexionController::class, 'connexion'])->setName('connexion');
+    $app->post('/connexion', [ConnexionController::class, 'connexion'])->setName('connexion');
     $app->get('/offres[/{page:\d+}]', [OffreController::class, 'liste'])->setName('Offres');
     $app->get('/offres-an[/{page:\d+}]', [OffreController::class, 'listean'])->setName('offres-an');
     $app->get('/ajout-offre', [OffreController::class, 'ajoute'])->setName('ajout-offre');
@@ -64,14 +65,11 @@ return function (App $app) {
     $app->get('/candidatures', [CandidatureController::class, 'list'])->setName('candidatures');
     $app->post('/candidature/enregistrer/{id}', [CandidatureController::class, 'add'])->setName('action-enregistrer-candidature');
 
-    // --- Login ---
-    // (Routes /connexion are handled by HomeController)
-
-
-    /*
-    $app->group('/users', function (Group $group) {
-        $group->get('', ListUsersAction::class);
-        $group->get('/{id}', ViewUserAction::class);
+    $app->get('/debug-session', function(Request $request, Response $response) {
+        $response->getBody()->write(json_encode([
+            'session_id' => session_id(),
+            'session_data' => $_SESSION
+        ]));
+        return $response->withHeader('Content-Type', 'application/json');
     });
-    */
 };

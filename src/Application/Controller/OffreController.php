@@ -9,7 +9,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
 use DateTimeImmutable;
 
-
 class OffreController
 {
     private EntityManager $entityManager;
@@ -31,7 +30,7 @@ class OffreController
 
         $repository = $this->entityManager->getRepository(Offre::class);
 
-        // Récupération des offres avec pagination (comme dans EntrepriseController)
+        // Récupération des offres avec pagination
         $offresAffichees = $repository->findBy(
             [],
             ['idOffre' => 'DESC'], // Tri par ID décroissant
@@ -58,7 +57,6 @@ class OffreController
 
         if ($request->getMethod() === 'POST') {
             // Création de l'entité Offre avec les données du formulaire
-            // On respecte les champs du screenshot
             $nouvelleOffre = new Offre(
                 $parsedBody['nom'] ?? '',
                 $parsedBody['duree'] ?? '',
@@ -91,7 +89,7 @@ class OffreController
         ]);
     }
 
-        public function listean(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    public function listean(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
 
@@ -103,7 +101,7 @@ class OffreController
 
         $repository = $this->entityManager->getRepository(Offre::class);
 
-        // Récupération des offres avec pagination (comme dans EntrepriseController)
+        // Récupération des offres avec pagination
         $offresAffichees = $repository->findBy(
             [],
             ['idOffre' => 'DESC'], // Tri par ID décroissant
@@ -121,5 +119,4 @@ class OffreController
             'filtres'        => $params
         ]);
     }
-
 }
