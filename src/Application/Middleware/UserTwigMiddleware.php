@@ -1,6 +1,6 @@
 <?php
 namespace App\Application\Middleware;
-use App\Domain\User;
+use App\Application\Domain\User;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;

@@ -55,7 +55,7 @@ class user
         string $motDePasse,
         DateTimeImmutable $dateNaissance,
         string $promo,
-        string $role
+        Role $role
     ) {
         $this->prenom = $prenom;
         $this->nom = $nom;
