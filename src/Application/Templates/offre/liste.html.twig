@@ -9,7 +9,7 @@
 
 	{% if filtres.search or filtres.lieu or filtres.candidats_max %}
 		<div class="text-center mt-3">
-			<a href="/offres" class="btn btn-sm btn-outline-danger">Réinitialiser les filtres</a>
+			<a href="{{ url_for('Offres') }}" class="btn btn-sm btn-outline-danger">Réinitialiser les filtres</a>
 		</div>
 	{% endif %}
 
@@ -59,7 +59,7 @@
 				{{ offre.date|date("d/m/Y") }}
 			</p>
 			<div class="position-absolute top-0 end-0 mt-3 me-3">
-				<a href="/wishlist/add/{{ offre.idOffre }}" class="btn-wishlist">
+				<a href="{{ url_for('app_wishlist_add', { 'idOffre': offre.idOffre }) }}" class="btn-wishlist">
 					<svg class="Wishlist" height="45" fill="none" stroke="black" stroke-width="30" viewbox="0 0 512 512" role="button" style="cursor: pointer;">
 						<path d="M256 472 C256 472 40 312 40 160 C40 72 104 32 168 32 C216 32 256 80 256 80 C256 80 296 32 344 32 C408 32 472 72 472 160 C472 312 256 472 256 472 Z"/>
 					</svg>

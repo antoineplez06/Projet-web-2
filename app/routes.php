@@ -26,7 +26,7 @@ return function (App $app) {
 
     $factory = $app->getContainer()->get(ResponseFactoryInterface::class);
 
-    $app->get('/', [HomeController::class, 'home']);
+    $app->get('/', [HomeController::class, 'home'])->setName('home');
     $app->get('/entreprises[/{page:\d+}]', [EntrepriseController::class, 'liste'])->setName('liste-entreprises');
     $app->get('/entreprises-an[/{page:\d+}]', [EntrepriseController::class, 'listean'])->setName('entreprises-an');
     $app->get('/entreprises-admin[/{page:\d+}]', [EntrepriseController::class, 'listeAdmin'])->setName('entreprises-admin');
@@ -43,9 +43,9 @@ return function (App $app) {
         $group->post('/inscription', [EtudiantController::class, 'ajoute']);
         $group->get('/liste', [EtudiantController::class, 'liste'])->setName('liste-etudiants');
 
-        $group->get('/modifier/{id}', [EtudiantController::class, 'modifier']);
+        $group->get('/modifier/{id}', [EtudiantController::class, 'modifier'])->setName('modifier-etudiant');
         $group->post('/modifier/{id}', [EtudiantController::class, 'modifier']);
-        $group->post('/supprimer/{id}', [EtudiantController::class, 'supprimer']);
+        $group->post('/supprimer/{id}', [EtudiantController::class, 'supprimer'])->setName('supprimer-etudiant');
 
     })->add(new RoleCheckMiddleware($factory, [Role::PILOTE, Role::ADMIN]));
 
@@ -59,7 +59,7 @@ return function (App $app) {
     $app->get('/accueil-co', [HomeController::class, 'accueilCo'])->setName('accueil-co');
     $app->get('/wishlist', [WishlistController::class, 'list'])->setName('wishlist');
     $app->get('/wishlist/add/{idOffre}', [WishlistController::class, 'add'])->setName('app_wishlist_add');
-    $app->get('/wishlist/remove/{id}', [WishlistController::class, 'remove']);
+    $app->get('/wishlist/remove/{id}', [WishlistController::class, 'remove'])->setName('wishlist-remove');
     $app->get('/deconnexion', [HomeController::class, 'deconnexion'])->setName('deconnexion');
     $app->get('/candidatures', [CandidatureController::class, 'list'])->setName('candidatures');
     $app->post('/candidature/enregistrer/{id}', [CandidatureController::class, 'add'])->setName('action-enregistrer-candidature');

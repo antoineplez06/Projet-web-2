@@ -9,7 +9,7 @@
 
 	{% if filtres.search or filtres.lieu or filtres.candidats_max %}
 		<div class="text-center mt-3">
-			<a href="/offres" class="btn btn-sm btn-outline-danger">Réinitialiser les filtres</a>
+			<a href="{{ url_for('offres-an') }}" class="btn btn-sm btn-outline-danger">Réinitialiser les filtres</a>
 		</div>
 	{% endif %}
 
@@ -62,7 +62,7 @@
 						</div>
 
 						<div class="modal-footer">
-							<a href="/connexion" class="btn btn-primary btn-lg">Se connecter pour postuler</a>
+							<a href="{{ url_for('connexion') }}" class="btn btn-primary btn-lg">Se connecter pour postuler</a>
 						</div>
 					</div>
 				</div>

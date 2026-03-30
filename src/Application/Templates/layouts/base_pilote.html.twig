@@ -23,7 +23,7 @@
 			<img src="/assets/images/logo.png" alt="StageHub" style="height:100px;">
 
 			<nav class="d-flex justify-content-center align-items-start gap-4 list-unstyled fs-5">
-				<a class="text-decoration-none text-dark" href="/accueil-co">
+				<a class="text-decoration-none text-dark" href="{{ url_for('accueil-co') }}">
 					<li>Page d'accueil</li>
 				</a>
 				<li class="Rechercher dropdown">
@@ -32,13 +32,13 @@
 					</a>
 					<ul class="dropdown-menu">
 						<li>
-							<a class="dropdown-item" href="/offres">Offres</a>
+							<a class="dropdown-item" href="{{ url_for('Offres') }}">Offres</a>
 						</li>
 						<li>
-							<a class="dropdown-item" href="/entreprises">Entreprises</a>
+							<a class="dropdown-item" href="{{ url_for('liste-entreprises') }}">Entreprises</a>
 						</li>
 						<li>
-							<a class="dropdown-item" href="/etudiants">Etudiants</a>
+							<a class="dropdown-item" href="{{ url_for('liste-etudiants') }}">Etudiants</a>
 						</li>
 					</ul>
 				</li>

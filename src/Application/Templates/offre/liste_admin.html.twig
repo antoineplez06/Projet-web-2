@@ -9,12 +9,12 @@
 
 	<div class="d-flex justify-content-center mt-3 gap-3">
 		<button class="btn btn-outline-dark bg-secondary text-white fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#filtreModal">Filtrer</button>
-		<a href="/ajout-offre" class="btn btn-success fw-bold">+ Ajouter une offre</a>
+		<a href="{{ url_for('ajout-offre') }}" class="btn btn-success fw-bold">+ Ajouter une offre</a>
 	</div>
 
 	{% if filtres.search or filtres.lieu or filtres.candidats_max %}
 		<div class="text-center mt-3">
-			<a href="/offres" class="btn btn-sm btn-outline-danger">Réinitialiser les filtres</a>
+			<a href="{{ url_for('Offres') }}" class="btn btn-sm btn-outline-danger">Réinitialiser les filtres</a>
 		</div>
 	{% endif %}
 

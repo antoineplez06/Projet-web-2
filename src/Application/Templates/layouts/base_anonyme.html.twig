@@ -17,7 +17,7 @@
         <img src="/assets/images/logo.png" alt="StageHub" style="height:100px;">
 
                 <nav class="d-flex justify-content-center align-items-start gap-4 list-unstyled fs-5">
-                    <a class="text-decoration-none text-dark" href="/">
+                    <a class="text-decoration-none text-dark" href="{{ url_for('home') }}">
                      <li>Page d'accueil</li>
                     </a>
                      <li class="Rechercher dropdown">
@@ -25,13 +25,13 @@
                         Rechercher
                         </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/offres-an">Offres</a></li>
-                                <li><a class="dropdown-item" href="/entreprises-an">Entreprises</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('offres-an') }}">Offres</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('entreprises-an') }}">Entreprises</a></li>
                             </ul>
                     </li>
                 </nav>
 
-                <a href="/connexion" title="connexion" class="ms-auto list-unstyled fs-5 btn btn-outline-primary rounded-pill px-3 py-2 pe-4 me-4 text-dark border border-dark" style="background-color: #8FB4B0">
+                <a href="{{ url_for('connexion') }}" title="connexion" class="ms-auto list-unstyled fs-5 btn btn-outline-primary rounded-pill px-3 py-2 pe-4 me-4 text-dark border border-dark" style="background-color: #8FB4B0">
                 Connexion</a>
 
                 

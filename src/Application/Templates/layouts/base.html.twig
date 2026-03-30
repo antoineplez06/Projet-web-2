@@ -19,7 +19,7 @@
 			<img src="/assets/images/logo.png" alt="StageHub" style="height:100px;">
 
 			<nav class="d-flex justify-content-center align-items-start gap-4 list-unstyled fs-5">
-				<a class="text-decoration-none text-dark" href="{{ user ? '/accueil-co' : '/' }}">
+				<a class="text-decoration-none text-dark" href="{{ user ? url_for('accueil-co') : url_for('home') }}">
 					<li>Page d'accueil</li>
 				</a>
 
@@ -29,10 +29,10 @@
 					</a>
 					<ul class="dropdown-menu">
 						<li>
-							<a class="dropdown-item" href="{{ user ? '/offres' : '/offres-an' }}">Offres</a>
+							<a class="dropdown-item" href="{{ user ? url_for('Offres') : url_for('offres-an') }}">Offres</a>
 						</li>
 						<li>
-							<a class="dropdown-item" href="{{ user ? '/entreprises' : '/entreprises-an' }}">Entreprises</a>
+							<a class="dropdown-item" href="{{ user ? url_for('liste-entreprises') : url_for('entreprises-an') }}">Entreprises</a>
 						</li>
 					</ul>
 				</li>
@@ -41,13 +41,13 @@
 			<div class="d-flex justify-content-end align-items-center ms-auto gap-3">
 
 				{% if user %}
-					<a href="/wishlist">
+					<a href="{{ url_for('wishlist') }}">
 						<svg class="Wishlist" height="45" fill="none" stroke="black" stroke-width="30" viewbox="0 0 512 512">
 							<path d="M256 472 C256 472 40 312 40 160 C40 72 104 32 168 32 C216 32 256 80 256 80 C256 80 296 32 344 32 C408 32 472 72 472 160 C472 312 256 472 256 472 Z"/>
 						</svg>
 					</a>
 
-					<a href="/candidatures">
+					<a href="{{ url_for('candidatures') }}">
 						<svg class="Candidatures" height="50" fill="none" stroke="black" stroke-width="30" viewbox="0 0 512 512">
 							<path d="M160 64 H352 L416 128 V448 H160 Z M352 64 V128 H416 M112 96 L208 288 L176 320 L80 128 Z"/>
 						</svg>
@@ -72,7 +72,7 @@
 					</div>
 
 				{% else %}
-					<a href="/connexion" class="fs-5 btn rounded-pill px-4 py-2 me-4 text-dark border border-dark" style="background-color: #8FB4B0">
+					<a href="{{ url_for('connexion') }}" class="fs-5 btn rounded-pill px-4 py-2 me-4 text-dark border border-dark" style="background-color: #8FB4B0">
 						Connexion
 					</a>
 				{% endif %}
