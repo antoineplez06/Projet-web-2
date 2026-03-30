@@ -12,6 +12,7 @@ class HomeController
 {
     private EntityManager $entityManager;
 
+    // Le constructeur reçoit l'EntityManager grâce au container de Slim
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -19,20 +20,12 @@ class HomeController
 
     public function home(Request $request, Response $response, array $args): Response
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        // Si l'utilisateur est déjà connecté, on l'envoie direct sur son accueil
-        if (isset($_SESSION['user_id'])) {
-            return $response->withHeader('Location', '/accueil-co')->withStatus(302);
-        }
-
         $view = Twig::fromRequest($request);
         return $view->render($response, 'accueil/index_anonyme.html.twig', [
             'name' => 'John',
         ]);
     }
+
 
     public function accueilCo(Request $request, Response $response, array $args): Response
     {
@@ -40,15 +33,12 @@ class HomeController
             session_start();
         }
         
+        // Puisque UserTwigMiddleware ne voit pas la session, on récupère l'user manuellement
         $userId = $_SESSION['user_id'] ?? null;
-        
-        // Sécurité : si quelqu'un tape /accueil-co sans être connecté, retour à la connexion
-        if (!$userId) {
-            return $response->withHeader('Location', '/connexion')->withStatus(302);
+        $user = null;
+        if ($userId) {
+            $user = $this->entityManager->getRepository(User::class)->find($userId);
         }
-
-        // On récupère l'utilisateur
-        $user = $this->entityManager->getRepository(User::class)->find($userId);
 
         $view = Twig::fromRequest($request);
         return $view->render($response, 'accueil/index.html.twig', [
@@ -59,10 +49,6 @@ class HomeController
 
     public function deconnexion(Request $request, Response $response): Response
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
         // Nettoyage complet de la session
         $_SESSION = [];
         session_destroy();
