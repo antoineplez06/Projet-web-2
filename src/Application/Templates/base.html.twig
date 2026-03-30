@@ -16,7 +16,7 @@
         <img src="/assets/images/logo.png" alt="StageHub" style="height:100px;">
 
         <nav class="d-flex justify-content-center align-items-start gap-4 list-unstyled fs-5">
-            <a class="text-decoration-none text-dark" href="{{ '/accueil-co' if user else '/' }}">
+            <a class="text-decoration-none text-dark" href="{{user ? '/accueil-co' : '/'}}">
                 <li>Page d'accueil</li>
             </a>
             
@@ -26,10 +26,10 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a class="dropdown-item" href="{{ '/offres' if user else '/offres-an' }}">Offres</a>
+                        <a class="dropdown-item" href="{{ user ? '/offres' : '/offres-an' }}">Offres</a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="{{ '/entreprises' if user else '/entreprises-an' }}">Entreprises</a>
+                        <a class="dropdown-item" href="{{user ? '/entreprises' : '/entreprises-an' }}">Entreprises</a>
                     </li>
                 </ul>
             </li>
