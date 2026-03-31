@@ -79,17 +79,17 @@
 		<nav aria-label="Page navigation" class="mt-4">
 			<ul class="pagination justify-content-center">
 				<li class="page-item {{ pageActuelle <= 1 ? 'disabled' }}">
-					<a class="page-link" href="{{ url_for('liste-entreprises', { 'page': pageActuelle - 1 }) }}">Précédent</a>
+					<a class="page-link" href="{{ url_for('entreprises-admin', { 'page': pageActuelle - 1 }) }}">Précédent</a>
 				</li>
 
 				{% for i in 1..nombrePages %}
 					<li class="page-item {{ i == pageActuelle ? 'active' }}">
-						<a class="page-link" href="{{ url_for('liste-entreprises', { 'page': i }) }}">{{ i }}</a>
+						<a class="page-link" href="{{ url_for('entreprises-admin', { 'page': i }) }}">{{ i }}</a>
 					</li>
 				{% endfor %}
 
 				<li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' }}">
-					<a class="page-link" href="{{ url_for('liste-entreprises', { 'page': pageActuelle + 1 }) }}">Suivant</a>
+					<a class="page-link" href="{{ url_for('entreprises-admin', { 'page': pageActuelle + 1 }) }}">Suivant</a>
 				</li>
 			</ul>
 		</nav>

@@ -30,8 +30,13 @@ class Offre
     #[Column(type: 'string', length: 255)]
     private string $exigenceEtude;
 
-    #[Column(type: 'string', length: 255)]
-    private string $entreprise;
+    /**
+     * RELATION : Plusieurs offres pour une seule entreprise
+     * inversedBy="offres" doit correspondre au nom de la variable dans Entreprise.php
+     */
+    #[ManyToOne(targetEntity: Entreprise::class, inversedBy: 'offres')]
+    #[JoinColumn(name: 'id_entreprise', referencedColumnName: 'id', nullable: false)]
+    private Entreprise $entreprise; // CHANGÉ : de string à Entreprise (Objet)
 
     #[Column(type: 'date_immutable')]
     private DateTimeImmutable $date;
@@ -53,7 +58,7 @@ class Offre
         string $nom,
         string $duree,
         string $exigenceEtude,
-        string $entreprise,
+        Entreprise $entreprise, // CHANGÉ : On passe l'objet Entreprise
         DateTimeImmutable $date,
         float $remuneration,
         string $description,
@@ -70,60 +75,31 @@ class Offre
         $this->nombreEtudiantPostule = 0;
     }
 
-    public function getIdOffre(): int
-    {
-        return $this->idOffre;
-    }
 
-    public function getNom(): string
-    {
-        return $this->nom;
-    }
+    // --- GETTERS ---
 
-    public function getDuree(): string
-    {
-        return $this->duree;
-    }
+    public function getIdOffre(): int { return $this->idOffre; }
+    public function getNom(): string { return $this->nom; }
+    public function getDuree(): string { return $this->duree; }
+    public function getNombreEtudiantPostule(): int { return $this->nombreEtudiantPostule; }
+    public function getExigenceEtude(): string { return $this->exigenceEtude; }
 
-    public function getNombreEtudiantPostule(): int
-    {
-        return $this->nombreEtudiantPostule;
-    }
 
-    public function getExigenceEtude(): string
-    {
-        return $this->exigenceEtude;
-    }
-
-    public function getEntreprise(): string
+    public function getEntreprise(): Entreprise 
     {
         return $this->entreprise;
     }
 
-    public function getDate(): DateTimeImmutable
-    {
-        return $this->date;
-    }
-
-    public function getRemuneration(): float
-    {
-        return $this->remuneration;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    public function getPresentielOuDistanciel(): string
-    {
-        return $this->presentielOuDistanciel;
-    }
-
+    public function getDate(): DateTimeImmutable { return $this->date; }
+    public function getRemuneration(): float { return $this->remuneration; }
+    public function getDescription(): string { return $this->description; }
+    public function getPresentielOuDistanciel(): string { return $this->presentielOuDistanciel; }
     public function getCampus(): Campus
     {
         return $this->campus;
     }
+
+    // --- SETTERS ---
 
     public function setNom(string $nom): void
     {
@@ -137,10 +113,7 @@ class Offre
     {
         $this->exigenceEtude = $exigenceEtude;
     }
-    public function setEntreprise(string $entreprise): void
-    {
-        $this->entreprise = $entreprise;
-    }
+
     public function setDate(DateTimeImmutable $date): void
     {
         $this->date = $date;
@@ -162,4 +135,10 @@ class Offre
     {
         $this->campus = $campus;
     }
+
+     public function setEntreprise(Entreprise $entreprise): void 
+    { 
+        $this->entreprise = $entreprise; 
+    }
 }
+

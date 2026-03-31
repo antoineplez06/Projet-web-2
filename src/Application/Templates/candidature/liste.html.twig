@@ -14,25 +14,27 @@
         {% set a_reponse = true %}
         {% set offre = candidature.offre %}
         
-        <div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white">
+        <div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white shadow-sm">
             <h3 class="float-none w-auto fw-bold">{{ offre.nom }}</h3>
-            <p class="mb-0">{{ offre.entreprise }}</p>
+            
+            {# --- CORRECTION : .nom ajouté --- #}
+            <p class="mb-0 text-muted fw-bold">{{ offre.entreprise.nom }}</p>
+            
             <p class="mb-0">{{ offre.lieu }}</p>
-            <p class="mt-5">Publié le : {{ offre.date|date("d/m/Y") }}</p>
+            <p class="mt-5 text-muted">Publié le : {{ offre.date|date("d/m/Y") }}</p>
 
-        <h3 class="border border-dark px-5 py-2 position-absolute top-0 end-0 mt-3 me-3 
-            {% if candidature.statut == 'Refusé' %}
-                bg-danger
-            {% elseif candidature.statut == 'Accepté' %}
-                bg-success
-            {% else %}
-                bg-light
-            {% endif %}">
+            <h3 class="border border-dark px-5 py-2 position-absolute top-0 end-0 mt-3 me-3 
+                {% if candidature.statut == 'Refusé' %}
+                    bg-danger text-white
+                {% elseif candidature.statut == 'Accepté' %}
+                    bg-success text-white
+                {% else %}
+                    bg-light
+                {% endif %}" style="font-size: 1.2rem;">
+                {{ candidature.statut }}
+            </h3>
             
-            {{ candidature.statut }}
-        </h3>
-            
-            <button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-success text-white" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.idOffre }}">
+            <button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-dark text-white hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.idOffre }}">
                 Voir l'offre
             </button>
         </div>
@@ -47,21 +49,24 @@
 
 {% set a_en_cours = false %}
 {% for candidature in candidatures %}
-    {% if candidature.statut == 'En cours de traitement' %}
+    {% if candidature.statut == 'En cours de traitement' or candidature.statut == 'En attente' %}
         {% set a_en_cours = true %}
         {% set offre = candidature.offre %}
 
-        <div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white">
+        <div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white shadow-sm">
             <h3 class="float-none w-auto fw-bold">{{ offre.nom }}</h3>
-            <p class="mb-0">{{ offre.entreprise }}</p>
+            
+            {# --- CORRECTION : .nom ajouté ici aussi --- #}
+            <p class="mb-0 text-muted fw-bold">{{ offre.entreprise.nom }}</p>
+            
             <p class="mb-0">{{ offre.lieu }}</p>
-            <p class="mt-5">Publié le : {{ offre.date|date("d/m/Y") }}</p>
+            <p class="mt-5 text-muted">Publié le : {{ offre.date|date("d/m/Y") }}</p>
 
-            <h3 class="border border-dark px-4 py-2 position-absolute top-0 end-0 mt-3 me-3 bg-light" style="font-size: 1.2rem;">
-                En cours de traitement
+            <h3 class="border border-dark px-4 py-2 position-absolute top-0 end-0 mt-3 me-3 bg-warning" style="font-size: 1.1rem;">
+                En cours
             </h3>
             
-            <button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-success text-white" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.idOffre }}">
+            <button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-dark text-white hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.idOffre }}">
                 Voir l'offre
             </button>
         </div>
@@ -71,5 +76,27 @@
 {% if not a_en_cours %}
     <p class="ms-5 text-muted">Aucune candidature en cours.</p>
 {% endif %}
+
+{# --- AJOUT DES MODALS (Indispensable pour que tes boutons fonctionnent) --- #}
+{% for candidature in candidatures %}
+    {% set offre = candidature.offre %}
+    <div class="modal fade" id="VoirOffre{{ offre.idOffre }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title">{{ offre.nom }} - {{ offre.entreprise.nom }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Lieu :</strong> {{ offre.lieu }}</p>
+                    <p><strong>Rémunération :</strong> {{ offre.remuneration }} €</p>
+                    <hr>
+                    <h6 class="fw-bold">Description :</h6>
+                    <p>{{ offre.description|nl2br }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
 
 {% endblock %}
