@@ -32,7 +32,7 @@ class OffreController
         $repository = $this->entityManager->getRepository(Offre::class);
         $queryBuilder = $repository->createQueryBuilder('o');
 
-        
+
         $user = $_SESSION['user'] ?? null;
 
         if ($user && $user->getRoleValue() === 'etudiant') {
@@ -76,27 +76,33 @@ class OffreController
         $success = false;
 
         if ($request->getMethod() === 'POST') {
-            // Création de l'entité Offre avec les données du formulaire
+            $idEntreprise = $parsedBody['entreprise'] ?? null;
+
+            $entrepriseSelectionnee = null;
+            if ($idEntreprise) {
+                $entrepriseSelectionnee = $this->entityManager->find(\App\Application\Domain\Entreprise::class, (int) $idEntreprise);
+            }
+
+            if (!$entrepriseSelectionnee) {
+                throw new \Exception("Veuillez sélectionner une entreprise valide.");
+            }
+
             $nouvelleOffre = new Offre(
                 $parsedBody['nom'] ?? '',
                 $parsedBody['duree'] ?? '',
                 $parsedBody['exigence_etude'] ?? '',
-                $parsedBody['entreprise'] ?? '',
+                $entrepriseSelectionnee, // <--- C'EST ICI LA CORRECTION
                 new DateTimeImmutable($parsedBody['date']),
                 (float) ($parsedBody['remuneration'] ?? 0),
                 $parsedBody['description'] ?? '',
                 $parsedBody['presentiel_ou_distanciel'] ?? ''
             );
 
-            // --- GESTION DU CAMPUS (OBLIGATOIRE) ---
             $idCampus = $parsedBody['id_campus'] ?? null;
             if ($idCampus) {
                 $campusSelectionne = $this->entityManager->find(Campus::class, (int) $idCampus);
                 if ($campusSelectionne) {
                     $nouvelleOffre->setCampus($campusSelectionne);
-                } else {
-                    // Optionnel : Gérer l'erreur si l'ID du campus n'existe pas en base
-                    // throw new \Exception("Campus introuvable.");
                 }
             }
 
@@ -111,12 +117,13 @@ class OffreController
                 ->withStatus(302);
         }
 
-        // Récupération des campus pour les envoyer au formulaire Twig
         $campuses = $this->entityManager->getRepository(Campus::class)->findAll();
+        $entreprises = $this->entityManager->getRepository(\App\Application\Domain\Entreprise::class)->findAll();
 
         return $view->render($response, 'offre/ajout.html.twig', [
             'success' => $success,
-            'campuses' => $campuses // On envoie la liste des campus ici
+            'campuses' => $campuses,
+            'entreprises' => $entreprises 
         ]);
     }
 

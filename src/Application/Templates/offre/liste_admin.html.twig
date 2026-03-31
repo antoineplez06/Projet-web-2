@@ -78,7 +78,7 @@
                         <tr>
                             <td class="text-muted">{{ offre.idOffre }}</td>
                             <td><strong>{{ offre.nom }}</strong></td>
-                            <td>{{ offre.entreprise }}</td>
+                            <td>{{ offre.entreprise.nom }}</td>
                             <td>{{ offre.lieu|default('-') }}</td>
                             <td>{{ offre.date|date("d/m/Y") }}</td>
                             <td>
@@ -109,7 +109,7 @@
                                             <div class="row w-100 align-items-center">
                                                 <div class="col-md-8">
                                                     <h3 class="fw-bold mb-0">{{ offre.nom }}</h3>
-                                                    <p class="mb-0 text-muted">{{ offre.entreprise }} - {{ offre.lieu|default('Lieu non précisé') }}</p>
+                                                    <p class="mb-0 text-muted">{{ offre.entreprise.nom }} - {{ offre.lieu|default('Lieu non précisé') }}</p>
                                                 </div>
                                                 <div class="col-md-4 text-center">
                                                     <p class="text-dark fw-bold mb-0">Candidatures : {{ offre.candidats|default(0) }}</p>
