@@ -118,6 +118,11 @@ class user
         return $this->role;
     }
 
+    public function getRoleValue(): string
+    {
+        return $this->role->value;
+    }
+
     public function setPrenom(string $prenom): void
     {
         $this->prenom = $prenom;
