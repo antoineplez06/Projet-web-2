@@ -182,7 +182,7 @@ class user
     }
 
     public function setCampus(?Campus $campus): void
-    {
-        $this->campus = $campus;
-    }
+     {
+         $this->campus = $campus;
+     }
 }
