@@ -4,7 +4,7 @@
 <h1 class="mt-4 text-center fw-bold">Postuler à l'offre n°{{ id }}</h1>
 <hr class="border border-dark">
 
-<form action="/candidature/enregistrer/{{ id }}" method="POST">
+<form action="{{ url_for('action-enregistrer-candidature', { 'id': id }) }}" method="POST" enctype="multipart/form-data">
     
     <div class="mb-3 w-50 mx-auto">
         <label class="form-label fw-bold">Lettre de motivation</label>
