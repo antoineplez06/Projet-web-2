@@ -17,7 +17,7 @@
 	{% for offre in offres %}
 		<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white">
 			<h3 class="float-none w-auto fw-bold">{{ offre.nom }}</h3>
-			<p class="mb-0">{{ offre.entreprise }}</p>
+			<p class="mb-0">{{ offre.entreprise.nom }}</p>
 			<p class="mb-0">{{ offre.lieu }}</p>
 			<p class="mt-4 text-muted">Publié le :
 				{{ offre.date_publication }}</p>
@@ -34,7 +34,7 @@
 								<div class="row w-100 align-items-center">
 									<div class="col-md-8">
 										<h2 class="fw-bold">{{ offre.nom }}</h2>
-										<p class="mb-1 text-muted">{{ offre.entreprise }}</p>
+										<p class="mb-1 text-muted">{{ offre.entreprise.nom }}</p>
 										<p class="mt-0 mb-1 text-muted">{{ offre.lieu }}</p>
 										<p class="mt-3 mb-0 text-muted small">Publié le :
 											{{ offre.date_publication }}</p>
