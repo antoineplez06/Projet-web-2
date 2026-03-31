@@ -1,18 +1,18 @@
 <?php
 
-
-
 namespace App\Application\Domain;
 
-use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection; // AJOUTÉ
+use Doctrine\Common\Collections\Collection;      // AJOUTÉ
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\OneToMany;             // AJOUTÉ
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity, Table(name: 'entreprises')]
-final class Entreprise
+class Entreprise
 {
     #[Id, Column(type: 'integer'), GeneratedValue(strategy: 'AUTO')]
     private int $id;
@@ -32,6 +32,10 @@ final class Entreprise
     #[Column(type: 'string', length: 100, nullable: false)]
     private string $taille;
 
+    // --- RELATION : Une entreprise a plusieurs offres ---
+    // mappedBy doit correspondre au nom de la propriété "entreprise" dans ton entité Offre
+    #[OneToMany(mappedBy: 'entreprise', targetEntity: Offre::class)]
+    private Collection $offres;
 
     public function __construct(
         string $nom,
@@ -45,71 +49,31 @@ final class Entreprise
         $this->siret = $siret;
         $this->domaine = $domaine;
         $this->taille = $taille;
+        $this->offres = new ArrayCollection(); // INITIALISATION IMPORTANTE
     }
 
     // --- Getters ---
 
-    public function getId(): int
+    public function getId(): int { return $this->id; }
+    public function getNom(): string { return $this->nom; }
+    public function getAdresse(): string { return $this->adresse; }
+    public function getSiret(): string { return $this->siret; }
+    public function getDomaine(): string { return $this->domaine; }
+    public function getTaille(): string { return $this->taille; }
+
+    /**
+     * C'est cette méthode que Twig va appeler avec ent.offres
+     * @return Collection<int, Offre>
+     */
+    public function getOffres(): Collection
     {
-        return $this->id;
+        return $this->offres;
     }
 
-    public function getNom(): string
-    {
-        return $this->nom;
-    }
-
-    public function getAdresse(): string
-    {
-        return $this->adresse;
-    }
-
-    public function getSiret(): string
-    {
-        return $this->siret;
-    }
-
-    public function getDomaine(): string
-    {
-        return $this->domaine;
-    }
-
-    public function getTaille(): string
-    {
-        return $this->taille;
-    }
-    public function setNom(string $nom): self
-    {
-        $this->nom = $nom;
-
-        return $this;
-    }
-
-    public function setAdresse(string $adresse): self
-    {
-        $this->adresse = $adresse;
-
-        return $this;
-    }
-
-    public function setSiret(string $siret): self
-    {
-        $this->siret = $siret;
-
-        return $this;
-    }
-
-    public function setDomaine(string $domaine): self
-    {
-        $this->domaine = $domaine;
-
-        return $this;
-    }
-
-    public function setTaille(string $taille): self
-    {
-        $this->taille = $taille;
-
-        return $this;
-    }
+    // --- Setters ---
+    public function setNom(string $nom): self { $this->nom = $nom; return $this; }
+    public function setAdresse(string $adresse): self { $this->adresse = $adresse; return $this; }
+    public function setSiret(string $siret): self { $this->siret = $siret; return $this; }
+    public function setDomaine(string $domaine): self { $this->domaine = $domaine; return $this; }
+    public function setTaille(string $taille): self { $this->taille = $taille; return $this; }
 }

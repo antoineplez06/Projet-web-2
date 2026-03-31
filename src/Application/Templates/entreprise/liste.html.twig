@@ -1,92 +1,162 @@
-	{% extends "layouts/base.html.twig" %}
 
-	{% block title %}Liste des Entreprises{% endblock %}
+          {% extends "layouts/base.html.twig" %}
 
-	{% block content %}
+{% block title %}Liste des Entreprises{% endblock %}
 
-		{# Barre de recherche #}
-		<form class="d-flex mt-4 mx-auto w-50" method="GET" action="">
-			<input class="form-control me-4 border border-dark border-2" type="search" name="search" value="{{ filtres.search|default('') }}" placeholder="Rechercher une entreprise..." aria-label="Rechercher">
-			<button class="btn btn-outline-secondary" type="submit">Rechercher</button>
-		</form>
+{% block content %}
 
-		{% for ent in entreprises %}
-			<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white shadow-sm">
-				<h3 class="float-none w-auto fw-bold">{{ ent.nom }}</h3>
-				<p class="mb-0 text-muted"><strong>Domaine :</strong> {{ ent.domaine }}</p>
-				<p class="mb-0"><strong>Lieu :</strong> {{ ent.adresse }}</p>
-				
-				<p class="mt-4 text-muted small">SIRET : <code>{{ ent.siret }}</code></p>
+    {# Barre de recherche #}
+    <form class="d-flex mt-4 mx-auto w-50" method="GET" action="">
+        <input class="form-control me-4 border border-dark border-2" type="search" name="search" value="{{ filtres.search|default('') }}" placeholder="Rechercher une entreprise..." aria-label="Rechercher">
+        <button class="btn btn-outline-secondary" type="submit">Rechercher</button>
+    </form>
 
-				<div class="position-absolute top-0 end-0 mt-3 me-3">
-					<span class="badge border border-dark text-dark bg-light p-2">{{ ent.taille }}</span>
-				</div>
+    {% for ent in entreprises %}
+        <div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white shadow-sm">
+            <h3 class="float-none w-auto fw-bold">{{ ent.nom }}</h3>
+            <p class="mb-0 text-muted"><strong>Domaine :</strong> {{ ent.domaine }}</p>
+            <p class="mb-0"><strong>Lieu :</strong> {{ ent.adresse }}</p>
+            
+            <p class="mt-4 text-muted small">SIRET : <code>{{ ent.siret }}</code></p>
 
-				<button type="button" class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-light hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirEntreprise{{ ent.id }}">
-					Voir l'entreprise
-				</button>
+            <div class="position-absolute top-0 end-0 mt-3 me-3">
+                <span class="badge border border-dark text-dark bg-light p-2">{{ ent.taille }}</span>
+            </div>
 
-				{# Modal de détails #}
-				<div class="modal fade" id="VoirEntreprise{{ ent.id }}" tabindex="-1">
-					<div class="modal-dialog modal-lg">
-						<div class="modal-content">
-							<div class="modal-header">
-								<div class="container-fluid">
-									<div class="row w-100 align-items-center">
-										<div class="col-md-8">
-											<h2 class="fw-bold">{{ ent.nom }}</h2>
-											
-											<p class="mt-0 mb-1 text-muted">{{ ent.adresse }}</p>
-										</div>
-										<div class="col-md-4 text-center">
-											<p class="text-dark fw-bold mb-0">Taille : {{ ent.taille }}</p>
-										</div>
-									</div>
-								</div>
-								<button type="button" class="btn-close position-absolute top-0 end-0 me-3 mt-3" data-bs-dismiss="modal"></button>
-							</div>
+            {# --- SECTION BOUTONS --- #}
+            <div class="position-absolute bottom-0 end-0 mb-3 me-3 d-flex gap-2">
+                <button type="button" class="btn btn-dark rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#ModalOffres{{ ent.id }}">
+                    Voir les offres ({{ ent.offres|length }})
+                </button>
 
-							<div class="modal-body p-4">
-								<h4 class="fw-bold">Informations légales</h4>
-								<p><strong>SIRET :</strong> {{ ent.siret }}</p>
-								
-								<h4 class="fw-bold mt-4">À propos</h4>
-								{# Affichage de la description avec gestion des sauts de ligne #}
-								<p class="mb-1 text-muted">{{ ent.domaine|default('Aucune description disponible.')|nl2br }}</p>
-							</div>
+                <button type="button" class="border border-dark rounded-pill px-4 py-2 bg-light hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirEntreprise{{ ent.id }}">
+                    Détails
+                </button>
+            </div>
 
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		{% else %}
-			<div class="text-center mt-5">
-				<h4 class="fw-bold text-muted">Aucune entreprise ne correspond à vos critères.</h4>
-			</div>
-		{% endfor %}
+            {# --- MODAL 1 : DÉTAILS ENTREPRISE --- #}
+            <div class="modal fade" id="VoirEntreprise{{ ent.id }}" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="fw-bold">{{ ent.nom }}</h2>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <p><strong>Adresse :</strong> {{ ent.adresse }}</p>
+                            <p><strong>SIRET :</strong> {{ ent.siret }}</p>
+                            <p><strong>Taille :</strong> {{ ent.taille }}</p>
+                            <h4 class="fw-bold mt-4">À propos</h4>
+                            <p class="mb-1 text-muted">{{ ent.domaine|default('Aucune description disponible.')|nl2br }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-		{# Pagination #}
-		{% if nombrePages > 1 %}
-		<nav aria-label="Page navigation" class="mt-4">
-			<ul class="pagination justify-content-center">
-				<li class="page-item {{ pageActuelle <= 1 ? 'disabled' : '' }}">
-					<a class="page-link text-dark" href="{{ url_for('liste-entreprises', { 'page': pageActuelle - 1 }) }}">Précédent</a>
-				</li>
+            {# --- MODAL 2 : LISTE DES OFFRES (Version complète) --- #}
+<div class="modal fade" id="ModalOffres{{ ent.id }}" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable"> {# modal-xl pour avoir de la place #}
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Stages disponibles chez {{ ent.nom }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4 bg-light">
+                {% if ent.offres is not empty %}
+                    <div class="row">
+                        {% for offre in ent.offres %}
+                            <div class="col-12 mb-4">
+                                <div class="card border-dark border-2 shadow-sm">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h4 class="fw-bold text-dark mb-1">{{ offre.nom }}</h4>
+                                                <p class="text-muted mb-3">
+                                                    <i class="bi bi-geo-alt"></i> {{ offre.lieu }} | 
+                                                    Publié le {{ offre.date|date("d/m/Y") }}
+                                                </p>
+                                            </div>
+                                            <span class="badge bg-success fs-6">{{ offre.remuneration }} €</span>
+                                        </div>
 
-				{% for i in 1..nombrePages %}
-					<li class="page-item {{ i == pageActuelle ? 'active' : '' }}">
-						<a class="page-link {{ i == pageActuelle ? 'bg-dark text-white' : 'text-dark' }}" href="{{ url_for('liste-entreprises', { 'page': i }) }}">{{ i }}</a>
-					</li>
-				{% endfor %}
+                                        <hr>
 
-				<li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' : '' }}">
-					<a class="page-link text-dark" href="{{ url_for('liste-entreprises', { 'page': pageActuelle + 1 }) }}">Suivant</a>
-				</li>
-			</ul>
-		</nav>
-		{% endif %}
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <h5 class="fw-bold">Description du poste</h5>
+                                                <p class="text-dark">{{ offre.description|nl2br }}</p>
+                                                
+                                                <h5 class="fw-bold mt-3">Exigences / Études</h5>
+                                                <p class="text-dark">{{ offre.exigenceEtude|default('Non spécifié') }}</p>
+                                            </div>
+                                            
+                                            <div class="col-md-4 border-start border-2">
+                                                <div class="bg-white p-3 rounded border">
+                                                    <p class="mb-2"><strong>Type :</strong> Stage</p>
+                                                    <p class="mb-2"><strong>Postulants :</strong> {{ offre.nombreEtudiantPostule|default(0) }}</p>
+                                                    <a href="{{ url_for('page-postuler', { 'id': offre.idOffre }) }}" class="btn btn-primary w-100 mt-2">
+                                                        Postuler maintenant
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <h4 class="text-muted">Aucune offre de stage pour le moment.</h4>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+    {% endfor %} {# <-- C'EST CE ENDFOR QUI MANQUAIT PROBABLEMENT OU ÉTAIT MAL PLACÉ #}
 
-	{% endblock %}
+    {# Pagination #}
+    {% if nombrePages > 1 %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {{ pageActuelle <= 1 ? 'disabled' : '' }}">
+                <a class="page-link text-dark" href="{{ url_for('liste-entreprises', { 'page': pageActuelle - 1 }) }}">Précédent</a>
+            </li>
+            {% for i in 1..nombrePages %}
+                <li class="page-item {{ i == pageActuelle ? 'active' : '' }}">
+                    <a class="page-link {{ i == pageActuelle ? 'bg-dark text-white' : 'text-dark' }}" href="{{ url_for('liste-entreprises', { 'page': i }) }}">{{ i }}</a>
+                </li>
+            {% endfor %}
+            <li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' : '' }}">
+                <a class="page-link text-dark" href="{{ url_for('liste-entreprises', { 'page': pageActuelle + 1 }) }}">Suivant</a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+
+
+    {# Pagination #}
+    {% if nombrePages > 1 %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {{ pageActuelle <= 1 ? 'disabled' : '' }}">
+                <a class="page-link text-dark" href="{{ url_for('liste-entreprises', { 'page': pageActuelle - 1 }) }}">Précédent</a>
+            </li>
+            {% for i in 1..nombrePages %}
+                <li class="page-item {{ i == pageActuelle ? 'active' : '' }}">
+                    <a class="page-link {{ i == pageActuelle ? 'bg-dark text-white' : 'text-dark' }}" href="{{ url_for('liste-entreprises', { 'page': i }) }}">{{ i }}</a>
+                </li>
+            {% endfor %}
+            <li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' : '' }}">
+                <a class="page-link text-dark" href="{{ url_for('liste-entreprises', { 'page': pageActuelle + 1 }) }}">Suivant</a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+
+{% endblock %}

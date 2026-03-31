@@ -4,45 +4,43 @@
     <h1 class="text-center mt-4 fw-bold">Ma Wishlist</h1>
 
     {% for favori in favoris %}
-        {# On accède à l'offre via favori.offre car on a rétabli la relation ManyToOne #}
+        {# On accède à l'offre via favori.offre #}
         {% set offre = favori.offre %}
         
         <div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white shadow-sm">
             <h3 class="float-none w-auto fw-bold">{{ offre.nom }}</h3>
-            <p class="mb-0">{{ offre.entreprise }}</p>
+            
+            {# --- CORRECTION : .nom ajouté --- #}
+            <p class="mb-0">{{ offre.entreprise.nom }}</p>
+            
             <p class="mb-0">{{ offre.lieu }}</p>
             <p class="mt-4 text-muted">Publié le : {{ offre.date|date("d/m/Y") }}</p>
 
-            {# Bouton pour retirer de la wishlist (optionnel mais recommandé) #}
+            {# Bouton pour retirer de la wishlist #}
             <div class="position-absolute top-0 end-0 mt-3 me-3 dropdown">
-                {# Le bouton qui déclenche le menu (le coeur) #}
                 <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="text-decoration-none">
                     <svg class="Wishlist" height="45" fill="red" stroke="black" stroke-width="30" viewbox="0 0 512 512" role="button" style="cursor: pointer;">
-                                    <path d="M256 472 C256 472 40 312 40 160 C40 72 104 32 168 32 C216 32 256 80 256 80 C256 80 296 32 344 32 C408 32 472 72 472 160 C472 312 256 472 256 472 Z"/>
-                                </svg>
+                        <path d="M256 472 C256 472 40 312 40 160 C40 72 104 32 168 32 C216 32 256 80 256 80 C256 80 296 32 344 32 C408 32 472 72 472 160 C472 312 256 472 256 472 Z"/>
+                    </svg>
                 </a>
 
-                {# Le menu déroulant qui apparaît juste en dessous #}
                 <ul class="dropdown-menu dropdown-menu-end border border-dark border-2 shadow">
                     <li>
                         <a class="dropdown-item text-danger fw-bold" href="/wishlist/remove/{{ favori.idWishlist }}">
                             <i class="bi bi-trash"></i> Supprimer
                         </a>
                     </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                        <a class="dropdown-item small" href="#">Annuler</a>
-                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item small" href="#">Annuler</a></li>
                 </ul>
             </div>
+
             {# Bouton Voir l'offre #}
             <button type="button" class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-light hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.idOffre }}">
                 Voir l'offre
             </button>
 
-            {# Modal de détails (identique à ta page offres) #}
+            {# Modal de détails #}
             <div class="modal fade" id="VoirOffre{{ offre.idOffre }}" tabindex="-1">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
@@ -51,11 +49,16 @@
                                 <div class="row w-100 align-items-center">
                                     <div class="col-md-8">
                                         <h2 class="fw-bold">{{ offre.nom }}</h2>
-                                        <p class="mb-1 text-muted">{{ offre.entreprise }}</p>
+                                        
+                                        {# --- CORRECTION : .nom ajouté ici aussi --- #}
+                                        <p class="mb-1 text-muted">{{ offre.entreprise.nom }}</p>
+                                        
                                         <p class="mt-0 mb-1 text-muted">{{ offre.lieu }}</p>
+                                        <p class="mt-3 mb-0 text-muted small">Publié le : {{ offre.date|date('d/m/Y') }}</p>
                                     </div>
                                     <div class="col-md-4 text-center">
-                                        <p class="text-dark fw-bold mb-0">{{ offre.candidats }} postulants</p>
+                                        {# --- VERIFICATION : Vérifie si c'est .candidats ou .nombreEtudiantPostule --- #}
+                                        <p class="text-dark fw-bold mb-0">{{ offre.nombreEtudiantPostule }} postulant(s)</p>
                                     </div>
                                 </div>
                             </div>
@@ -63,9 +66,9 @@
                         </div>
                         <div class="modal-body p-4">
                             <h4 class="fw-bold">Description</h4>
-                            <p>{{ offre.description }}</p>
+                            <p>{{ offre.description|nl2br }}</p>
                             <h4 class="fw-bold mt-4">Rémunération</h4>
-                            <p>{{ offre.remuneration }}</p>
+                            <p>{{ offre.remuneration }} €</p>
                         </div>
                         <div class="modal-footer">
                             <a href="{{ url_for('page-postuler', { 'id': offre.idOffre }) }}" class="btn btn-primary btn-lg">Postuler maintenant</a>
@@ -76,10 +79,9 @@
         </div>
     {% else %}
         <div class="text-center mt-5">
-           <img src="assets/images/NoWishList.png" alt="Aucune wishlist" class="mx-auto d-block mt-4" style="width: 200px;">
+           <img src="{{('assets/images/NoWishList.png') }}" alt="Aucune wishlist" class="mx-auto d-block mt-4" style="width: 200px;">
             <h4 class="fw-bold text-muted text-center fs-3">Votre wishlist est vide.</h4>
-            <a href="/offres" class="border border-dark border-3 rounded-pill px-1 py-3 fw-bold bg-success w-50 mx-auto d-block mt-5 h-25 fs-4 text-dark" type="button">Découvrir des offres</a>
+            <a href="/offres" class="border border-dark border-3 rounded-pill px-1 py-3 fw-bold bg-success w-50 mx-auto d-block mt-5 h-25 fs-4 text-dark text-decoration-none text-center">Découvrir des offres</a>
         </div>
     {% endfor %}
-
 {% endblock %}
