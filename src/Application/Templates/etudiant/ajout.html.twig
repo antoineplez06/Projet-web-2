@@ -10,7 +10,7 @@
                     <h4 class="mb-0">Nouvel étudiant</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{ url_for('ajout-etudiant') }}" method="POST">
+                    <form action="{{ url_for('ajoute') }}" method="POST">
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -63,7 +63,7 @@
                         <hr>
 
                         <div class="d-flex justify-content-between">
-                            <a href="{{ url_for('liste-etudiant') }}" class="btn btn-light">Annuler</a>
+                            <a href="{{ url_for('liste-etudiants') }}" class="btn btn-light">Annuler</a>
                             <button type="submit" class="btn btn-success">Créer l'étudiant</button>
                         </div>
 

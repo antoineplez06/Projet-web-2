@@ -46,7 +46,6 @@ class EtudiantController
         ]);
     }
 
-
     public function ajoute(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
@@ -89,7 +88,7 @@ class EtudiantController
             $this->entityManager->flush();
             
             $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-            $url = $routeParser->urlFor('liste-etudiant');
+            $url = $routeParser->urlFor('liste-etudiants');
 
             return $response
                 ->withHeader('Location', $url)
@@ -142,7 +141,7 @@ class EtudiantController
             $success = true;
 
             $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-            $url = $routeParser->urlFor('liste-etudiant');
+            $url = $routeParser->urlFor('liste-etudiants');
 
             return $response
                 ->withHeader('Location', $url)
@@ -167,7 +166,7 @@ class EtudiantController
         }
 
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-        $url = $routeParser->urlFor('liste-etudiant');
+        $url = $routeParser->urlFor('liste-etudiants');
 
         return $response
             ->withHeader('Location', $url)

@@ -57,7 +57,7 @@
                         <hr>
 
                         <div class="d-flex justify-content-between">
-                            <a href="{{ url_for('liste-etudiant') }}" class="btn btn-light">Annuler</a>
+                            <a href="{{ url_for('liste-etudiants') }}" class="btn btn-light">Annuler</a>
                             <button type="submit" class="btn btn-success" onclick="history.back()">Enregistrer les modifications</button>
                         </div>
 
@@ -70,7 +70,7 @@
     {% if success %}
         <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
             Les modifications ont été enregistrées avec succès !
-            <button href="{{ url_for('liste-etudiant') }}" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>
+            <button href="{{ url_for('liste-etudiants') }}" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>
         </div>
     {% endif %}
 
