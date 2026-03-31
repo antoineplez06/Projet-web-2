@@ -32,7 +32,7 @@ class EntrepriseController
 
         $entreprisesAffichees = $repository->findBy(
             [],
-            ['id' => 'DESC'],
+            ['id' => 'DESC'],  
             $perPage,
             $offset
         );
@@ -68,7 +68,12 @@ class EntrepriseController
             $this->entityManager->persist($nouvelleEntreprise);
             $this->entityManager->flush();
 
-            $success = true;
+            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+            $url = $routeParser->urlFor('entreprises-admin');
+
+            return $response
+                ->withHeader('Location', $url)
+                ->withStatus(302);
         }
 
         return $view->render($response, 'entreprise/ajout.html.twig', [

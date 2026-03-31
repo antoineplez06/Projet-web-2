@@ -113,4 +113,13 @@ class Offre
     {
         return $this->presentielOuDistanciel;
     }
+
+    public function setNom(string $nom): void { $this->nom = $nom; }
+    public function setDuree(string $duree): void { $this->duree = $duree; }
+    public function setExigenceEtude(string $exigenceEtude): void { $this->exigenceEtude = $exigenceEtude; }
+    public function setEntreprise(string $entreprise): void { $this->entreprise = $entreprise; }
+    public function setDate(DateTimeImmutable $date): void { $this->date = $date; }
+    public function setRemuneration(float $remuneration): void { $this->remuneration = $remuneration; }
+    public function setDescription(string $description): void { $this->description = $description; }
+    public function setPresentielOuDistanciel(string $presentielOuDistanciel): void { $this->presentielOuDistanciel = $presentielOuDistanciel; }
 }
