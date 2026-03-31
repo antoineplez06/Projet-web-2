@@ -9,10 +9,9 @@
 			<div class="card shadow">
 				<div class="card-header bg-primary text-white">
 					<h4 class="mb-0">Nouvelle Entreprise</h4>
-				</div>
-				<div class="card-body">
+				</div>*
 					<form
-						action="/ajout-entreprise" method="POST">
+						action="{{ url_for('ajout-entreprise') }}" method="POST">
 
 						{# Nom de l'entreprise #}
 						<div class="mb-3">
