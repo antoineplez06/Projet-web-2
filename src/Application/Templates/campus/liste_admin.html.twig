@@ -1,0 +1,83 @@
+{% extends "layouts/base_admin.html.twig" %}
+
+{% block title %}Liste des Campus{% endblock %}
+
+{% block content %}
+
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+        <h1>Liste des Campus</h1>
+        <a class="btn btn-primary" href="{{ url_for('ajout-campus') }}">Ajouter un campus</a>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <form method="GET" action="{{ url_for('campus-admin') }}" class="d-flex">
+                <input type="text" name="q" class="form-control me-2" placeholder="Rechercher par ville..." value="{{ searchTerm }}">
+                <button type="submit" class="btn btn-outline-secondary">Rechercher</button>
+                {% if searchTerm %}
+                    <a href="{{ url_for('campus-admin') }}" class="btn btn-link">Réinitialiser</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Ville</th>
+                        <th class="text-end px-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for campus in listeCampus %}
+                        <tr>
+                            <td class="text-muted">{{ campus.idCampus }}</td>
+                            <td>
+                                <strong>{{ campus.ville }}</strong>
+                            </td>
+                            <td class="text-end px-3">
+                                <div class="btn-group">
+                                    <a href="{{ url_for('modifier-campus', { 'id': campus.idCampus }) }}" class="btn btn-sm btn-outline-warning">Modifier</a>
+                                    <form action="{{ url_for('supprimer-campus', { 'id': campus.idCampus }) }}" method="POST" class="d-inline" onsubmit="return confirm('Voulez-vous vraiment supprimer ce campus ?')">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center py-4 text-muted">
+                                Aucun campus trouvé dans la base de données.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {# Pagination #}
+    {% if nombrePages > 1 %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {{ pageActuelle <= 1 ? 'disabled' }}">
+                    <a class="page-link" href="{{ url_for('campus-admin', { 'page': pageActuelle - 1 }) }}">Précédent</a>
+                </li>
+
+                {% for i in 1..nombrePages %}
+                    <li class="page-item {{ i == pageActuelle ? 'active' }}">
+                        <a class="page-link" href="{{ url_for('campus-admin', { 'page': i }) }}">{{ i }}</a>
+                    </li>
+                {% endfor %}
+
+                <li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' }}">
+                    <a class="page-link" href="{{ url_for('campus-admin', { 'page': pageActuelle + 1 }) }}">Suivant</a>
+                </li>
+            </ul>
+        </nav>
+    {% endif %}
+
+{% endblock %}

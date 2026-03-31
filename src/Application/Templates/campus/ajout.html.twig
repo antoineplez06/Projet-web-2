@@ -1,0 +1,44 @@
+{% extends "layouts/base_admin.html.twig" %}
+
+{% block title %}Ajouter un Campus{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Nouveau Campus</h4>
+                </div>
+                <div class="card-body">
+                    {# On pointe vers la nouvelle route d'ajout de campus #}
+                    <form action="{{ url_for('ajout-campus') }}" method="POST">
+
+                        {# Ville du campus #}
+                        <div class="mb-4">
+                            <label for="ville" class="form-label font-weight-bold">Ville du campus</label>
+                            <input type="text" class="form-control" id="ville" name="ville" placeholder="Ex: Bordeaux, Paris, Lyon..." required>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+                            {# Bouton d'annulation qui renvoie vers la liste des campus #}
+                            <a href="{{ url_for('campus-admin') }}" class="btn btn-outline-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-success px-4">Enregistrer</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+            {% if success %}
+                <div class="alert alert-success alert-dismissible fade show mt-4" role="alert">
+                    <strong>Succès !</strong>
+                    Le campus a bien été ajouté.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}

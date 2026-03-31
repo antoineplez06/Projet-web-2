@@ -12,6 +12,7 @@ use App\Application\Controller\EtudiantController;
 use App\Application\Controller\OffreController;
 use App\Application\Controller\WishlistController;
 use App\Application\Controller\CandidatureController;
+use App\Application\Controller\CampusController;
 use App\Application\Controller\ConnexionController;
 use App\Application\Middleware\LoggedMiddleware;
 use App\Application\Middleware\RoleCheckMiddleware;
@@ -46,6 +47,17 @@ return function (App $app) {
 
     $app->get('/entreprises[/{page:\d+}]', [EntrepriseController::class, 'listean'])->setName('entreprises-an');
 
+    $app->group('/campus', function (RouteCollectorProxy $group) use ($factory) {
+        $group->get('[/{page:\d+}]', [CampusController::class, 'listeAdmin'])->setName('campus-admin');
+        $group->get('/ajout', [CampusController::class, 'ajoute'])->setName('ajout-campus');
+        $group->post('/ajout', [CampusController::class, 'ajoute'])->setName('ajout-campus');
+        $group->get('/supprimer/{id}', [CampusController::class, 'supprimer'])->setName('supprimer-campus');
+        $group->post('/supprimer/{id}', [CampusController::class, 'supprimer'])->setName('supprimer-campus');
+        $group->get('/modifier/{id}', [CampusController::class, 'modifier'])->setName('modifier-campus');
+        $group->post('/modifier/{id}', [CampusController::class, 'modifier'])->setName('modifier-campus');
+
+    })->add(new RoleCheckMiddleware($factory, [Role::ADMIN]));
+
     $app->group('/etudiant', function (RouteCollectorProxy $group) use ($factory) {
         $group->get('/inscription', [EtudiantController::class, 'ajoute'])->setName('ajoute');
         $group->post('/inscription', [EtudiantController::class, 'ajoute']);
@@ -61,9 +73,17 @@ return function (App $app) {
     $app->post('/connexion', [ConnexionController::class, 'connexion'])->setName('connexion');
 
     $app->group('/offres', function (RouteCollectorProxy $group) use ($factory) {
-        $group->get('[/{page:\d+}]', [OffreController::class, 'liste'])->setName('Offres');
+        $group->get('/admin[/{page:\d+}]', [OffreController::class, 'listeAdmin'])->setName('offres-admin');
         $group->get('/ajout', [OffreController::class, 'ajoute'])->setName('ajout-offre');
         $group->post('/ajout', [OffreController::class, 'ajoute'])->setName('ajout-offre');
+        $group->get('/supprimer/{id}', [OffreController::class, 'supprimer'])->setName('supprimer-offre');
+        $group->post('/supprimer/{id}', [OffreController::class, 'supprimer'])->setName('supprimer-offre');
+        $group->get('/modifier/{id}', [OffreController::class, 'modifier'])->setName('modifier-offre');
+        $group->post('/modifier/{id}', [OffreController::class, 'modifier'])->setName('modifier-offre');
+    })->add(new RoleCheckMiddleware($factory, [Role::PILOTE, Role::ADMIN]));
+
+    $app->group('/offres', function (RouteCollectorProxy $group) use ($factory) {
+        $group->get('[/{page:\d+}]', [OffreController::class, 'liste'])->setName('Offres');
         $group->get('/postuler/{id}', [OffreController::class, 'afficherFormulairePostuler'])->setName('page-postuler');
 
     })->add(new RoleCheckMiddleware($factory, [Role::ETUDIANT,Role::PILOTE, Role::ADMIN]));
