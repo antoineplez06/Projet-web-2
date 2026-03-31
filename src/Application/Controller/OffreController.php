@@ -3,6 +3,7 @@
 namespace App\Application\Controller;
 
 use App\Application\Domain\Offre;
+use App\Application\Domain\Campus; // N'oublie pas cet import !
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -22,7 +23,6 @@ class OffreController
     public function liste(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
-
         $params = $request->getQueryParams();
 
         $page = isset($args['page']) ? (int) $args['page'] : 1;
@@ -30,23 +30,42 @@ class OffreController
         $offset = ($page - 1) * $perPage;
 
         $repository = $this->entityManager->getRepository(Offre::class);
+        $queryBuilder = $repository->createQueryBuilder('o');
 
-        // Récupération des offres avec pagination
-        $offresAffichees = $repository->findBy(
-            [],
-            ['idOffre' => 'DESC'], // Tri par ID décroissant
-            $perPage,
-            $offset
-        );
+        
+        $user = $_SESSION['user'] ?? null;
 
-        $totalOffres = $repository->count([]);
+        if ($user && $user->getRoleValue() === 'etudiant') {
+            $campusEtudiant = $user->getCampus();
+
+            if ($campusEtudiant) {
+                $queryBuilder->andWhere('o.campus = :campus')
+                    ->setParameter('campus', $campusEtudiant);
+            }
+        }
+
+        $queryBuilder->orderBy('o.idOffre', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($perPage);
+
+        $offresAffichees = $queryBuilder->getQuery()->getResult();
+
+        $countBuilder = $repository->createQueryBuilder('o')
+            ->select('count(o.idOffre)');
+
+        if ($user && $user->getRoleValue() === 'etudiant' && $user->getCampus()) {
+            $countBuilder->andWhere('o.campus = :campus')
+                ->setParameter('campus', $user->getCampus());
+        }
+
+        $totalOffres = $countBuilder->getQuery()->getSingleScalarResult();
         $nombrePages = ceil($totalOffres / $perPage);
 
         return $view->render($response, 'offre/liste.html.twig', [
-            'offres' => $offresAffichees,
+            'offres'       => $offresAffichees,
             'pageActuelle' => $page,
-            'nombrePages' => $nombrePages,
-            'filtres'        => $params
+            'nombrePages'  => $nombrePages,
+            'filtres'      => $params
         ]);
     }
 
@@ -69,6 +88,18 @@ class OffreController
                 $parsedBody['presentiel_ou_distanciel'] ?? ''
             );
 
+            // --- GESTION DU CAMPUS (OBLIGATOIRE) ---
+            $idCampus = $parsedBody['id_campus'] ?? null;
+            if ($idCampus) {
+                $campusSelectionne = $this->entityManager->find(Campus::class, (int) $idCampus);
+                if ($campusSelectionne) {
+                    $nouvelleOffre->setCampus($campusSelectionne);
+                } else {
+                    // Optionnel : Gérer l'erreur si l'ID du campus n'existe pas en base
+                    // throw new \Exception("Campus introuvable.");
+                }
+            }
+
             $this->entityManager->persist($nouvelleOffre);
             $this->entityManager->flush();
 
@@ -80,8 +111,12 @@ class OffreController
                 ->withStatus(302);
         }
 
+        // Récupération des campus pour les envoyer au formulaire Twig
+        $campuses = $this->entityManager->getRepository(Campus::class)->findAll();
+
         return $view->render($response, 'offre/ajout.html.twig', [
-            'success' => $success
+            'success' => $success,
+            'campuses' => $campuses // On envoie la liste des campus ici
         ]);
     }
 
@@ -125,7 +160,8 @@ class OffreController
             'filtres'        => $params
         ]);
     }
-public function listeAdmin(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+
+    public function listeAdmin(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
         $queryParams = $request->getQueryParams();
@@ -153,7 +189,7 @@ public function listeAdmin(ServerRequestInterface $request, ResponseInterface $r
         // Calcul du total pour la pagination (en tenant compte du filtre)
         $countBuilder = $repository->createQueryBuilder('o')
             ->select('count(o.idOffre)');
-            
+
         if ($search) {
             $countBuilder->where('o.nom LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
@@ -189,14 +225,23 @@ public function listeAdmin(ServerRequestInterface $request, ResponseInterface $r
             $offre->setDuree(trim($data['duree'] ?? ''));
             $offre->setExigenceEtude(trim($data['exigenceEtude'] ?? $data['exigence_etude'] ?? ''));
             $offre->setEntreprise(trim($data['entreprise'] ?? ''));
-            
+
             if (!empty($data['date'])) {
                 $offre->setDate(new DateTimeImmutable($data['date']));
             }
-            
+
             $offre->setRemuneration((float) ($data['remuneration'] ?? 0));
             $offre->setDescription(trim($data['description'] ?? ''));
             $offre->setPresentielOuDistanciel(trim($data['presentielOuDistanciel'] ?? $data['presentiel_ou_distanciel'] ?? ''));
+
+            // --- GESTION DU CAMPUS (MODIFICATION) ---
+            $idCampus = $data['id_campus'] ?? null;
+            if ($idCampus) {
+                $campusSelectionne = $this->entityManager->find(Campus::class, (int) $idCampus);
+                if ($campusSelectionne) {
+                    $offre->setCampus($campusSelectionne);
+                }
+            }
 
             $this->entityManager->flush();
             $success = true;
@@ -209,9 +254,13 @@ public function listeAdmin(ServerRequestInterface $request, ResponseInterface $r
                 ->withStatus(302);
         }
 
+        // Récupération des campus pour le formulaire de modification
+        $campuses = $this->entityManager->getRepository(Campus::class)->findAll();
+
         return $view->render($response, 'offre/modifier.html.twig', [
             'offre' => $offre,
             'success' => $success,
+            'campuses' => $campuses // On envoie la liste des campus ici
         ]);
     }
 

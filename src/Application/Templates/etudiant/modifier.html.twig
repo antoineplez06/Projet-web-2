@@ -54,6 +54,18 @@
                             <input type="password" class="form-control" id="motDePasse" name="motDePasse">
                         </div>
 
+                        <div class="mb-4">
+							<label for="id_campus" class="form-label fw-bold">Campus de gestion</label>
+							<select class="form-select" id="id_campus" name="id_campus">
+								<option value="">-- Aucun campus / Ne pas associer --</option>
+								{% for campus in campuses %}
+									<option value="{{ campus.idCampus }}" {% if etu.campus and etu.campus.idCampus == campus.idCampus %} selected {% endif %}>
+										{{ campus.ville }}
+									</option>
+								{% endfor %}
+							</select>
+						</div>
+
                         <hr>
 
                         <div class="d-flex justify-content-between">

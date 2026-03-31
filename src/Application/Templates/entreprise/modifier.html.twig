@@ -3,14 +3,21 @@
 {% block title %}Modifier une entreprise{% endblock %}
 
 {% block content %}
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mt-4 mb-5">
         <div class="col-md-6">
+            
+            {% if success %}
+                <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                    Les informations de l'entreprise ont été mises à jour !
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
                     <h4 class="mb-0">Modifier l'entreprise : {{ Entreprise.nom }}</h4>
                 </div>
                 <div class="card-body">
-                    {# L'action reste vide pour poster sur l'URL actuelle #}
                     <form action="" method="POST">
 
                         <div class="mb-3">
@@ -36,8 +43,8 @@
                         <div class="mb-3">
                             <label for="taille" class="form-label">Taille de l'entreprise</label>
                             <input type="text" class="form-control" id="taille" name="taille" value="{{ Entreprise.taille }}" required>
-
                         </div>
+
 
                         <hr>
 
@@ -51,12 +58,4 @@
             </div>
         </div>
     </div>
-
-    {% if success %}
-        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-            Les informations de l'entreprise ont été mises à jour !
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    {% endif %}
-
 {% endblock %}

@@ -51,7 +51,7 @@
 								<td>{{ pil.numeroTelephone }}</td>
 								<td>{{ pil.dateNaissance|date("d/m/Y") }}</td>
 								<td>{{ pil.email }}</td>
-								<td>{{ pil.campus }}</td>
+								<td>{{ pil.campus.ville }}</td>
 
 								<td class="text-end text-nowrap">
 									<a href="{{ url_for('modifier-pilote', { 'id': pil.id }) }}" class="btn btn-sm btn-outline-warning">Modifier</a>

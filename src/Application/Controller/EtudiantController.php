@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Application\Controller;
-use App\Application\Domain\User;
+
+use App\Application\Domain\user; // Attention à la majuscule/minuscule selon ton fichier réel
 use App\Application\Domain\Role;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
+use App\Application\Domain\Campus;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
 use Slim\Routing\RouteContext;
@@ -23,7 +25,7 @@ class EtudiantController
     {
         $view = Twig::fromRequest($request);
         $queryParams = $request->getQueryParams();
-        $search = $queryParams['q'] ?? null; // Récupère le terme de recherche
+        $search = $queryParams['q'] ?? null;
 
         $page = isset($args['page']) ? (int) $args['page'] : 1;
         if ($page < 1) {
@@ -40,31 +42,54 @@ class EtudiantController
         $queryBuilder->where('u.role = :role')
             ->setParameter('role', 'etudiant');
 
-        // 2. Si une recherche est effectuée (sur nom ou prénom)
+        // --- 2. FILTRE PAR CAMPUS (POUR LES PILOTES) ---
+        // On récupère l'utilisateur connecté via l'attribut de la requête (injecté par le middleware)
+        $userConnecte = $request->getAttribute('user');
+
+        // Si l'utilisateur est un pilote, on filtre par son campus
+        if ($userConnecte && $userConnecte->getRoleValue() === 'pilote') {
+            $campusPilote = $userConnecte->getCampus();
+
+            if ($campusPilote) {
+                $queryBuilder->andWhere('u.campus = :campus')
+                    ->setParameter('campus', $campusPilote->getIdCampus());
+            }
+        }
+
+        // 3. Recherche par nom ou prénom
         if ($search) {
             $queryBuilder->andWhere('u.nom LIKE :search OR u.prenom LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
         }
 
         // Tri et Pagination
-        $queryBuilder->orderBy('u.id', 'DESC') // Vérifie que ta clé primaire s'appelle bien "id"
+        $queryBuilder->orderBy('u.id', 'DESC')
             ->setFirstResult($offset)
             ->setMaxResults($perPage);
 
         $etudiantAffichees = $queryBuilder->getQuery()->getResult();
 
-        // 3. Calcul du total pour la pagination
+        // 4. Calcul du total pour la pagination
         $countBuilder = $repository->createQueryBuilder('u')
             ->select('count(u.id)')
             ->where('u.role = :role')
             ->setParameter('role', 'etudiant');
 
-        // On applique le même filtre de recherche pour le compte des pages
+        // On applique le même filtre de campus pour le count (très important !)
+        if ($userConnecte && strtolower($userConnecte->getRoleValue()) === 'pilote') {
+            $campusPilote = $userConnecte->getCampus();
+            if ($campusPilote) {
+                $countBuilder->andWhere('u.campus = :campus_id')
+                    ->setParameter('campus_id', $campusPilote->getIdCampus());
+            }
+        }
+
+        // On applique le filtre de recherche pour le count
         if ($search) {
             $countBuilder->andWhere('u.nom LIKE :search OR u.prenom LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
         }
-        
+
         $totalItems = $countBuilder->getQuery()->getSingleScalarResult();
         $nombrePages = ceil($totalItems / $perPage);
 
@@ -72,7 +97,7 @@ class EtudiantController
             'etudiant'     => $etudiantAffichees,
             'pageActuelle' => $page,
             'nombrePages'  => $nombrePages,
-            'searchTerm'   => $search // On renvoie le terme pour l'afficher dans l'input
+            'searchTerm'   => $search
         ]);
     }
 
@@ -83,24 +108,27 @@ class EtudiantController
         $success = false;
 
         if ($request->getMethod() === 'POST') {
-            // 1. Préparation des données (on s'assure qu'elles ne sont pas nulles)
             $prenom = trim($data['prenom'] ?? '');
             $nom = trim($data['nom'] ?? '');
             $tel = trim($data['numeroTelephone'] ?? '');
             $genre = trim($data['genre'] ?? '');
             $email = trim($data['email'] ?? '');
-            $mdp = password_hash(trim($data['motDePasse'] ?? ''), PASSWORD_BCRYPT); // Toujours hasher les MDP !
+            $mdp = password_hash(trim($data['motDePasse'] ?? ''), PASSWORD_BCRYPT);
             $promo = trim($data['promo'] ?? '');
             $role = Role::ETUDIANT;
 
-            // Gestion de la date de naissance (DateTimeImmutable requis)
             $dateNaissanceRaw = $data['dateNaissance'] ?? 'now';
             try {
                 $dateNaissance = new \DateTimeImmutable($dateNaissanceRaw);
             } catch (\Exception $e) {
-                $dateNaissance = new \DateTimeImmutable(); // Date par défaut si erreur
+                $dateNaissance = new \DateTimeImmutable();
             }
 
+            $idCampus = $data['id_campus'] ?? null;
+            $campusSelectionne = null;
+            if ($idCampus) {
+                $campusSelectionne = $this->entityManager->find(Campus::class, (int)$idCampus);
+            }
 
             $nouvelEtudiant = new user(
                 $prenom,
@@ -111,26 +139,32 @@ class EtudiantController
                 $mdp,
                 $dateNaissance,
                 $promo,
-                $role
+                $role,
+                $campusSelectionne // Si tu l'as rendu obligatoire dans le constructeur
             );
+
+            // Si tu ne l'as pas mis dans le constructeur de User, tu fais :
+            // $nouvelEtudiant->setCampus($campusSelectionne);
 
             $this->entityManager->persist($nouvelEtudiant);
             $this->entityManager->flush();
-            
+
             $routeParser = RouteContext::fromRequest($request)->getRouteParser();
             $url = $routeParser->urlFor('liste-etudiants');
 
             return $response
                 ->withHeader('Location', $url)
                 ->withStatus(302);
-
         }
 
+        // On récupère les campus pour la liste déroulante
+        $campuses = $this->entityManager->getRepository(Campus::class)->findAll();
+
         return $view->render($response, 'etudiant/ajout.html.twig', [
-            "success" => $success
+            "success" => $success,
+            "campuses" => $campuses // On envoie les campus à Twig !
         ]);
     }
-
 
     public function modifier(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
@@ -147,7 +181,6 @@ class EtudiantController
         if ($request->getMethod() === 'POST') {
             $data = $request->getParsedBody();
 
-            // On remplit l'objet avec les nouvelles valeurs
             $Etudiant->setPrenom(trim($data['prenom'] ?? ''));
             $Etudiant->setNom(trim($data['nom'] ?? ''));
             $Etudiant->setNumeroTelephone(trim($data['numeroTelephone'] ?? ''));
@@ -155,18 +188,22 @@ class EtudiantController
             $Etudiant->setEmail(trim($data['email'] ?? ''));
             $Etudiant->setPromo(trim($data['promo'] ?? ''));
 
-            // On ajoute la gestion du mot de passe
             if (!empty($data['motDePasse'])) {
-                $Etudiant->setMotDePasse($data['motDePasse']);
+                $Etudiant->setMotDePasse(password_hash($data['motDePasse'], PASSWORD_BCRYPT)); // N'oublie pas de hasher en cas de modif !
             }
 
-            // On ajoute la gestion de la date
             if (!empty($data['dateNaissance'])) {
                 $date = new \DateTimeImmutable($data['dateNaissance']);
                 $Etudiant->setDateNaissance($date);
             }
 
-            // On sauvegarde tout en base de données
+            // GESTION DU CAMPUS LORS DE LA MODIFICATION
+            $idCampus = $data['id_campus'] ?? null;
+            if ($idCampus) {
+                $campusSelectionne = $this->entityManager->find(Campus::class, (int)$idCampus);
+                $Etudiant->setCampus($campusSelectionne);
+            }
+
             $this->entityManager->flush();
             $success = true;
 
@@ -178,13 +215,16 @@ class EtudiantController
                 ->withStatus(302);
         }
 
+        // On récupère les campus pour la liste déroulante
+        $campuses = $this->entityManager->getRepository(Campus::class)->findAll();
+
         return $view->render($response, 'etudiant/modifier.html.twig', [
             'etudiant' => $Etudiant,
             'success' => $success,
-
+            'campuses' => $campuses // On envoie les campus à Twig !
         ]);
-
     }
+
     public function supprimer(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $id = (int) $args['id'];
@@ -203,5 +243,3 @@ class EtudiantController
             ->withStatus(302);
     }
 }
-
-

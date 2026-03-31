@@ -8,6 +8,9 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\JoinColumn;
+use App\Application\Domain\Campus;
 
 #[Entity, Table(name: 'offres')]
 class Offre
@@ -42,6 +45,10 @@ class Offre
     #[Column(type: 'string', length: 50)]
     private string $presentielOuDistanciel;
 
+    #[ManyToOne(targetEntity: Campus::class)]
+    #[JoinColumn(name: 'id_campus', referencedColumnName: 'id_campus', nullable: false)]
+    private Campus $campus;
+
     public function __construct(
         string $nom,
         string $duree,
@@ -60,9 +67,8 @@ class Offre
         $this->remuneration = $remuneration;
         $this->description = $description;
         $this->presentielOuDistanciel = $presentielOuDistanciel;
-        $this->nombreEtudiantPostule = 0; 
+        $this->nombreEtudiantPostule = 0;
     }
-
 
     public function getIdOffre(): int
     {
@@ -114,12 +120,46 @@ class Offre
         return $this->presentielOuDistanciel;
     }
 
-    public function setNom(string $nom): void { $this->nom = $nom; }
-    public function setDuree(string $duree): void { $this->duree = $duree; }
-    public function setExigenceEtude(string $exigenceEtude): void { $this->exigenceEtude = $exigenceEtude; }
-    public function setEntreprise(string $entreprise): void { $this->entreprise = $entreprise; }
-    public function setDate(DateTimeImmutable $date): void { $this->date = $date; }
-    public function setRemuneration(float $remuneration): void { $this->remuneration = $remuneration; }
-    public function setDescription(string $description): void { $this->description = $description; }
-    public function setPresentielOuDistanciel(string $presentielOuDistanciel): void { $this->presentielOuDistanciel = $presentielOuDistanciel; }
+    public function getCampus(): Campus
+    {
+        return $this->campus;
+    }
+
+    public function setNom(string $nom): void
+    {
+        $this->nom = $nom;
+    }
+    public function setDuree(string $duree): void
+    {
+        $this->duree = $duree;
+    }
+    public function setExigenceEtude(string $exigenceEtude): void
+    {
+        $this->exigenceEtude = $exigenceEtude;
+    }
+    public function setEntreprise(string $entreprise): void
+    {
+        $this->entreprise = $entreprise;
+    }
+    public function setDate(DateTimeImmutable $date): void
+    {
+        $this->date = $date;
+    }
+    public function setRemuneration(float $remuneration): void
+    {
+        $this->remuneration = $remuneration;
+    }
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+    public function setPresentielOuDistanciel(string $presentielOuDistanciel): void
+    {
+        $this->presentielOuDistanciel = $presentielOuDistanciel;
+    }
+
+    public function setCampus(Campus $campus): void
+    {
+        $this->campus = $campus;
+    }
 }

@@ -1,75 +1,73 @@
 {% extends "layouts/base.html.twig" %}
 
-{% block title %}Ajouter une Entreprise
-{% endblock %}
+{% block title %}Ajouter une Entreprise{% endblock %}
 
 {% block content %}
-	<div class="row justify-content-center">
-		<div class="col-md-8 col-lg-6">
-			<div class="card shadow">
-				<div class="card-header bg-primary text-white">
-					<h4 class="mb-0">Nouvelle Entreprise</h4>
-				</div>
-				<div class="card-body">
-					<form
-						action="/ajout-entreprise" method="POST">
+    <div class="row justify-content-center mt-4 mb-5">
+        <div class="col-md-8 col-lg-6">
+            
+            {% if success %}
+                <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                    <strong>Succès !</strong> L'entreprise a été ajoutée.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
 
-						{# Nom de l'entreprise #}
-						<div class="mb-3">
-							<label for="nom" class="form-label font-weight-bold">Nom de l'entreprise</label>
-							<input type="text" class="form-control" id="nom" name="nom" placeholder="Ex: TechCorp" value="{{ nom }}" required>
-						</div>
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Nouvelle Entreprise</h4>
+                </div>
+                <div class="card-body">
+                    <form action="/ajout-entreprise" method="POST">
 
-						{# Adresse #}
-						<div class="mb-3">
-							<label for="adresse" class="form-label">Adresse postale</label>
-							<input type="text" class="form-control" id="adresse" name="adresse" placeholder="123 Rue de l'Innovation, Paris" required>
-						</div>
+                        {# Nom de l'entreprise #}
+                        <div class="mb-3">
+                            <label for="nom" class="form-label font-weight-bold">Nom de l'entreprise</label>
+                            <input type="text" class="form-control" id="nom" name="nom" placeholder="Ex: TechCorp" value="{{ nom|default('') }}" required>
+                        </div>
 
-						<div
-							class="row">
-							{# SIRET #}
-							<div class="col-md-6 mb-3">
-								<label for="siret" class="form-label">N° SIRET</label>
-								<input type="text" class="form-control" id="siret" name="siret" placeholder="14 chiffres" pattern="[0-9]{14}" title="Le SIRET doit contenir 14 chiffres" required>
-							</div>
+                        {# Adresse #}
+                        <div class="mb-3">
+                            <label for="adresse" class="form-label">Adresse postale</label>
+                            <input type="text" class="form-control" id="adresse" name="adresse" placeholder="123 Rue de l'Innovation, Paris" required>
+                        </div>
 
-							{# Taille de l'entreprise #}
-							<div class="col-md-6 mb-3">
-								<label for="taille" class="form-label">Taille (Effectif)</label>
-								<input type="text" class="form-control" id="taille" name="taille" placeholder="Ex: 15 personnes ou PME" required>
-							</div>
+                        <div class="row">
+                            {# SIRET #}
+                            <div class="col-md-6 mb-3">
+                                <label for="siret" class="form-label">N° SIRET</label>
+                                <input type="text" class="form-control" id="siret" name="siret" placeholder="14 chiffres" pattern="[0-9]{14}" title="Le SIRET doit contenir 14 chiffres" required>
+                            </div>
 
-							{# Domaine (Anciennement Secteur) #}
-							<div class="mb-3">
-								<label for="domaine" class="form-label">Domaine d'activité</label>
-								<input type="text" class="form-control" id="domaine" name="domaine" list="domaines-suggest" placeholder="Ex: Développement Web, Industrie...">
-								<datalist id="domaines-suggest">
-									<option value="Informatique"></option>
-									<option value="Énergie"></option>
-									<option value="Santé"></option>
-									<option value="Transport"></option>
-								</datalist>
-							</div>
+                            {# Taille de l'entreprise #}
+                            <div class="col-md-6 mb-3">
+                                <label for="taille" class="form-label">Taille (Effectif)</label>
+                                <input type="text" class="form-control" id="taille" name="taille" placeholder="Ex: 15 personnes ou PME" required>
+                            </div>
+                        </div>
 
-							<hr>
+                        {# Domaine #}
+                        <div class="mb-3">
+                            <label for="domaine" class="form-label">Domaine d'activité</label>
+                            <input type="text" class="form-control" id="domaine" name="domaine" list="domaines-suggest" placeholder="Ex: Développement Web, Industrie..." required>
+                            <datalist id="domaines-suggest">
+                                <option value="Informatique"></option>
+                                <option value="Énergie"></option>
+                                <option value="Santé"></option>
+                                <option value="Transport"></option>
+                            </datalist>
+                        </div>
 
-							<div class="d-flex justify-content-between">
-								<a href="/entreprises" class="btn btn-outline-secondary">Annuler</a>
-								<button type="submit" class="btn btn-success px-4">Enregistrer</button>
-							</div>
+                        <hr>
 
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('entreprises-admin') }}" class="btn btn-outline-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-success px-4">Enregistrer</button>
+                        </div>
 
-		{% if success %}
-			<div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-				<strong>Succès !</strong>
-				L'entreprise a été ajoutée.
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-			</div>
-		{% endif %}
-	{% endblock %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

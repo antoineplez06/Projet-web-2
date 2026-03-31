@@ -57,6 +57,18 @@
 							<input type="text" class="form-control" id="exigenceEtude" name="exigenceEtude" placeholder="Ex: Bac+3, Master, PHP, React..." required>
 						</div>
 
+						<div class="mb-4">
+							<label for="id_campus" class="form-label fw-bold">Campus de gestion</label>
+							<select class="form-select" id="id_campus" name="id_campus">
+								<option value="">-- Aucun campus / Ne pas associer --</option>
+								{% for campus in campuses %}
+									<option value="{{ campus.idCampus }}" {% if Entreprise.campus and Entreprise.campus.idCampus == campus.idCampus %} selected {% endif %}>
+										{{ campus.ville }}
+									</option>
+								{% endfor %}
+							</select>
+						</div>
+
 						<div class="mb-3">
 							<label for="description" class="form-label fw-bold">Description détaillée</label>
 							<textarea class="form-control" id="description" name="description" rows="5" placeholder="Détaillez les missions de l'offre..." required></textarea>

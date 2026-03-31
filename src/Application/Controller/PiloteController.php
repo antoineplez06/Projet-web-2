@@ -6,6 +6,7 @@ use App\Application\Domain\User;
 use App\Application\Domain\Role;
 
 use Doctrine\ORM\EntityManager;
+use App\Application\Domain\Campus;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
@@ -102,6 +103,12 @@ public function liste(ServerRequestInterface $request, ResponseInterface $respon
                 $dateNaissance = new \DateTimeImmutable(); // Date par défaut si erreur
             }
 
+            $idCampus = $data ['id_campus'] ?? null;
+            $campusSelectionne = null;
+            if ($idCampus) {
+                $campusSelectionne = $this->entityManager->find(Campus::class, (int)$idCampus);
+            }
+
 
             $nouveauPilote = new user(
                 $prenom,
@@ -112,7 +119,8 @@ public function liste(ServerRequestInterface $request, ResponseInterface $respon
                 $mdp,
                 $dateNaissance,
                 $promo,
-                $role
+                $role,
+                $campusSelectionne 
             );
 
             $this->entityManager->persist($nouveauPilote);

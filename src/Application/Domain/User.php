@@ -9,6 +9,10 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\JoinColumn;
+
+use App\Application\Domain\Campus;
 
 #[Entity, Table(name: 'user')]
 class user
@@ -40,10 +44,12 @@ class user
     #[Column(type: 'string', length: 50)]
     private string $promo;
 
-
     #[Column(type: Types::STRING, enumType: Role::class)]
     private Role $role = Role::ETUDIANT;
 
+    #[ManyToOne(targetEntity: Campus::class)]
+    #[JoinColumn(name: 'id_campus', referencedColumnName: 'id_campus', nullable: true)]
+    private Campus $campus;
 
 
     public function __construct(
@@ -55,7 +61,8 @@ class user
         string $motDePasse,
         DateTimeImmutable $dateNaissance,
         string $promo,
-        Role $role
+        Role $role,
+        Campus $campus
     ) {
         $this->prenom = $prenom;
         $this->nom = $nom;
@@ -66,6 +73,7 @@ class user
         $this->dateNaissance = $dateNaissance;
         $this->promo = $promo;
         $this->role = $role;
+        $this->campus = $campus;
     }
 
     public function getId(): int
@@ -123,12 +131,20 @@ class user
         return $this->role->value;
     }
 
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
     public function setPrenom(string $prenom): void
     {
         $this->prenom = $prenom;
     }
 
-   public function setRole(Role $role): void { $this->role = $role; }
+    public function setRole(Role $role): void 
+    { 
+        $this->role = $role; 
+    }
 
     public function setNom(string $nom): void
     {
@@ -163,5 +179,10 @@ class user
     public function setPromo(string $promo): void
     {
         $this->promo = $promo;
+    }
+
+    public function setCampus(?Campus $campus): void
+    {
+        $this->campus = $campus;
     }
 }

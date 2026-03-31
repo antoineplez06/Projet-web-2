@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Application\Controller;
-use App\Application\Domain\Entreprise;
 
+use App\Application\Domain\Entreprise;
+use App\Application\Domain\Campus; 
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -12,7 +13,6 @@ use Slim\Routing\RouteContext;
 class EntrepriseController
 {
     private EntityManager $entityManager;
-
 
     public function __construct(EntityManager $entityManager)
     {
@@ -26,9 +26,7 @@ class EntrepriseController
         $perPage = 5;
         $offset = ($page - 1) * $perPage;
 
-
         $repository = $this->entityManager->getRepository(Entreprise::class);
-
 
         $entreprisesAffichees = $repository->findBy(
             [],
@@ -36,7 +34,6 @@ class EntrepriseController
             $perPage,
             $offset
         );
-
 
         $totalEntreprises = $repository->count([]);
         $nombrePages = ceil($totalEntreprises / $perPage);
@@ -77,7 +74,7 @@ class EntrepriseController
         }
 
         return $view->render($response, 'entreprise/ajout.html.twig', [
-            'success' => $success
+            'success' => $success,
         ]);
     }
 
@@ -88,9 +85,7 @@ class EntrepriseController
         $perPage = 5;
         $offset = ($page - 1) * $perPage;
 
-
         $repository = $this->entityManager->getRepository(Entreprise::class);
-
 
         $entreprisesAffichees = $repository->findBy(
             [],
@@ -98,7 +93,6 @@ class EntrepriseController
             $perPage,
             $offset
         );
-
 
         $totalEntreprises = $repository->count([]);
         $nombrePages = ceil($totalEntreprises / $perPage);
@@ -114,7 +108,7 @@ class EntrepriseController
     {
         $view = Twig::fromRequest($request);
         $queryParams = $request->getQueryParams();
-        $search = $queryParams['q'] ?? null; // Récupère le terme de recherche
+        $search = $queryParams['q'] ?? null;
 
         $page = isset($args['page']) ? (int) $args['page'] : 1;
         $perPage = 5;
@@ -123,7 +117,6 @@ class EntrepriseController
         $repository = $this->entityManager->getRepository(Entreprise::class);
         $queryBuilder = $repository->createQueryBuilder('e');
 
-        // Si une recherche est effectuée
         if ($search) {
             $queryBuilder->where('e.nom LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
@@ -135,7 +128,6 @@ class EntrepriseController
 
         $entreprisesAffichees = $queryBuilder->getQuery()->getResult();
 
-        // Calcul du total pour la pagination (en tenant compte du filtre)
         $countBuilder = $repository->createQueryBuilder('e')
             ->select('count(e.id)');
         if ($search) {
@@ -150,9 +142,10 @@ class EntrepriseController
             'entreprises' => $entreprisesAffichees,
             'pageActuelle' => $page,
             'nombrePages' => $nombrePages,
-            'searchTerm' => $search // On renvoie le terme pour l'afficher dans l'input
+            'searchTerm' => $search
         ]);
     }
+
     public function modifier(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
@@ -168,14 +161,13 @@ class EntrepriseController
         if ($request->getMethod() === 'POST') {
             $data = $request->getParsedBody();
 
-            // On remplit l'objet avec les nouvelles valeurs
             $Entreprise->setNom(trim($data['nom'] ?? ''));
             $Entreprise->setAdresse(trim($data['adresse'] ?? ''));
             $Entreprise->setSiret(trim($data['siret'] ?? ''));
             $Entreprise->setDomaine(trim($data['domaine'] ?? ''));
             $Entreprise->setTaille(trim($data['taille'] ?? ''));
 
-            // On sauvegarde tout en base de données
+
             $this->entityManager->flush();
             $success = true;
 
@@ -187,12 +179,16 @@ class EntrepriseController
                 ->withStatus(302);
         }
 
+        // Récupération des campus pour le formulaire de modification
+        $campuses = $this->entityManager->getRepository(Campus::class)->findAll();
+
         return $view->render($response, 'entreprise/modifier.html.twig', [
             'Entreprise' => $Entreprise,
             'success' => $success,
-
+            'campuses' => $campuses // On envoie la liste ici !
         ]);
     }
+
     public function supprimer(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $id = (int) $args['id'];

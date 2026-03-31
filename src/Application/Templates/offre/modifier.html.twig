@@ -1,86 +1,101 @@
 {% extends "layouts/base.html.twig" %}
 
-{% block title %}Modifier une offre{% endblock %}
+{% block title %}Modifier une offre
+{% endblock %}
 
 {% block content %}
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow border-0">
-                <div class="card-header bg-primary text-white py-3">
-                    <h4 class="mb-0">Modifier l'offre : {{ offre.nom }}</h4>
-                </div>
-                <div class="card-body p-4">
-                    {# L'action reste vide pour poster sur l'URL actuelle #}
-                    <form action="" method="POST">
+	<div class="row justify-content-center">
+		<div class="col-md-8">
+			<div class="card shadow border-0">
+				<div class="card-header bg-primary text-white py-3">
+					<h4 class="mb-0">Modifier l'offre :
+						{{ offre.nom }}</h4>
+				</div>
+				<div
+					class="card-body p-4">
+					{# L'action reste vide pour poster sur l'URL actuelle #}
+					<form action="" method="POST">
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="nom" class="form-label fw-bold">Intitulé du poste (nom)</label>
-                                <input type="text" class="form-control" id="nom" name="nom" value="{{ offre.nom }}" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="entreprise" class="form-label fw-bold">Entreprise</label>
-                                <input type="text" class="form-control" id="entreprise" name="entreprise" value="{{ offre.entreprise }}" required>
-                            </div>
-                        </div>
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label for="nom" class="form-label fw-bold">Intitulé du poste (nom)</label>
+								<input type="text" class="form-control" id="nom" name="nom" value="{{ offre.nom }}" required>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label for="entreprise" class="form-label fw-bold">Entreprise</label>
+								<input type="text" class="form-control" id="entreprise" name="entreprise" value="{{ offre.entreprise }}" required>
+							</div>
+						</div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="duree" class="form-label fw-bold">Durée du stage</label>
-                                <input type="text" class="form-control" id="duree" name="duree" value="{{ offre.duree }}" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="date" class="form-label fw-bold">Date de début / Publication</label>
-                                <input type="date" class="form-control" id="date" name="date" value="{{ offre.date|date('Y-m-d') }}" required>
-                            </div>
-                        </div>
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label for="duree" class="form-label fw-bold">Durée du stage</label>
+								<input type="text" class="form-control" id="duree" name="duree" value="{{ offre.duree }}" required>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label for="date" class="form-label fw-bold">Date de début / Publication</label>
+								<input type="date" class="form-control" id="date" name="date" value="{{ offre.date|date('Y-m-d') }}" required>
+							</div>
+						</div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="remuneration" class="form-label fw-bold">Rémunération (€)</label>
-                                <input type="number" step="0.01" class="form-control" id="remuneration" name="remuneration" value="{{ offre.remuneration }}" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="presentielOuDistanciel" class="form-label fw-bold">Mode de travail</label>
-                                <select class="form-select" id="presentielOuDistanciel" name="presentielOuDistanciel" required>
-                                    <option value="Présentiel" {% if offre.presentielOuDistanciel == 'Présentiel' %}selected{% endif %}>Présentiel</option>
-                                    <option value="Distanciel" {% if offre.presentielOuDistanciel == 'Distanciel' %}selected{% endif %}>Distanciel</option>
-                                    <option value="Hybride" {% if offre.presentielOuDistanciel == 'Hybride' %}selected{% endif %}>Hybride</option>
-                                </select>
-                            </div>
-                        </div>
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label for="remuneration" class="form-label fw-bold">Rémunération (€)</label>
+								<input type="number" step="0.01" class="form-control" id="remuneration" name="remuneration" value="{{ offre.remuneration }}" required>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label for="presentielOuDistanciel" class="form-label fw-bold">Mode de travail</label>
+								<select class="form-select" id="presentielOuDistanciel" name="presentielOuDistanciel" required>
+									<option value="Présentiel" {% if offre.presentielOuDistanciel == 'Présentiel' %} selected {% endif %}>Présentiel</option>
+									<option value="Distanciel" {% if offre.presentielOuDistanciel == 'Distanciel' %} selected {% endif %}>Distanciel</option>
+									<option value="Hybride" {% if offre.presentielOuDistanciel == 'Hybride' %} selected {% endif %}>Hybride</option>
+								</select>
+							</div>
+						</div>
 
-                        <div class="mb-3">
-                            <label for="exigenceEtude" class="form-label fw-bold">Exigences d'études</label>
-                            <input type="text" class="form-control" id="exigenceEtude" name="exigenceEtude" value="{{ offre.exigenceEtude }}" required>
-                        </div>
+						<div class="mb-3">
+							<label for="exigenceEtude" class="form-label fw-bold">Exigences d'études</label>
+							<input type="text" class="form-control" id="exigenceEtude" name="exigenceEtude" value="{{ offre.exigenceEtude }}" required>
+						</div>
 
-                        <div class="mb-3">
-                            <label for="description" class="form-label fw-bold">Description détaillée</label>
-                            <textarea class="form-control" id="description" name="description" rows="5" required>{{ offre.description }}</textarea>
-                        </div>
+						<div class="mb-4">
+							<label for="id_campus" class="form-label fw-bold">Campus de gestion</label>
+							<select class="form-select" id="id_campus" name="id_campus">
+								<option value="">-- Aucun campus / Ne pas associer --</option>
+								{% for campus in campuses %}
+									<option value="{{ campus.idCampus }}" {% if offre.campus and offre.campus.idCampus == campus.idCampus %} selected {% endif %}>
+										{{ campus.ville }}
+									</option>
+								{% endfor %}
+							</select>
+						</div>
 
-                        <hr class="my-4">
+						<div class="mb-3">
+							<label for="description" class="form-label fw-bold">Description détaillée</label>
+							<textarea class="form-control" id="description" name="description" rows="5" required>{{ offre.description }}</textarea>
+						</div>
 
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ url_for('offres-admin') }}" class="btn btn-outline-secondary px-4">Annuler</a>
-                            <button type="submit" class="btn btn-success px-5 fw-bold">Enregistrer les modifications</button>
-                        </div>
+						<hr class="my-4">
 
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+						<div class="d-flex justify-content-between">
+							<a href="{{ url_for('offres-admin') }}" class="btn btn-outline-secondary px-4">Annuler</a>
+							<button type="submit" class="btn btn-success px-5 fw-bold">Enregistrer les modifications</button>
+						</div>
 
-    {% if success %}
-        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-            <div class="alert alert-success alert-dismissible fade show shadow" role="alert">
-                <strong>Succès !</strong>
-                L'offre a été mise à jour avec succès.
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
-    {% endif %}
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{% if success %}
+		<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+			<div class="alert alert-success alert-dismissible fade show shadow" role="alert">
+				<strong>Succès !</strong>
+				L'offre a été mise à jour avec succès.
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		</div>
+	{% endif %}
 
 {% endblock %}
