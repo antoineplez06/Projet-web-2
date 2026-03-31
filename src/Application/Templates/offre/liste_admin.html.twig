@@ -10,21 +10,13 @@
         <a class="btn btn-primary" href="{{ url_for('ajout-offre') }}">Ajouter une offre</a>
     </div>
 
-    {# Barre de recherche simple à gauche (Style "Entreprises") mais avec bouton de filtre intégré #}
-    <div class="row mb-3">
+   <div class="row mb-3">
         <div class="col-md-6">
             <form method="GET" action="{{ url_for('offres-admin') }}" class="d-flex">
-                <input type="text" name="search" class="form-control me-2" placeholder="Rechercher par nom d'offre ou entreprise..." value="{{ filtres.search|default('') }}">
-                
-                <div class="btn-group me-2">
-                    <button type="submit" class="btn btn-outline-secondary">Rechercher</button>
-                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#filtreModal" title="Filtres avancés">
-                        <i class="bi bi-funnel"></i> Filtrer
-                    </button>
-                </div>
-
-                {% if filtres.search or filtres.lieu or filtres.candidats_max %}
-                    <a href="{{ url_for('offres-admin') }}" class="btn btn-link text-danger text-decoration-none" style="white-space: nowrap;">Réinitialiser</a>
+                <input type="text" name="q" class="form-control me-2" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
+                <button type="submit" class="btn btn-outline-secondary">Rechercher</button>
+                {% if searchTerm %}
+                    <a href="{{ url_for('offres-admin') }}" class="btn btn-link">Réinitialiser</a>
                 {% endif %}
             </form>
         </div>

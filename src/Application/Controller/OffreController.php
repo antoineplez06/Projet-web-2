@@ -125,15 +125,11 @@ class OffreController
             'filtres'        => $params
         ]);
     }
-
-    public function listeAdmin(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+public function listeAdmin(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
         $queryParams = $request->getQueryParams();
-
-        // Récupération des filtres depuis l'URL (search, lieu)
-        $search = $queryParams['search'] ?? null;
-        $lieu = $queryParams['lieu'] ?? null;
+        $search = $queryParams['q'] ?? null; // Récupère le terme de recherche
 
         $page = isset($args['page']) ? (int) $args['page'] : 1;
         $perPage = 5;
@@ -142,38 +138,26 @@ class OffreController
         $repository = $this->entityManager->getRepository(Offre::class);
         $queryBuilder = $repository->createQueryBuilder('o');
 
-        // 1. Filtre par recherche texte (nom ou entreprise)
+        // Si une recherche est effectuée
         if ($search) {
-            $queryBuilder->andWhere('o.nom LIKE :search OR o.entreprise LIKE :search')
+            $queryBuilder->where('o.nom LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
         }
 
-        // 2. Filtre par lieu (depuis la modale)
-        if ($lieu) {
-            $queryBuilder->andWhere('o.lieu = :lieu')
-                ->setParameter('lieu', $lieu);
-        }
-
-        // Tri et Pagination
         $queryBuilder->orderBy('o.idOffre', 'DESC')
             ->setFirstResult($offset)
             ->setMaxResults($perPage);
 
         $offresAffichees = $queryBuilder->getQuery()->getResult();
 
-        // Calcul du total pour la pagination (en tenant compte des mêmes filtres)
+        // Calcul du total pour la pagination (en tenant compte du filtre)
         $countBuilder = $repository->createQueryBuilder('o')
             ->select('count(o.idOffre)');
-
+            
         if ($search) {
-            $countBuilder->andWhere('o.nom LIKE :search OR o.entreprise LIKE :search')
+            $countBuilder->where('o.nom LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
         }
-        if ($lieu) {
-            $countBuilder->andWhere('o.lieu = :lieu')
-                ->setParameter('lieu', $lieu);
-        }
-
         $totalOffres = $countBuilder->getQuery()->getSingleScalarResult();
 
         $nombrePages = ceil($totalOffres / $perPage);
@@ -182,7 +166,7 @@ class OffreController
             'offres'       => $offresAffichees,
             'pageActuelle' => $page,
             'nombrePages'  => $nombrePages,
-            'filtres'      => $queryParams // On passe tout le tableau pour pré-remplir la vue
+            'searchTerm'   => $search // On renvoie le terme pour l'afficher dans l'input
         ]);
     }
 

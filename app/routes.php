@@ -11,6 +11,7 @@ use App\Application\Controller\EntrepriseController;
 use App\Application\Controller\EtudiantController;
 use App\Application\Controller\OffreController;
 use App\Application\Controller\WishlistController;
+use App\Application\Controller\PiloteController;
 use App\Application\Controller\CandidatureController;
 use App\Application\Controller\CampusController;
 use App\Application\Controller\ConnexionController;
@@ -71,6 +72,15 @@ return function (App $app) {
 
     $app->get('/connexion', [ConnexionController::class, 'connexion'])->setName('connexion');
     $app->post('/connexion', [ConnexionController::class, 'connexion'])->setName('connexion');
+
+    $app->group('/pilote', function (RouteCollectorProxy $group) use ($factory) {
+        $group->get('/ajout', [PiloteController::class, 'ajoute'])->setName('ajout-pilote');
+        $group->post('/ajout', [PiloteController::class, 'ajoute'])->setName('ajout-pilote');
+        $group->get('/liste', [PiloteController::class, 'liste'])->setName('liste-pilotes');
+        $group->get('/modifier/{id}', [PiloteController::class, 'modifier'])->setName('modifier-pilote');
+        $group->post('/modifier/{id}', [PiloteController::class, 'modifier'])->setName('modifier-pilote');
+        $group->post('/supprimer/{id}', [PiloteController::class, 'supprimer'])->setName('supprimer-pilote');
+    })->add(new RoleCheckMiddleware($factory, [Role::ADMIN]));
 
     $app->group('/offres', function (RouteCollectorProxy $group) use ($factory) {
         $group->get('/admin[/{page:\d+}]', [OffreController::class, 'listeAdmin'])->setName('offres-admin');

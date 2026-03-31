@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Application\Controller;
+
 use App\Application\Domain\User;
 use App\Application\Domain\Role;
 
@@ -10,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
 use Slim\Routing\RouteContext;
 
-class EtudiantController
+class PiloteController
 {
     private EntityManager $entityManager;
 
@@ -19,7 +20,7 @@ class EtudiantController
         $this->entityManager = $entityManager;
     }
 
-    public function liste(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+public function liste(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
         $queryParams = $request->getQueryParams();
@@ -36,9 +37,9 @@ class EtudiantController
         $repository = $this->entityManager->getRepository(user::class);
         $queryBuilder = $repository->createQueryBuilder('u');
 
-        // 1. Condition obligatoire : on ne veut QUE les étudiants
+        // 1. Condition obligatoire : on ne veut QUE les pilotes
         $queryBuilder->where('u.role = :role')
-            ->setParameter('role', 'etudiant');
+            ->setParameter('role', 'pilote');
 
         // 2. Si une recherche est effectuée (sur nom ou prénom)
         if ($search) {
@@ -47,17 +48,17 @@ class EtudiantController
         }
 
         // Tri et Pagination
-        $queryBuilder->orderBy('u.id', 'DESC') // Vérifie que ta clé primaire s'appelle bien "id"
+        $queryBuilder->orderBy('u.id', 'DESC')
             ->setFirstResult($offset)
             ->setMaxResults($perPage);
 
-        $etudiantAffichees = $queryBuilder->getQuery()->getResult();
+        $piloteAffiches = $queryBuilder->getQuery()->getResult();
 
         // 3. Calcul du total pour la pagination
         $countBuilder = $repository->createQueryBuilder('u')
             ->select('count(u.id)')
             ->where('u.role = :role')
-            ->setParameter('role', 'etudiant');
+            ->setParameter('role', 'pilote');
 
         // On applique le même filtre de recherche pour le compte des pages
         if ($search) {
@@ -68,8 +69,8 @@ class EtudiantController
         $totalItems = $countBuilder->getQuery()->getSingleScalarResult();
         $nombrePages = ceil($totalItems / $perPage);
 
-        return $view->render($response, 'etudiant/liste.html.twig', [
-            'etudiant'     => $etudiantAffichees,
+        return $view->render($response, 'pilote/liste.html.twig', [
+            'pilote'       => $piloteAffiches,
             'pageActuelle' => $page,
             'nombrePages'  => $nombrePages,
             'searchTerm'   => $search // On renvoie le terme pour l'afficher dans l'input
@@ -91,7 +92,7 @@ class EtudiantController
             $email = trim($data['email'] ?? '');
             $mdp = password_hash(trim($data['motDePasse'] ?? ''), PASSWORD_BCRYPT); // Toujours hasher les MDP !
             $promo = trim($data['promo'] ?? '');
-            $role = Role::ETUDIANT;
+            $role = Role::PILOTE;
 
             // Gestion de la date de naissance (DateTimeImmutable requis)
             $dateNaissanceRaw = $data['dateNaissance'] ?? 'now';
@@ -102,7 +103,7 @@ class EtudiantController
             }
 
 
-            $nouvelEtudiant = new user(
+            $nouveauPilote = new user(
                 $prenom,
                 $nom,
                 $tel,
@@ -114,19 +115,18 @@ class EtudiantController
                 $role
             );
 
-            $this->entityManager->persist($nouvelEtudiant);
+            $this->entityManager->persist($nouveauPilote);
             $this->entityManager->flush();
-            
+
             $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-            $url = $routeParser->urlFor('liste-etudiants');
+            $url = $routeParser->urlFor('liste-pilotes');
 
             return $response
                 ->withHeader('Location', $url)
                 ->withStatus(302);
-
         }
 
-        return $view->render($response, 'etudiant/ajout.html.twig', [
+        return $view->render($response, 'pilote/ajout.html.twig', [
             "success" => $success
         ]);
     }
@@ -136,9 +136,9 @@ class EtudiantController
     {
         $view = Twig::fromRequest($request);
         $id = (int) $args['id'];
-        $Etudiant = $this->entityManager->find(user::class, $id);
+        $Pilote = $this->entityManager->find(user::class, $id);
 
-        if (!$Etudiant) {
+        if (!$Pilote) {
             return $response->withStatus(404);
         }
 
@@ -148,22 +148,22 @@ class EtudiantController
             $data = $request->getParsedBody();
 
             // On remplit l'objet avec les nouvelles valeurs
-            $Etudiant->setPrenom(trim($data['prenom'] ?? ''));
-            $Etudiant->setNom(trim($data['nom'] ?? ''));
-            $Etudiant->setNumeroTelephone(trim($data['numeroTelephone'] ?? ''));
-            $Etudiant->setGenre(trim($data['genre'] ?? ''));
-            $Etudiant->setEmail(trim($data['email'] ?? ''));
-            $Etudiant->setPromo(trim($data['promo'] ?? ''));
+            $Pilote->setPrenom(trim($data['prenom'] ?? ''));
+            $Pilote->setNom(trim($data['nom'] ?? ''));
+            $Pilote->setNumeroTelephone(trim($data['numeroTelephone'] ?? ''));
+            $Pilote->setGenre(trim($data['genre'] ?? ''));
+            $Pilote->setEmail(trim($data['email'] ?? ''));
+            $Pilote->setPromo(trim($data['promo'] ?? ''));
 
             // On ajoute la gestion du mot de passe
             if (!empty($data['motDePasse'])) {
-                $Etudiant->setMotDePasse($data['motDePasse']);
+                $Pilote->setMotDePasse($data['motDePasse']);
             }
 
             // On ajoute la gestion de la date
             if (!empty($data['dateNaissance'])) {
                 $date = new \DateTimeImmutable($data['dateNaissance']);
-                $Etudiant->setDateNaissance($date);
+                $Pilote->setDateNaissance($date);
             }
 
             // On sauvegarde tout en base de données
@@ -171,37 +171,34 @@ class EtudiantController
             $success = true;
 
             $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-            $url = $routeParser->urlFor('liste-etudiants');
+            $url = $routeParser->urlFor('liste-pilotes');
 
             return $response
                 ->withHeader('Location', $url)
                 ->withStatus(302);
         }
 
-        return $view->render($response, 'etudiant/modifier.html.twig', [
-            'etudiant' => $Etudiant,
+        return $view->render($response, 'pilote/modifier.html.twig', [
+            'pilote' => $Pilote,
             'success' => $success,
 
         ]);
-
     }
     public function supprimer(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $id = (int) $args['id'];
-        $Etudiant = $this->entityManager->find(user::class, $id);
+        $Pilote = $this->entityManager->find(user::class, $id);
 
-        if ($Etudiant) {
-            $this->entityManager->remove($Etudiant);
+        if ($Pilote) {
+            $this->entityManager->remove($Pilote);
             $this->entityManager->flush();
         }
 
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-        $url = $routeParser->urlFor('liste-etudiants');
+        $url = $routeParser->urlFor('liste-pilotes');
 
         return $response
             ->withHeader('Location', $url)
             ->withStatus(302);
     }
 }
-
-
