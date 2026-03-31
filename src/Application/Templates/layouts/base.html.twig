@@ -31,7 +31,7 @@
 					<ul class="dropdown-menu">
 						{# --- SECTION OFFRES --- #}
 						<li>
-							{% (user.role == 'pilote' or user.role == 'admin') %}
+							{% if (user.role == 'pilote' or user.role == 'admin')  %}
 								<a class="dropdown-item" href="{{ url_for('offres-admin') }}">Offres (Gestion Admin)</a>
 							{% else %}
 								<a class="dropdown-item" href="{{ user ? url_for('Offres') : url_for('offres-an') }}">Offres</a>
@@ -51,7 +51,7 @@
 						{# Menu spécifique Admin uniquement #}
 						{% if user and user.role == 'admin' %}
 							<li>
-								<a class="dropdown-item" href="#">Pilotes</a>
+								<a class="dropdown-item" >Pilotes</a>
 							</li>
 						{% endif %}
 					</ul>
@@ -87,8 +87,6 @@
 							<li class="text-center fw-bold border-bottom border-dark px-2">
 								{{ user.prenom }}
 								{{ user.nom }}
-								<br>
-								<small class="text-muted">({{ user.role|capitalize }})</small>
 							</li>
 							<li>
 								<a class="dropdown-item text-center text-danger fw-bold" href="{{ url_for('deconnexion') }}">
