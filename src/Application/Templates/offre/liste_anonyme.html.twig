@@ -2,10 +2,17 @@
 
 {% block content %}
 
-	<form class="d-flex mt-4 mx-auto w-50" method="GET" action="/offres-an">
-		<input class="form-control me-4 border border-dark border-2" type="search" name="search" value="{{ filtres.search|default('') }}" placeholder="Rechercher par nom d'offre ou entreprise" aria-label="Rechercher une offre"/>
-		<button class="btn btn-outline-secondary" type="submit">Rechercher</button>
-	</form>
+	<div class="row mb-3 mt-4 justify-content-center">
+		<div class="col-md-6">
+			<form method="GET" action="{{ url_for('offres-an') }}" class="d-flex">
+				<input type="text" name="q" class="form-control me-2" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
+				<button type="submit" class="btn btn-outline-secondary">Rechercher</button>
+				{% if searchTerm %}
+					<a href="{{ url_for('offres-an') }}" class="btn btn-link">Réinitialiser</a>
+				{% endif %}
+			</form>
+		</div>
+	</div>
 
 	{% if filtres.search or filtres.lieu or filtres.candidats_max %}
 		<div class="text-center mt-3">
@@ -13,7 +20,7 @@
 		</div>
 	{% endif %}
 
-	
+
 	{% for offre in offres %}
 		<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white">
 			<h3 class="float-none w-auto fw-bold">{{ offre.nom }}</h3>
@@ -73,29 +80,30 @@
 			<h4 class="fw-bold text-muted">Aucune offre ne correspond à vos critères.</h4>
 		</div>
 	{% endfor %}
-<nav aria-label="Page navigation" class="mt-4">
-  <ul class="pagination justify-content-center">
-    
-    {# Bouton Précédent #}
-    <li class="page-item {{ pageActuelle <= 1 ? 'disabled' : '' }}">
-      <a class="page-link text-dark" href="{{ url_for('offres-an', { 'page': pageActuelle - 1 }, filtres) }}">Précédent</a>
-    </li>
+	<nav aria-label="Page navigation" class="mt-4">
+		<ul
+			class="pagination justify-content-center">
 
-    {# Numéros de pages #}
-    {% for i in 1..nombrePages %}
-      <li class="page-item {{ i == pageActuelle ? 'active' : '' }}">
-        {# On passe 'filtres' comme troisième argument à url_for pour conserver les paramètres GET #}
-        <a class="page-link {{ i == pageActuelle ? 'bg-dark text-white' : 'text-dark' }}" 
-           href="{{ url_for('offres-an', { 'page': i }, filtres) }}">{{ i }}</a>
-      </li>
-    {% endfor %}
+			{# Bouton Précédent #}
+			<li class="page-item {{ pageActuelle <= 1 ? 'disabled' : '' }}">
+				<a class="page-link text-dark" href="{{ url_for('offres-an', { 'page': pageActuelle - 1 }, filtres) }}">Précédent</a>
+			</li>
 
-    {# Bouton Suivant #}
-    <li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' : '' }}">
-      <a class="page-link text-dark" href="{{ url_for('offres-an', { 'page': pageActuelle + 1 }, filtres) }}">Suivant</a>
-    </li>
+			{# Numéros de pages #}
+			{% for i in 1..nombrePages %}
+				<li
+					class="page-item {{ i == pageActuelle ? 'active' : '' }}">
+					{# On passe 'filtres' comme troisième argument à url_for pour conserver les paramètres GET #}
+					<a class="page-link {{ i == pageActuelle ? 'bg-dark text-white' : 'text-dark' }}" href="{{ url_for('offres-an', { 'page': i }, filtres) }}">{{ i }}</a>
+				</li>
+			{% endfor %}
 
-  </ul>
-</nav>
+			{# Bouton Suivant #}
+			<li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' : '' }}">
+				<a class="page-link text-dark" href="{{ url_for('offres-an', { 'page': pageActuelle + 1 }, filtres) }}">Suivant</a>
+			</li>
+
+		</ul>
+	</nav>
 
 {% endblock %}

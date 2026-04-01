@@ -1,174 +1,187 @@
 {% extends "layouts/base.html.twig" %}
 
-{% block title %}Liste des Offres{% endblock %}
+{% block title %}Liste des Offres
+{% endblock %}
 
 {% block content %}
 
-    {# En-tête : Titre à gauche, bouton à droite (Style "Entreprises") #}
-    <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
-        <h1>Liste des Offres</h1>
-        <a class="btn btn-primary" href="{{ url_for('ajout-offre') }}">Ajouter une offre</a>
-    </div>
+	{# En-tête : Titre à gauche, bouton à droite (Style "Entreprises") #}
+	<div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+		<h1>Liste des Offres</h1>
+		<a class="btn btn-primary" href="{{ url_for('ajout-offre') }}">Ajouter une offre</a>
+	</div>
 
-   <div class="row mb-3">
-        <div class="col-md-6">
-            <form method="GET" action="{{ url_for('offres-admin') }}" class="d-flex">
-                <input type="text" name="q" class="form-control me-2" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
-                <button type="submit" class="btn btn-outline-secondary">Rechercher</button>
-                {% if searchTerm %}
-                    <a href="{{ url_for('offres-admin') }}" class="btn btn-link">Réinitialiser</a>
-                {% endif %}
-            </form>
-        </div>
-    </div>
+	<div class="row mb-3">
+		<div class="col-md-6">
+			<form method="GET" action="{{ url_for('offres-admin') }}" class="d-flex">
+				<input type="text" name="q" class="form-control me-2" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
+				<button type="submit" class="btn btn-outline-secondary">Rechercher</button>
+				{% if searchTerm %}
+					<a href="{{ url_for('offres-admin') }}" class="btn btn-link">Réinitialiser</a>
+				{% endif %}
+			</form>
+		</div>
+	</div>
 
-    {# Modale des filtres (Inchangé, c'est ta logique) #}
-    <div class="modal fade" id="filtreModal" tabindex="-1" aria-labelledby="filtreModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form method="GET" action="{{ url_for('offres-admin') }}">
-                    <input type="hidden" name="search" value="{{ filtres.search|default('') }}">
-                    <div class="modal-header">
-                        <h2 class="modal-title fs-5" id="filtreModalLabel">Filtrer les offres</h2>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Lieu</label>
-                            <select name="lieu" class="form-select">
-                                <option value="">Tous les lieux</option>
-                                <option value="Paris" {% if filtres.lieu|default('') == 'Paris' %} selected {% endif %}>Paris</option>
-                                <option value="Lyon" {% if filtres.lieu|default('') == 'Lyon' %} selected {% endif %}>Lyon</option>
-                                <option value="Toulouse" {% if filtres.lieu|default('') == 'Toulouse' %} selected {% endif %}>Toulouse</option>
-                                <option value="Marseille" {% if filtres.lieu|default('') == 'Marseille' %} selected {% endif %}>Marseille</option>
-                                <option value="Strasbourg" {% if filtres.lieu|default('') == 'Strasbourg' %} selected {% endif %}>Strasbourg</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Candidats maximum</label>
-                            <input type="number" name="candidats_max" class="form-control" placeholder="Ex: 10" value="{{ filtres.candidats_max|default('') }}">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <button type="submit" class="btn btn-primary">Appliquer les filtres</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+	{# Modale des filtres (Inchangé, c'est ta logique) #}
+	<div class="modal fade" id="filtreModal" tabindex="-1" aria-labelledby="filtreModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form method="GET" action="{{ url_for('offres-admin') }}">
+					<input type="hidden" name="search" value="{{ filtres.search|default('') }}">
+					<div class="modal-header">
+						<h2 class="modal-title fs-5" id="filtreModalLabel">Filtrer les offres</h2>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="mb-3">
+							<label class="form-label fw-semibold">Lieu</label>
+							<select name="lieu" class="form-select">
+								<option value="">Tous les lieux</option>
+								<option value="Paris" {% if filtres.lieu|default('') == 'Paris' %} selected {% endif %}>Paris</option>
+								<option value="Lyon" {% if filtres.lieu|default('') == 'Lyon' %} selected {% endif %}>Lyon</option>
+								<option value="Toulouse" {% if filtres.lieu|default('') == 'Toulouse' %} selected {% endif %}>Toulouse</option>
+								<option value="Marseille" {% if filtres.lieu|default('') == 'Marseille' %} selected {% endif %}>Marseille</option>
+								<option value="Strasbourg" {% if filtres.lieu|default('') == 'Strasbourg' %} selected {% endif %}>Strasbourg</option>
+							</select>
+						</div>
+						<div class="mb-3">
+							<label class="form-label fw-semibold">Candidats maximum</label>
+							<input type="number" name="candidats_max" class="form-control" placeholder="Ex: 10" value="{{ filtres.candidats_max|default('') }}">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+						<button type="submit" class="btn btn-primary">Appliquer les filtres</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
-    {# Tableau d'administration (Même structure que ton modèle) #}
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Intitulé du poste</th>
-                        <th>Entreprise</th>
-                        <th>Lieu</th>
-                        <th>Date de publication</th>
-                        <th>Candidats</th>
-                        <th class="text-end px-3">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for offre in offres %}
-                        <tr>
-                            <td class="text-muted">{{ offre.idOffre }}</td>
-                            <td><strong>{{ offre.nom }}</strong></td>
-                            <td>{{ offre.entreprise.nom }}</td>
-                            <td>{{ offre.lieu|default('-') }}</td>
-                            <td>{{ offre.date|date("d/m/Y") }}</td>
-                            <td>
-                                <span class="badge border text-dark bg-light">{{ offre.candidats|default(0) }}</span>
-                            </td>
-                            <td class="text-end px-3">
-                                <div class="btn-group">
-                                    {# Bouton Voir #}
-                                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.idOffre }}">Voir</button>
-                                    
-                                    {# Bouton Modifier #}
-                                    <a href="{{ url_for('modifier-offre', { 'id': offre.idOffre })|default('#') }}" class="btn btn-sm btn-outline-warning">Modifier</a>
-                                    
-                                    {# Bouton Supprimer #}
-                                    <form action="{{ url_for('supprimer-offre', { 'id': offre.idOffre })|default('#') }}" method="POST" class="d-inline" onsubmit="return confirm('Voulez-vous vraiment supprimer cette offre ?')">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
+	{# Tableau d'administration (Même structure que ton modèle) #}
+	<div class="card shadow-sm">
+		<div class="card-body p-0">
+			<table class="table table-hover mb-0">
+				<thead class="table-light">
+					<tr>
+						<th>ID</th>
+						<th>Intitulé du poste</th>
+						<th>Entreprise</th>
+						<th>Lieu</th>
+						<th>Date de publication</th>
+						<th>Candidats</th>
+						<th class="text-end px-3">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for offre in offres %}
+						<tr>
+							<td class="text-muted">{{ offre.idOffre }}</td>
+							<td>
+								<strong>{{ offre.nom }}</strong>
+							</td>
+							<td>{{ offre.entreprise.nom }}</td>
+							<td>{{ offre.campus.ville|default('-') }}</td>
+							<td>{{ offre.date|date("d/m/Y") }}</td>
+							<td>
+								<span class="badge border text-dark bg-light">{{ offre.candidatures|length }}</span>
+							</td>
+							<td class="text-end px-3">
+								<div
+									class="btn-group">
+									{# Bouton Voir #}
+									<button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.idOffre }}">Voir</button>
 
-                        {# Modale de détails de l'offre (intégrée dans la boucle pour l'ID) #}
-                        <div class="modal fade text-start" id="VoirOffre{{ offre.idOffre }}" tabindex="-1">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-light">
-                                        <div class="container-fluid px-0">
-                                            <div class="row w-100 align-items-center">
-                                                <div class="col-md-8">
-                                                    <h3 class="fw-bold mb-0">{{ offre.nom }}</h3>
-                                                    <p class="mb-0 text-muted">{{ offre.entreprise.nom }} - {{ offre.lieu|default('Lieu non précisé') }}</p>
-                                                </div>
-                                                <div class="col-md-4 text-center">
-                                                    <p class="text-dark fw-bold mb-0">Candidatures : {{ offre.candidats|default(0) }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button type="button" class="btn-close position-absolute top-0 end-0 me-3 mt-3" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body p-4">
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <p><strong>Date de publication :</strong> {{ offre.date|date('d/m/Y') }}</p>
-                                                <p><strong>Rémunération :</strong> {{ offre.remuneration|default('Non renseignée') }} €</p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p><strong>Niveau requis :</strong> {{ offre.exigenceEtude|default('Non renseigné') }}</p>
-                                            </div>
-                                        </div>
-                                        <h5 class="fw-bold border-bottom pb-2 mt-4">Description</h5>
-                                        <p style="white-space: pre-line;" class="text-muted">{{ offre.description }}</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+									{# Bouton Modifier #}
+									<a href="{{ url_for('modifier-offre', { 'id': offre.idOffre })|default('#') }}" class="btn btn-sm btn-outline-warning">Modifier</a>
 
-                    {% else %}
-                        <tr>
-                            <td colspan="7" class="text-center py-4 text-muted">
-                                Aucune offre trouvée dans la base de données.
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+									{# Bouton Supprimer #}
+									<form action="{{ url_for('supprimer-offre', { 'id': offre.idOffre })|default('#') }}" method="POST" class="d-inline" onsubmit="return confirm('Voulez-vous vraiment supprimer cette offre ?')">
+										<button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+									</form>
+								</div>
+							</td>
+						</tr>
 
-    {# Pagination (Identique au modèle d'entreprise) #}
-    {% if nombrePages > 1 %}
-        <nav aria-label="Page navigation" class="mt-4">
-            <ul class="pagination justify-content-center">
-                <li class="page-item {{ pageActuelle <= 1 ? 'disabled' : '' }}">
-                    <a class="page-link" href="{{ url_for('offres-admin', { 'page': pageActuelle - 1 }, filtres) }}">Précédent</a>
-                </li>
+						<div class="modal fade text-start" id="VoirOffre{{ offre.idOffre }}" tabindex="-1">
+							<div class="modal-dialog modal-lg">
+								<div class="modal-content">
+									<div class="modal-header bg-light">
+										<div class="container-fluid px-0">
+											<div class="row w-100 align-items-center">
+												<div class="col-md-8">
+													<h3 class="fw-bold mb-0">{{ offre.nom }}</h3>
+													<p class="mb-0 text-muted">{{ offre.entreprise.nom }}
+														-
+														{{ offre.lieu|default('Lieu non précisé') }}</p>
+												</div>
+												<div class="col-md-4 text-center">
+													<p class="text-dark fw-bold mb-0">Candidatures :
+														{{ offre.candidats|default(0) }}</p>
+												</div>
+											</div>
+										</div>
+										<button type="button" class="btn-close position-absolute top-0 end-0 me-3 mt-3" data-bs-dismiss="modal"></button>
+									</div>
+									<div class="modal-body p-4">
+										<div class="row mb-3">
+											<div class="col-md-6">
+												<p>
+													<strong>Date de publication :</strong>
+													{{ offre.date|date('d/m/Y') }}</p>
+												<p>
+													<strong>Rémunération :</strong>
+													{{ offre.remuneration|default('Non renseignée') }}
+													€</p>
+											</div>
+											<div class="col-md-6">
+												<p>
+													<strong>Niveau requis :</strong>
+													{{ offre.exigenceEtude|default('Non renseigné') }}</p>
+											</div>
+										</div>
+										<h5 class="fw-bold border-bottom pb-2 mt-4">Description</h5>
+										<p style="white-space: pre-line;" class="text-muted">{{ offre.description }}</p>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+									</div>
+								</div>
+							</div>
+						</div>
 
-                {% for i in 1..nombrePages %}
-                    <li class="page-item {{ i == pageActuelle ? 'active' : '' }}">
-                        <a class="page-link" href="{{ url_for('offres-admin', { 'page': i }, filtres) }}">{{ i }}</a>
-                    </li>
-                {% endfor %}
+					{% else %}
+						<tr>
+							<td colspan="7" class="text-center py-4 text-muted">
+								Aucune offre trouvée dans la base de données.
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
-                <li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' : '' }}">
-                    <a class="page-link" href="{{ url_for('offres-admin', { 'page': pageActuelle + 1 }, filtres) }}">Suivant</a>
-                </li>
-            </ul>
-        </nav>
-    {% endif %}
+	{# Pagination (Identique au modèle d'entreprise) #}
+	{% if nombrePages > 1 %}
+		<nav aria-label="Page navigation" class="mt-4">
+			<ul class="pagination justify-content-center">
+				<li class="page-item {{ pageActuelle <= 1 ? 'disabled' : '' }}">
+					<a class="page-link" href="{{ url_for('offres-admin', { 'page': pageActuelle - 1 }, filtres) }}">Précédent</a>
+				</li>
+
+				{% for i in 1..nombrePages %}
+					<li class="page-item {{ i == pageActuelle ? 'active' : '' }}">
+						<a class="page-link" href="{{ url_for('offres-admin', { 'page': i }, filtres) }}">{{ i }}</a>
+					</li>
+				{% endfor %}
+
+				<li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' : '' }}">
+					<a class="page-link" href="{{ url_for('offres-admin', { 'page': pageActuelle + 1 }, filtres) }}">Suivant</a>
+				</li>
+			</ul>
+		</nav>
+	{% endif %}
 
 {% endblock %}

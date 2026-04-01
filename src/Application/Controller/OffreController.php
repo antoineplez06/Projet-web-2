@@ -25,6 +25,9 @@ class OffreController
         $view = Twig::fromRequest($request);
         $params = $request->getQueryParams();
 
+        // --- 1. Récupération du terme de recherche ---
+        $search = $params['q'] ?? null;
+
         $page = isset($args['page']) ? (int) $args['page'] : 1;
         $perPage = 5;
         $offset = ($page - 1) * $perPage;
@@ -32,9 +35,15 @@ class OffreController
         $repository = $this->entityManager->getRepository(Offre::class);
         $queryBuilder = $repository->createQueryBuilder('o');
 
+        // --- 2. Application du filtre de recherche ---
+        if ($search) {
+            $queryBuilder->andWhere('o.nom LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
 
         $user = $_SESSION['user'] ?? null;
 
+        // Application du filtre de campus pour l'étudiant
         if ($user && $user->getRoleValue() === 'etudiant') {
             $campusEtudiant = $user->getCampus();
 
@@ -50,9 +59,17 @@ class OffreController
 
         $offresAffichees = $queryBuilder->getQuery()->getResult();
 
+        // Calcul du total pour la pagination
         $countBuilder = $repository->createQueryBuilder('o')
             ->select('count(o.idOffre)');
 
+        // --- 3. Application du filtre de recherche pour le compteur ---
+        if ($search) {
+            $countBuilder->andWhere('o.nom LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        // Application du filtre de campus pour le compteur
         if ($user && $user->getRoleValue() === 'etudiant' && $user->getCampus()) {
             $countBuilder->andWhere('o.campus = :campus')
                 ->setParameter('campus', $user->getCampus());
@@ -65,7 +82,8 @@ class OffreController
             'offres'       => $offresAffichees,
             'pageActuelle' => $page,
             'nombrePages'  => $nombrePages,
-            'filtres'      => $params
+            'filtres'      => $params,
+            'searchTerm'   => $search // On renvoie le terme pour l'afficher dans l'input Twig
         ]);
     }
 
@@ -123,7 +141,7 @@ class OffreController
         return $view->render($response, 'offre/ajout.html.twig', [
             'success' => $success,
             'campuses' => $campuses,
-            'entreprises' => $entreprises 
+            'entreprises' => $entreprises
         ]);
     }
 
@@ -140,31 +158,49 @@ class OffreController
     public function listean(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
-
         $params = $request->getQueryParams();
+
+        // --- 1. Récupération du terme de recherche ---
+        $search = $params['q'] ?? null;
 
         $page = isset($args['page']) ? (int) $args['page'] : 1;
         $perPage = 5;
         $offset = ($page - 1) * $perPage;
 
         $repository = $this->entityManager->getRepository(Offre::class);
+        $queryBuilder = $repository->createQueryBuilder('o');
 
-        // Récupération des offres avec pagination
-        $offresAffichees = $repository->findBy(
-            [],
-            ['idOffre' => 'DESC'], // Tri par ID décroissant
-            $perPage,
-            $offset
-        );
+        // --- 2. Application du filtre de recherche (si l'utilisateur a tapé quelque chose) ---
+        if ($search) {
+            $queryBuilder->where('o.nom LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
 
-        $totalOffres = $repository->count([]);
+        // --- 3. Tri et Pagination ---
+        $queryBuilder->orderBy('o.idOffre', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($perPage);
+
+        $offresAffichees = $queryBuilder->getQuery()->getResult();
+
+        // --- 4. Calcul du total pour la pagination (en tenant compte de la recherche !) ---
+        $countBuilder = $repository->createQueryBuilder('o')
+            ->select('count(o.idOffre)');
+
+        if ($search) {
+            $countBuilder->where('o.nom LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        $totalOffres = $countBuilder->getQuery()->getSingleScalarResult();
         $nombrePages = ceil($totalOffres / $perPage);
 
         return $view->render($response, 'offre/liste_anonyme.html.twig', [
-            'offres' => $offresAffichees,
+            'offres'       => $offresAffichees,
             'pageActuelle' => $page,
-            'nombrePages' => $nombrePages,
-            'filtres'        => $params
+            'nombrePages'  => $nombrePages,
+            'filtres'      => $params,
+            'searchTerm'   => $search // On renvoie le terme pour l'afficher dans l'input Twig
         ]);
     }
 
