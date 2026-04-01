@@ -37,7 +37,7 @@ class CampusController
                 ->setParameter('search', '%' . $search . '%');
         }
 
-        $queryBuilder->orderBy('c.id_campus', 'DESC') // Assure-toi que la clé primaire s'appelle bien id_campus dans ton entité
+        $queryBuilder->orderBy('c.id_campus', 'DESC')
             ->setFirstResult($offset)
             ->setMaxResults($perPage);
 
