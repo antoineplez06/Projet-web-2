@@ -21,8 +21,11 @@ class WishlistController
     public function list(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $view = Twig::fromRequest($request);
-        
-        $favoris = $this->entityManager->getRepository(Wishlist::class)->findAll();
+        $userConnecte = $request->getAttribute('user');
+
+        $favoris = $this->entityManager->getRepository(Wishlist::class)->findBy([
+            'etudiant' => $userConnecte,
+        ]);
 
         return $view->render($response, 'favoris/liste.html.twig', [
             'favoris' => $favoris
@@ -32,29 +35,35 @@ class WishlistController
     public function add(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $idOffre = (int)$args['idOffre'];
-        
+        $userConnecte = $request->getAttribute('user');
         $offre = $this->entityManager->getRepository(Offre::class)->find($idOffre);
 
-        if ($offre) {
-            $wishlist = new Wishlist($offre);
-            $this->entityManager->persist($wishlist);
+        if ($offre && $userConnecte) {
+            $dejaEnWishlist = $this->entityManager->getRepository(Wishlist::class)->findOneBy([
+                'offre'    => $offre,
+                'etudiant' => $userConnecte,
+            ]);
+
+            if (!$dejaEnWishlist) {
+                $wishlist = new Wishlist($offre, $userConnecte);
+                $this->entityManager->persist($wishlist);
+                $this->entityManager->flush();
+            }
+        }
+
+        return $response->withHeader('Location', '/wishlist')->withStatus(302);
+    }
+    public function remove(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $id = (int)$args['id'];
+
+        $item = $this->entityManager->getRepository(Wishlist::class)->find($id);
+
+        if ($item) {
+            $this->entityManager->remove($item);
             $this->entityManager->flush();
         }
 
         return $response->withHeader('Location', '/wishlist')->withStatus(302);
     }
-
-    public function remove(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
-{
-    $id = (int)$args['id'];
-
-    $item = $this->entityManager->getRepository(Wishlist::class)->find($id);
-
-    if ($item) {
-        $this->entityManager->remove($item);
-        $this->entityManager->flush();
-    }
-
-    return $response->withHeader('Location', '/wishlist')->withStatus(302);
-}
 }

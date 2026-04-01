@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Application\Domain;
 
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use App\Application\Domain\user;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\ManyToOne;
@@ -20,9 +20,14 @@ class Wishlist
     #[JoinColumn(name: 'idOffre', referencedColumnName: 'idOffre', nullable: false)]
     private Offre $offre;
 
-    public function __construct(Offre $offre)
+    #[ManyToOne(targetEntity: user::class)]
+    #[JoinColumn(name: 'id_etudiant', referencedColumnName: 'id', nullable: false)]
+    private user $etudiant;
+
+    public function __construct(Offre $offre, user $etudiant)
     {
         $this->offre = $offre;
+        $this->etudiant = $etudiant;
     }
 
     public function getIdWishlist(): int 
@@ -33,5 +38,10 @@ class Wishlist
     public function getOffre(): Offre 
     { 
         return $this->offre; 
+    }
+
+    public function getEtudiant(): user
+    {
+        return $this->etudiant;
     }
 }

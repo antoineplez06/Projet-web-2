@@ -59,33 +59,39 @@ class CandidatureController
         $offre = $this->entityManager->getRepository(Offre::class)->find($idOffre);
 
         if ($offre && $userConnecte) {
-            $candidature = new Candidature($offre, $userConnecte);
 
-            $parsebody = $request->getParsedBody();
-            $lettre = $parsebody['lettre'] ?? null;
+            $candidatureExistante = $this->entityManager->getRepository(Candidature::class)->findOneBy([
+                'offre' => $offre,
+                'etudiant'  => $userConnecte, // à adapter selon le nom de votre propriété
+            ]);
+            if (!$candidatureExistante) {
+                $candidature = new Candidature($offre, $userConnecte);
 
-            $uploadedFile = $request->getUploadedFiles();
-            $cvFile = $uploadedFile['cv'] ?? null;
-            $nomFichierCv = null;
+                $parsebody = $request->getParsedBody();
+                $lettre = $parsebody['lettre'] ?? null;
 
-            if ($cvFile && $cvFile->getError() === UPLOAD_ERR_OK) {
-                $extension = pathinfo($cvFile->getClientFilename(), PATHINFO_EXTENSION);
-                $nomFichierCv = uniqid('cv_' . $userConnecte->getId() . '_') . '.' . $extension;
+                $uploadedFile = $request->getUploadedFiles();
+                $cvFile = $uploadedFile['cv'] ?? null;
+                $nomFichierCv = null;
 
-                $dossierDestination = __DIR__ . '/../../../public/uploads/cv/';
+                if ($cvFile && $cvFile->getError() === UPLOAD_ERR_OK) {
+                    $extension = pathinfo($cvFile->getClientFilename(), PATHINFO_EXTENSION);
+                    $nomFichierCv = uniqid('cv_' . $userConnecte->getId() . '_') . '.' . $extension;
 
-                $cvFile->moveTo($dossierDestination . $nomFichierCv);
+                    $dossierDestination = __DIR__ . '/../../../public/uploads/cv/';
+
+                    $cvFile->moveTo($dossierDestination . $nomFichixerCv);
+                }
+
+                $candidature->setLettreMotivation($lettre);
+                $candidature->setCv($nomFichierCv);
+
+                $this->entityManager->persist($candidature);
+                $this->entityManager->flush();
             }
-
-            $candidature->setLettreMotivation($lettre);
-            $candidature->setCv($nomFichierCv);
-
-            $this->entityManager->persist($candidature);
-            $this->entityManager->flush();
+            return $response->withHeader('Location', '/candidatures')->withStatus(302);
         }
-        return $response->withHeader('Location', '/candidatures')->withStatus(302);
     }
-
     public function updateStatus(Request $request, Response $response, array $args): Response
     {
         $idCandidature = (int)$args['id'];
