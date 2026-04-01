@@ -4,6 +4,28 @@
   border-bottom: 5px solid #8FB4B0;
 }
 
+/* SVG Icons - Responsive */
+svg.Wishlist,
+svg.Candidatures,
+svg.Profil {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 576px) {
+  .navbar-brand img {
+    height: 60px !important;
+  }
+  
+  .navbar {
+    padding: 0.5rem 0 !important;
+  }
+  
+  .fs-6 {
+    font-size: 0.875rem !important;
+  }
+}
+
 .Wishlist {
   cursor: pointer;
   transition: transform 0.2s ease,
@@ -44,10 +66,110 @@
               fill 0.25s ease,
               stroke 0.25s ease;
 }
+
 .Profil:hover {
   transform: scale(1.15);
 }
 
 .Profil:active {
   transform: scale(0.95);
+}
+
+/* Card responsiveness */
+.card {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 0.75rem;
+  }
+  
+  .table-sm {
+    font-size: 0.8rem;
+  }
+  
+  .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Modal responsiveness */
+@media (max-width: 576px) {
+  .modal-content {
+    border-radius: 0.5rem;
+  }
+  
+  .modal-header {
+    padding: 0.75rem !important;
+  }
+  
+  .modal-body {
+    padding: 0.75rem !important;
+  }
+  
+  .modal-footer {
+    padding: 0.5rem !important;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+}
+
+/* Form responsiveness */
+.form-control,
+.form-select {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 576px) {
+  .form-control,
+  .form-select {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+  }
+  
+  label {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+  }
+}
+
+/* Pagination responsiveness */
+@media (max-width: 576px) {
+  .pagination {
+    font-size: 0.875rem;
+  }
+  
+  .page-link {
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+/* Button group responsiveness */
+@media (max-width: 576px) {
+  .btn-group {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+}
+
+/* Text wrapping for long content */
+.text-break {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Carousel responsiveness */
+@media (max-width: 576px) {
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .carousel-inner {
+    min-height: 150px;
+  }
 }

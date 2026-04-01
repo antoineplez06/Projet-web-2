@@ -4,14 +4,14 @@
 
 	{# --- ADAPTATION DU TITRE SELON LE RÔLE --- #}
 	{% if userRole == 'etudiant' %}
-		<h1 class="mt-3 fw-bold text-center" style="font-size: 50px;">Mes candidatures</h1>
+		<h1 class="mt-3 fw-bold text-center fs-3 fs-md-2">Mes candidatures</h1>
 	{% else %}
-		<h1 class="mt-3 fw-bold text-center" style="font-size: 50px;">Candidatures des étudiants</h1>
+		<h1 class="mt-3 fw-bold text-center fs-3 fs-md-2">Candidatures des étudiants</h1>
 	{% endif %}
 
 	<hr class="border border-dark opacity-100">
 
-	<h2 class="mt-2 fw-bold ms-4">Réponses</h2>
+	<h2 class="mt-4 fw-bold fs-5 fs-md-4">Réponses</h2>
 
 	{% set a_reponse = false %}
 	{% for candidature in candidatures %}
@@ -19,50 +19,44 @@
 			{% set a_reponse = true %}
 			{% set offre = candidature.offre %}
 
-			<div
-				class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white shadow-sm">
+			<div class="row mt-3 px-2 justify-content-center">
+				<div class="col-12 col-sm-10 col-lg-8 col-xl-7">
+					<div class="border border-dark border-3 rounded-2 px-3 px-md-5 py-3 bg-white shadow-sm position-relative">
+						{# --- AFFICHAGE DU NOM DU CANDIDAT (SI PILOTE/ADMIN) --- #}
+						{% if userRole != 'etudiant' %}
+							<p class="text-primary fw-bold mb-2">
+								Candidat : {{ candidature.etudiant.prenom }} {{ candidature.etudiant.nom }}
+							</p>
+						{% endif %}
 
-				{# --- ÉTAPE 5 : AFFICHAGE DU NOM DU CANDIDAT (SI PILOTE/ADMIN) --- #}
-				{% if userRole != 'etudiant' %}
-					<p class="text-primary fw-bold mb-1">
-						Candidat :
-						{{ candidature.etudiant.prenom }}
-						{{ candidature.etudiant.nom }}
-					</p>
-				{% endif %}
+						<div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+							<div class="flex-grow-1 min-w-0">
+								<h3 class="fw-bold mb-0 text-break">{{ offre.nom }}</h3>
+								<p class="mb-0 text-muted fw-bold small text-break">{{ offre.entreprise.nom }}</p>
+								<p class="mb-0 small">{{ offre.presentielOuDistanciel }}</p>
+								<p class="mt-3 text-muted small">Publié le : {{ offre.date|date("d/m/Y") }}</p>
+							</div>
+							<span class="badge p-2 flex-shrink-0 {% if candidature.statut == 'Refusé' %}bg-danger{% elseif candidature.statut == 'Accepté' %}bg-success{% else %}bg-light border border-dark text-dark{% endif %}{% if candidature.statut != 'Refusé' and candidature.statut != 'Accepté' %} text-dark{% else %} text-white{% endif %}">
+								{{ candidature.statut }}
+							</span>
+						</div>
 
-				<h3 class="float-none w-auto fw-bold">{{ offre.nom }}</h3>
-
-				<p class="mb-0 text-muted fw-bold">{{ offre.entreprise.nom }}</p>
-
-				<p class="mb-0">{{ offre.presentielOuDistanciel }}</p>
-				<p class="mt-5 text-muted">Publié le :
-					{{ offre.date|date("d/m/Y") }}</p>
-
-				<h3 class="border border-dark px-5 py-2 position-absolute top-0 end-0 mt-3 me-3
-					                                                                {% if candidature.statut == 'Refusé' %}
-					                                                                    bg-danger text-white
-					                                                                {% elseif candidature.statut == 'Accepté' %}
-					                                                                    bg-success text-white
-					                                                                {% else %}
-					                                                                    bg-light
-					                                                                {% endif %}" style="font-size: 1.2rem;">
-					{{ candidature.statut }}
-				</h3>
-
-				{# CORRECTION 1 ICI #}
-				<button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-dark text-white hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ candidature.idCandidature }}">
-					Voir l'offre
-				</button>
+						<div class="d-flex justify-content-center mt-4">
+							<button class="btn btn-dark rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ candidature.idCandidature }}">
+								Voir l'offre
+							</button>
+						</div>
+					</div>
+				</div>
 			</div>
 		{% endif %}
 	{% endfor %}
 
 	{% if not a_reponse %}
-		<p class="ms-5 text-muted">Aucune réponse pour le moment.</p>
+		<p class="text-muted text-center mt-3">Aucune réponse pour le moment.</p>
 	{% endif %}
 
-	<h2 class="mt-5 fw-bold ms-4">En cours de traitement</h2>
+	<h2 class="mt-5 fw-bold fs-5 fs-md-4">En cours de traitement</h2>
 
 	{% set a_en_cours = false %}
 	{% for candidature in candidatures %}
@@ -70,112 +64,101 @@
 			{% set a_en_cours = true %}
 			{% set offre = candidature.offre %}
 
-			<div
-				class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white shadow-sm">
+			<div class="row mt-3 px-2 justify-content-center">
+				<div class="col-12 col-sm-10 col-lg-8 col-xl-7">
+					<div class="border border-dark border-3 rounded-2 px-3 px-md-5 py-3 bg-white shadow-sm position-relative">
+						{# --- AFFICHAGE DU NOM DU CANDIDAT (SI PILOTE/ADMIN) --- #}
+						{% if userRole != 'etudiant' %}
+							<p class="text-primary fw-bold mb-2">
+								Candidat : {{ candidature.etudiant.prenom }} {{ candidature.etudiant.nom }}
+							</p>
+						{% endif %}
 
-				{# --- ÉTAPE 5 : AFFICHAGE DU NOM DU CANDIDAT (SI PILOTE/ADMIN) --- #}
-				{% if userRole != 'etudiant' %}
-					<p class="text-primary fw-bold mb-1">
-						Candidat :
-						{{ candidature.etudiant.prenom }}
-						{{ candidature.etudiant.nom }}
-					</p>
-				{% endif %}
+						<div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+							<div class="flex-grow-1 min-w-0">
+								<h3 class="fw-bold mb-0 text-break">{{ offre.nom }}</h3>
+								<p class="mb-0 text-muted fw-bold small text-break">{{ offre.entreprise.nom }}</p>
+								<p class="mb-0 small">{{ offre.presentielOuDistanciel }}</p>
+								<p class="mt-3 text-muted small">Publié le : {{ offre.date|date("d/m/Y") }}</p>
+							</div>
+							<span class="badge bg-warning text-dark p-2 flex-shrink-0">
+								En cours
+							</span>
+						</div>
 
-				<h3 class="float-none w-auto fw-bold">{{ offre.nom }}</h3>
-
-				<p class="mb-0 text-muted fw-bold">{{ offre.entreprise.nom }}</p>
-
-				<p class="mb-0">{{ offre.presentielOuDistanciel }}</p>
-				<p class="mt-5 text-muted">Publié le :
-					{{ offre.date|date("d/m/Y") }}</p>
-
-				<h3 class="border border-dark px-4 py-2 position-absolute top-0 end-0 mt-3 me-3 bg-warning" style="font-size: 1.1rem;">
-					En cours
-				</h3>
-
-				{# CORRECTION 2 ICI #}
-				<button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-dark text-white hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ candidature.idCandidature }}">
-					Voir l'offre
-				</button>
+						<div class="d-flex justify-content-center mt-4">
+							<button class="btn btn-dark rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ candidature.idCandidature }}">
+								Voir l'offre
+							</button>
+						</div>
+					</div>
+				</div>
 			</div>
 		{% endif %}
 	{% endfor %}
 
 	{% if not a_en_cours %}
-		<p class="ms-5 text-muted">Aucune candidature en cours.</p>
+		<p class="text-muted text-center mt-3">Aucune candidature en cours.</p>
 	{% endif %}
 
-	{# --- AJOUT DES MODALS --- #}
+	{# --- MODALS --- #}
 	{% for candidature in candidatures %}
 		{% set offre = candidature.offre %}
 
-		{# CORRECTION 3 ICI #}
 		<div class="modal fade" id="VoirOffre{{ candidature.idCandidature }}" tabindex="-1" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable">
 				<div class="modal-content">
 					<div class="modal-header bg-dark text-white">
-						<h5 class="modal-title">{{ offre.nom }}
-							-
-							{{ offre.entreprise.nom }}</h5>
+						<h5 class="modal-title text-break">{{ offre.nom }} - {{ offre.entreprise.nom }}</h5>
 						<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
 					</div>
-					<div
-						class="modal-body">
+					<div class="modal-body px-3 px-md-4">
 
-						{# --- DOSSIER DE CANDIDATURE (Maintenant visible par TOUT LE MONDE) --- #}
+						{# --- DOSSIER DE CANDIDATURE --- #}
 						<div class="bg-light p-3 rounded mb-4 border">
 							<h5 class="text-primary fw-bold border-bottom pb-2">
 								{% if userRole == 'etudiant' %}
 									Mon dossier de candidature
 								{% else %}
-									Dossier de
-									{{ candidature.etudiant.prenom }}
-									{{ candidature.etudiant.nom }}
+									Dossier de {{ candidature.etudiant.prenom }} {{ candidature.etudiant.nom }}
 								{% endif %}
 							</h5>
 
-							<h6 class="fw-bold mt-3">Lettre de motivation :</h6>
+							<h6 class="fw-bold mt-3 small">Lettre de motivation :</h6>
 							{% if candidature.lettreMotivation %}
-								<p class="bg-white p-3 border rounded" style="white-space: pre-wrap;">{{ candidature.lettreMotivation }}</p>
+								<p class="bg-white p-2 border rounded text-break" style="white-space: pre-wrap; font-size: 0.9rem;">{{ candidature.lettreMotivation }}</p>
 							{% else %}
-								<p class="text-muted fst-italic">Aucune lettre fournie.</p>
+								<p class="text-muted fst-italic small">Aucune lettre fournie.</p>
 							{% endif %}
 
-							<h6 class="fw-bold mt-3">Curriculum Vitae (CV) :</h6>
+							<h6 class="fw-bold mt-3 small">Curriculum Vitae (CV) :</h6>
 							{% if candidature.cv %}
-								<a href="/uploads/cv/{{ candidature.cv }}" target="_blank" class="btn btn-outline-primary">
+								<a href="/uploads/cv/{{ candidature.cv }}" target="_blank" class="btn btn-outline-primary btn-sm">
 									<i class="bi bi-file-earmark-pdf"></i>
-									Télécharger / Voir le CV
+									Télécharger le CV
 								</a>
 							{% else %}
-								<p class="text-muted fst-italic">Aucun CV fourni.</p>
+								<p class="text-muted fst-italic small">Aucun CV fourni.</p>
 							{% endif %}
 						</div>
-						{# ----------------------------------------------------------------- #}
 
-						<h6 class="fw-bold text-secondary">Détails de l'offre :</h6>
-						<p>
-							<strong>Lieu :</strong>
-							{{ offre.lieu }}</p>
-						<p>
-							<strong>Rémunération :</strong>
-							{{ offre.remuneration }}
-							€</p>
-						<p>{{ offre.description|nl2br }}</p>
+						<h6 class="fw-bold text-secondary small">Détails de l'offre :</h6>
+						<p class="small mb-2"><strong>Lieu :</strong> <span class="text-break">{{ offre.lieu }}</span></p>
+						<p class="small mb-3"><strong>Rémunération :</strong> {{ offre.remuneration }} €</p>
+						<p class="small text-break">{{ offre.description|nl2br }}</p>
 					</div>
-					<div class="modal-footer">
+					<div class="modal-footer flex-wrap gap-2">
 						{% if userRole == 'admin' %}
 							{% if candidature.statut == 'En cours de traitement' or candidature.statut == 'En attente' %}
 								<form action="/candidatures/accepter/{{ candidature.idCandidature }}" method="POST" class="d-inline">
-									<button type="submit" class="btn btn-success rounded-pill px-4">Accepter la candidature</button>
+									<button type="submit" class="btn btn-success rounded-pill px-3 py-2 btn-sm">Accepter</button>
 								</form>
 								<form action="/candidatures/refuser/{{ candidature.idCandidature }}" method="POST" class="d-inline">
-									<button type="submit" class="btn btn-danger rounded-pill px-4">Refuser la candidature</button>
+									<button type="submit" class="btn btn-danger rounded-pill px-3 py-2 btn-sm">Refuser</button>
 								</form>
 							{% endif %}
 						{% endif %}
-						<button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Fermer</button>
+						<button type="button" class="btn btn-secondary rounded-pill px-3 py-2 btn-sm" data-bs-dismiss="modal">Fermer</button>
 					</div>
 				</div>
 			</div>

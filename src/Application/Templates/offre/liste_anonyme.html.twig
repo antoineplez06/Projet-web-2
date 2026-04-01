@@ -2,11 +2,11 @@
 
 {% block content %}
 
-	<div class="row mb-3 mt-4 justify-content-center">
-		<div class="col-md-6">
-			<form method="GET" action="{{ url_for('offres-an') }}" class="d-flex">
-				<input type="text" name="q" class="form-control me-2" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
-				<button type="submit" class="btn btn-outline-secondary">Rechercher</button>
+	<div class="row mb-3 mt-4 justify-content-center px-2">
+		<div class="col-12 col-sm-10 col-md-8 col-lg-6">
+			<form method="GET" action="{{ url_for('offres-an') }}" class="d-flex flex-column flex-sm-row gap-2">
+				<input type="text" name="q" class="form-control" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
+				<button type="submit" class="btn btn-outline-secondary flex-shrink-0">Rechercher</button>
 				{% if searchTerm %}
 					<a href="{{ url_for('offres-an') }}" class="btn btn-link">Réinitialiser</a>
 				{% endif %}
@@ -20,56 +20,50 @@
 		</div>
 	{% endif %}
 
-
 	{% for offre in offres %}
-		<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white">
-			<h3 class="float-none w-auto fw-bold">{{ offre.nom }}</h3>
-			<p class="mb-0">{{ offre.entreprise.nom }}</p>
-			<p class="mb-0">{{ offre.lieu }}</p>
-			<p class="mt-4 text-muted">Publié le :
-				{{ offre.date_publication }}</p>
+		<div class="row mt-4 px-2 justify-content-center">
+			<div class="col-12 col-sm-10 col-lg-8 col-xl-7">
+				<div class="border border-dark border-3 rounded-2 px-3 px-md-5 py-3 bg-white shadow-sm">
+					<h3 class="fw-bold mb-0 text-break">{{ offre.nom }}</h3>
+					<p class="mb-0 text-break">{{ offre.entreprise.nom }}</p>
+					<p class="mb-0">{{ offre.lieu }}</p>
+					<p class="mt-4 text-muted small">Publié le : {{ offre.date_publication }}</p>
 
-			<button type="button" class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-light hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.id }}">
-				Voir l'offre
-			</button>
+					<div class="d-flex justify-content-center mt-4">
+						<button type="button" class="btn btn-outline-dark rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.id }}">
+							Voir l'offre
+						</button>
+					</div>
 
-			<div class="modal fade" id="VoirOffre{{ offre.id }}" tabindex="-1">
-				<div class="modal-dialog modal-xl">
-					<div class="modal-content">
-						<div class="modal-header">
-							<div class="container-fluid">
-								<div class="row w-100 align-items-center">
-									<div class="col-md-8">
-										<h2 class="fw-bold">{{ offre.nom }}</h2>
-										<p class="mb-1 text-muted">{{ offre.entreprise.nom }}</p>
-										<p class="mt-0 mb-1 text-muted">{{ offre.lieu }}</p>
-										<p class="mt-3 mb-0 text-muted small">Publié le :
-											{{ offre.date_publication }}</p>
-									</div>
-									<div class="col-md-4 text-center">
-										<p class="text-dark fw-bold mb-0" style="font-size: 1.1rem;">
-											{{ offre.candidats }}
-											personne(s) ont déjà postulé
-										</p>
+					<div class="modal fade" id="VoirOffre{{ offre.id }}" tabindex="-1">
+						<div class="modal-dialog modal-lg modal-dialog-scrollable">
+							<div class="modal-content">
+								<div class="modal-header flex-column align-items-start border-bottom">
+									<button type="button" class="btn-close align-self-end mb-2" data-bs-dismiss="modal"></button>
+									<div class="w-100">
+										<h2 class="fw-bold text-break">{{ offre.nom }}</h2>
+										<p class="mb-1 text-muted small text-break">{{ offre.entreprise.nom }}</p>
+										<p class="mb-1 text-muted small">{{ offre.lieu }}</p>
+										<p class="mt-2 text-muted small">Publié le : {{ offre.date_publication }}</p>
+										<p class="text-dark fw-bold">{{ offre.candidats }} personne(s) ont déjà postulé</p>
 									</div>
 								</div>
+
+								<div class="modal-body px-3 px-md-4">
+									<h4 class="fw-bold">Description de l'offre</h4>
+									<p class="text-break">{{ offre.description }}</p>
+
+									<h4 class="fw-bold mt-4">Compétences requises</h4>
+									<p class="text-break">{{ offre.competences }}</p>
+
+									<h4 class="fw-bold mt-4">Rémunération</h4>
+									<p>{{ offre.remuneration }}</p>
+								</div>
+
+								<div class="modal-footer">
+									<a href="{{ url_for('connexion') }}" class="btn btn-primary">Se connecter pour postuler</a>
+								</div>
 							</div>
-							<button type="button" class="btn-close position-absolute top-0 end-0 me-3 mt-3" data-bs-dismiss="modal"></button>
-						</div>
-
-						<div class="modal-body p-4">
-							<h4 class="fw-bold">Description de l'offre</h4>
-							<p>{{ offre.description }}</p>
-
-							<h4 class="fw-bold mt-4">Compétences requises</h4>
-							<p>{{ offre.competences }}</p>
-
-							<h4 class="fw-bold mt-4">Rémunération</h4>
-							<p>{{ offre.remuneration }}</p>
-						</div>
-
-						<div class="modal-footer">
-							<a href="{{ url_for('connexion') }}" class="btn btn-primary btn-lg">Se connecter pour postuler</a>
 						</div>
 					</div>
 				</div>
@@ -80,9 +74,9 @@
 			<h4 class="fw-bold text-muted">Aucune offre ne correspond à vos critères.</h4>
 		</div>
 	{% endfor %}
-	<nav aria-label="Page navigation" class="mt-4">
-		<ul
-			class="pagination justify-content-center">
+
+	<nav aria-label="Page navigation" class="mt-4 d-flex justify-content-center">
+		<ul class="pagination pagination-sm">
 
 			{# Bouton Précédent #}
 			<li class="page-item {{ pageActuelle <= 1 ? 'disabled' : '' }}">
@@ -91,9 +85,7 @@
 
 			{# Numéros de pages #}
 			{% for i in 1..nombrePages %}
-				<li
-					class="page-item {{ i == pageActuelle ? 'active' : '' }}">
-					{# On passe 'filtres' comme troisième argument à url_for pour conserver les paramètres GET #}
+				<li class="page-item {{ i == pageActuelle ? 'active' : '' }}">
 					<a class="page-link {{ i == pageActuelle ? 'bg-dark text-white' : 'text-dark' }}" href="{{ url_for('offres-an', { 'page': i }, filtres) }}">{{ i }}</a>
 				</li>
 			{% endfor %}

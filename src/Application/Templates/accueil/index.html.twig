@@ -2,39 +2,40 @@
 
 {% block content %}
 
-	<div class="position-relative">
-		<h1 class="position-absolute justify-content-start text-white" style="font-size: 150px;">
+	<div class="position-relative overflow-hidden">
+		<h1 class="position-absolute top-50 start-50 translate-middle text-white text-center fw-bold" style="font-size: clamp(2rem, 8vw, 150px); z-index: 1; width: 90%;">
 			Bienvenue !
 		</h1>
-		<img src="/assets/images/bg.jpg" alt="Image-Background" class="w-100" style="object-fit: cover; object-position:top; height: 400px; overflow:hidden;">
+		<img src="/assets/images/bg.jpg" alt="Image-Background" class="w-100" style="object-fit: cover; object-position:top; height: clamp(250px, 50vh, 400px); display: block;">
 	</div>
-	<div id="carouselExample" class="carousel slide">
+
+	<div id="carouselExample" class="carousel slide mt-4">
 		<div class="carousel-inner">
 
-			<div class="carousel-item active text-center py-5">
-				<h2 class="display-4 fw-bold">{{ totalOffres }}</h2>
-				<p class="lead">Offres de stage disponibles</p>
+			<div class="carousel-item active text-center py-4 py-md-5">
+				<h2 class="display-5 display-md-4 fw-bold">{{ totalOffres }}</h2>
+				<p class="lead fs-6 fs-md-5">Offres de stage disponibles</p>
 			</div>
 
-			<div class="carousel-item text-center py-5">
-				<h2 class="display-4 fw-bold">{{ totalEntreprises }}</h2>
-				<p class="lead">Entreprises partenaires</p>
+			<div class="carousel-item text-center py-4 py-md-5">
+				<h2 class="display-5 display-md-4 fw-bold">{{ totalEntreprises }}</h2>
+				<p class="lead fs-6 fs-md-5">Entreprises partenaires</p>
 			</div>
 
-			<div class="carousel-item text-center py-5">
-				<h2 class="display-4 fw-bold">{{ totalEtudiants }}</h2>
-				<p class="lead">Étudiants inscrits</p>
+			<div class="carousel-item text-center py-4 py-md-5">
+				<h2 class="display-5 display-md-4 fw-bold">{{ totalEtudiants }}</h2>
+				<p class="lead fs-6 fs-md-5">Étudiants inscrits</p>
 			</div>
 
 		</div>
 
 		<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev" style="filter: invert(1);">
-			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-			<span class="visually-hidden">Previous</span>
+			<span class="carousel-control-prev-icon aria-hidden="true"></span>
+			<span class="visually-hidden">Précédent</span>
 		</button>
 		<button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next" style="filter: invert(1);">
 			<span class="carousel-control-next-icon" aria-hidden="true"></span>
-			<span class="visually-hidden">Next</span>
+			<span class="visually-hidden">Suivant</span>
 		</button>
 	</div>
 {% endblock %}

@@ -4,21 +4,21 @@
 {% endblock %}
 
 {% block content %}
-	<div class="row justify-content-center">
-		<div class="col-md-6">
+	<div class="row justify-content-center px-2">
+		<div class="col-12 col-sm-10 col-md-8 col-lg-7">
 			<div class="card shadow">
 				<div class="card-header bg-primary text-white">
-					<h4 class="mb-0">Nouvel étudiant</h4>
+					<h4 class="mb-0 fs-5 fs-md-4">Nouvel étudiant</h4>
 				</div>
-				<div class="card-body">
+				<div class="card-body px-3 px-md-4">
 					<form action="{{ url_for('ajoute') }}" method="POST">
 
 						<div class="row">
-							<div class="col-md-6 mb-3">
+							<div class="col-12 col-md-6 mb-3">
 								<label for="prenom" class="form-label">Prénom</label>
 								<input type="text" class="form-control" id="prenom" name="prenom" placeholder="Ex: Tonio" required>
 							</div>
-							<div class="col-md-6 mb-3">
+							<div class="col-12 col-md-6 mb-3">
 								<label for="nom" class="form-label">Nom</label>
 								<input type="text" class="form-control" id="nom" name="nom" placeholder="Ex: Montana" required>
 							</div>
@@ -36,11 +36,11 @@
 						</div>
 
 						<div class="row">
-							<div class="col-md-6 mb-3">
+							<div class="col-12 col-md-6 mb-3">
 								<label for="numeroTelephone" class="form-label">Téléphone</label>
 								<input type="tel" class="form-control" id="numeroTelephone" name="numeroTelephone" placeholder="06XXXXXXXX" required>
 							</div>
-							<div class="col-md-6 mb-3">
+							<div class="col-12 col-md-6 mb-3">
 								<label for="genre" class="form-label">Genre</label>
 								<select class="form-select" id="genre" name="genre" required>
 									<option value="" selected disabled>Choisir...</option>
@@ -75,7 +75,7 @@
 
                         <hr>
 
-						<div class="d-flex justify-content-between">
+						<div class="d-flex flex-column flex-sm-row gap-2 justify-content-between">
 							<a href="{{ url_for('liste-etudiants') }}" class="btn btn-light">Annuler</a>
 							<button type="submit" class="btn btn-success">Créer l'étudiant</button>
 						</div>

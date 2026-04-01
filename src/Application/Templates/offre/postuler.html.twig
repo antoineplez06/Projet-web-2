@@ -1,27 +1,31 @@
 {% extends "layouts/base.html.twig" %}
 
 {% block content %}
-<h1 class="mt-4 text-center fw-bold">Postuler à l'offre n°{{ id }}</h1>
-<hr class="border border-dark">
+<div class="container py-4">
+    <h1 class="mt-4 text-center fw-bold mb-4">Postuler à l'offre n°{{ id }}</h1>
+    <hr class="border border-dark">
 
-<form action="{{ url_for('action-enregistrer-candidature', { 'id': id }) }}" method="POST" enctype="multipart/form-data">
-    
-    <div class="mb-3 w-50 mx-auto">
-        <label class="form-label fw-bold">Lettre de motivation</label>
-        <textarea class="form-control border border-dark" rows="10" name="lettre" placeholder="Écrivez votre message ici..."></textarea>
-    </div>
+    <form action="{{ url_for('action-enregistrer-candidature', { 'id': id }) }}" method="POST" enctype="multipart/form-data">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-7">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Lettre de motivation</label>
+                    <textarea class="form-control border border-dark" rows="8" name="lettre" placeholder="Écrivez votre message ici..."></textarea>
+                </div>
 
-    <div class="mb-3 w-50 mx-auto">
-        <label for="cv" class="form-label fw-bold">Choisir votre CV</label>
-        <input class="form-control border border-dark" type="file" id="cv" name="cv">
-    </div>
+                <div class="mb-3">
+                    <label for="cv" class="form-label fw-bold">Choisir votre CV</label>
+                    <input class="form-control border border-dark" type="file" id="cv" name="cv">
+                </div>
 
-    <div class="text-center mt-4 mb-5">
-        <button type="submit" class="btn btn-primary btn-lg px-5">
-            Postuler maintenant
-        </button>
-        <a href="/offres" class="btn btn-outline-secondary btn-lg ms-3">Annuler</a>
-    </div>
-
-</form>
+                <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center mt-4 mb-5">
+                    <button type="submit" class="btn btn-primary px-4">
+                        Postuler maintenant
+                    </button>
+                    <a href="/offres" class="btn btn-outline-secondary px-4">Annuler</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 {% endblock %}

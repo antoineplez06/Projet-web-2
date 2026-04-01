@@ -5,11 +5,11 @@
 
 {% block content %}
 
-	<div class="row mb-3 mt-4 justify-content-center">
-		<div class="col-md-6">
-			<form method="GET" action="{{ url_for('liste-entreprises') }}" class="d-flex">
-				<input type="text" name="q" class="form-control me-2" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
-				<button type="submit" class="btn btn-outline-secondary">Rechercher</button>
+	<div class="row mb-3 mt-4 justify-content-center px-2">
+		<div class="col-12 col-sm-10 col-md-8 col-lg-6">
+			<form method="GET" action="{{ url_for('liste-entreprises') }}" class="d-flex flex-column flex-sm-row gap-2">
+				<input type="text" name="q" class="form-control" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
+				<button type="submit" class="btn btn-outline-secondary flex-shrink-0">Rechercher</button>
 				{% if searchTerm %}
 					<a href="{{ url_for('liste-entreprises') }}" class="btn btn-link">Réinitialiser</a>
 				{% endif %}
@@ -18,74 +18,78 @@
 	</div>
 
 	{% for ent in entreprises %}
-		<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white shadow-sm">
-			<h3 class="float-none w-auto fw-bold mb-1">{{ ent.nom }}</h3>
+		<div class="row mt-4 px-2 justify-content-center">
+			<div class="col-12 col-sm-10 col-lg-8 col-xl-7">
+				<div class="border border-dark border-3 rounded-2 px-3 px-md-5 py-3 bg-white shadow-sm">
+					<div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+						<h3 class="fw-bold mb-0 flex-grow-1 text-break">{{ ent.nom }}</h3>
+						<span class="badge border border-dark text-dark bg-light p-2 flex-shrink-0">{{ ent.taille }}</span>
+					</div>
 
-			{# --- AFFICHAGE DES ÉTOILES (MOYENNE) --- #}
-			<div
-				class="mb-3">
-				{# On arrondit la note pour les étoiles, mais on garde la décimale pour le texte #}
-				{% set noteValue = ent.note|default(0) %}
-				{% set noteArrondie = noteValue|round %}
+					{# --- AFFICHAGE DES ÉTOILES (MOYENNE) --- #}
+					<div class="mb-3">
+						{% set noteValue = ent.note|default(0) %}
+						{% set noteArrondie = noteValue|round %}
 
-				{% if noteValue > 0 %}
-					{% for i in 1..5 %}
-						<i class="bi bi-star{{ i <= noteArrondie ? '-fill' : '' }} text-warning"></i>
-					{% endfor %}
-					<span class="ms-2 text-dark fw-bold small">Note :{{ noteValue }}/5</span>
-				{% else %}
-					<span class="text-muted small">
-						<i>Aucune note</i>
-					</span>
-				{% endif %}
-			</div>
+						{% if noteValue > 0 %}
+							{% for i in 1..5 %}
+								<i class="bi bi-star{{ i <= noteArrondie ? '-fill' : '' }} text-warning"></i>
+							{% endfor %}
+							<span class="ms-2 text-dark fw-bold small">Note : {{ noteValue }}/5</span>
+						{% else %}
+							<span class="text-muted small"><i>Aucune note</i></span>
+						{% endif %}
+					</div>
 
-			<p class="mb-0 text-muted">
-				<strong>Domaine :</strong>
-				{{ ent.domaine }}</p>
-			<p class="mb-0">
-				<strong>Lieu :</strong>
-				{{ ent.adresse }}</p>
+					<p class="mb-2 text-muted small">
+						<strong>Domaine :</strong>
+						<span class="text-break">{{ ent.domaine }}</span>
+					</p>
+					<p class="mb-3">
+						<strong>Lieu :</strong>
+						<span class="text-break">{{ ent.adresse }}</span>
+					</p>
 
-			<p class="mt-4 text-muted small">SIRET :
-				<code>{{ ent.siret }}</code>
-			</p>
+					<p class="mt-3 text-muted small">
+						<strong>SIRET :</strong>
+						<code class="text-break">{{ ent.siret }}</code>
+					</p>
 
-			<div class="position-absolute top-0 end-0 mt-3 me-3">
-				<span class="badge border border-dark text-dark bg-light p-2">{{ ent.taille }}</span>
-			</div>
+					{# --- SECTION BOUTONS --- #}
+					<div class="d-flex flex-column flex-sm-row gap-2 mt-4">
+						<a href="{{ url_for('entreprise-offres', { 'id': ent.id }) }}" class="btn btn-dark rounded-pill px-3 flex-grow-1">
+							Voir les offres ({{ ent.offres|length }})
+						</a>
 
-			{# --- SECTION BOUTONS --- #}
-			<div class="position-absolute bottom-0 end-0 mb-3 me-3 d-flex gap-2">
-				<a href="{{ url_for('entreprise-offres', { 'id': ent.id }) }}" class="btn btn-dark rounded-pill px-3 shadow-sm">
-					Voir les offres ({{ ent.offres|length }})
-				</a>
+						<button type="button" class="btn border border-dark rounded-pill px-3 bg-light" data-bs-toggle="modal" data-bs-target="#VoirEntreprise{{ ent.id }}">
+							Détails
+						</button>
+					</div>
 
-				<button type="button" class="border border-dark rounded-pill px-4 py-2 bg-light hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirEntreprise{{ ent.id }}">
-					Détails
-				</button>
-			</div>
-
-			{# --- MODAL 1 : DÉTAILS ENTREPRISE + FORMULAIRE DE NOTE --- #}
-			<div class="modal fade" id="VoirEntreprise{{ ent.id }}" tabindex="-1">
-				<div class="modal-dialog modal-lg">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h2 class="fw-bold">{{ ent.nom }}</h2>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-						</div>
-						<div class="modal-body p-4">
-							<p>
-								<strong>Adresse :</strong>
-								{{ ent.adresse }}</p>
-							<p>
-								<strong>SIRET :</strong>
-								{{ ent.siret }}</p>
-							<p>
-								<strong>Taille :</strong>
-								{{ ent.taille }}</p>
-							<h4 class="fw-bold mt-4">À propos</h4>
-							<p class="mb-1 text-muted">{{ ent.domaine|default('Aucune description disponible.')|nl2br }}</p>
+					{# --- MODAL : DÉTAILS ENTREPRISE --- #}
+					<div class="modal fade" id="VoirEntreprise{{ ent.id }}" tabindex="-1">
+						<div class="modal-dialog modal-lg modal-dialog-scrollable">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h2 class="fw-bold text-break">{{ ent.nom }}</h2>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+								</div>
+								<div class="modal-body px-3 px-md-4">
+									<p>
+										<strong>Adresse :</strong>
+										<span class="text-break">{{ ent.adresse }}</span>
+									</p>
+									<p>
+										<strong>SIRET :</strong>
+										<code class="text-break">{{ ent.siret }}</code>
+									</p>
+									<p>
+										<strong>Taille :</strong>
+										{{ ent.taille }}</p>
+									<h4 class="fw-bold mt-4">À propos</h4>
+									<p class="mb-1 text-muted text-break">{{ ent.domaine|default('Aucune description disponible.')|nl2br }}</p>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -95,8 +99,8 @@
 
 	{# Pagination (Une seule fois !) #}
 	{% if nombrePages > 1 %}
-		<nav aria-label="Page navigation" class="mt-5 mb-5">
-			<ul class="pagination justify-content-center">
+		<nav aria-label="Page navigation" class="mt-5 mb-5 d-flex justify-content-center">
+			<ul class="pagination pagination-sm">
 				<li class="page-item {{ pageActuelle <= 1 ? 'disabled' : '' }}">
 					<a class="page-link text-dark border-dark" href="{{ url_for('liste-entreprises', { 'page': pageActuelle - 1 }) }}">Précédent</a>
 				</li>

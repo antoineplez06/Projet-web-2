@@ -2,11 +2,11 @@
 
 {% block content %}
 
-    <div class="row mb-3 mt-4 justify-content-center">
-        <div class="col-md-6">
-            <form method="GET" action="{{ url_for('Offres') }}" class="d-flex">
-                <input type="text" name="q" class="form-control me-2" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
-                <button type="submit" class="btn btn-outline-secondary">Rechercher</button>
+    <div class="row mb-3 mt-4 justify-content-center px-2">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+            <form method="GET" action="{{ url_for('Offres') }}" class="d-flex flex-column flex-sm-row gap-2">
+                <input type="text" name="q" class="form-control" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
+                <button type="submit" class="btn btn-outline-secondary flex-shrink-0">Rechercher</button>
                 {% if searchTerm %}
                     <a href="{{ url_for('Offres') }}" class="btn btn-link">Réinitialiser</a>
                 {% endif %}
@@ -15,67 +15,70 @@
     </div>
 
 	{% for offre in offres %}
-		<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white">
-			<div class="d-flex justify-content-between align-items-start">
-				<div>
-					<h3 class="fw-bold mb-0">{{ offre.nom }}</h3>
-					<p class="mb-0 text-secondary">{{ offre.entreprise.nom }}</p>
-					<p class="mb-0 text-muted">{{ offre.lieu }}</p>
-				</div>
-				<a href="{{ url_for('app_wishlist_add', { 'idOffre': offre.idOffre }) }}" class="btn-wishlist">
-					<svg height="45" fill="none" stroke="black" stroke-width="30" viewbox="0 0 512 512" style="cursor:pointer">
-						<path d="M256 472 C256 472 40 312 40 160 C40 72 104 32 168 32 C216 32 256 80 256 80 C256 80 296 32 344 32 C408 32 472 72 472 160 C472 312 256 472 256 472 Z"/>
-					</svg>
-				</a>
-			</div>
-			<hr
-			class="my-3">
+		<div class="row mt-4 px-2 justify-content-center">
+			<div class="col-12 col-sm-10 col-lg-8 col-xl-7">
+				<div class="border border-dark border-3 rounded-2 px-3 px-md-5 py-3 bg-white shadow-sm">
+					<div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+						<div class="flex-grow-1 min-w-0">
+							<h3 class="fw-bold mb-0 text-break">{{ offre.nom }}</h3>
+							<p class="mb-0 text-secondary small text-break">{{ offre.entreprise.nom }}</p>
+							<p class="mb-0 text-muted small">{{ offre.lieu }}</p>
+						</div>
+						<a href="{{ url_for('app_wishlist_add', { 'idOffre': offre.idOffre }) }}" class="btn-wishlist flex-shrink-0" title="Ajouter aux favoris">
+							<svg height="40" width="40" fill="none" stroke="black" stroke-width="30" viewbox="0 0 512 512" style="cursor:pointer">
+								<path d="M256 472 C256 472 40 312 40 160 C40 72 104 32 168 32 C216 32 256 80 256 80 C256 80 296 32 344 32 C408 32 472 72 472 160 C472 312 256 472 256 472 Z"/>
+							</svg>
+						</a>
+					</div>
+					<hr class="my-3">
 
-			{# ── Carousel des caractéristiques ── #}
-			<div id="carouselOffre{{ offre.idOffre }}" class="carousel slide" data-bs-ride="false">
-				<div class="carousel-inner">
-					<div class="carousel-item active">
-						<p class="text-uppercase text-muted small fw-semibold mb-1">Description</p>
-						<p class="mb-0">{{ offre.description|slice(0, 150) }}
-							{% if offre.description|length > 150 %}…
-							{% endif %}
-						</p>
+					{# ── Carousel des caractéristiques ── #}
+					<div id="carouselOffre{{ offre.idOffre }}" class="carousel slide" data-bs-ride="false">
+						<div class="carousel-inner">
+							<div class="carousel-item active">
+								<p class="text-uppercase text-muted small fw-semibold mb-1">Description</p>
+								<p class="mb-0 fs-6 fs-md-5">{{ offre.description|slice(0, 150) }}
+									{% if offre.description|length > 150 %}…
+									{% endif %}
+								</p>
+							</div>
+							<div class="carousel-item">
+								<p class="text-uppercase text-muted small fw-semibold mb-1">Niveau d'études requis</p>
+								<p class="fs-6 fs-md-5 fw-bold mb-0">{{ offre.exigenceEtude }}</p>
+							</div>
+							<div class="carousel-item">
+								<p class="text-uppercase text-muted small fw-semibold mb-1">Rémunération</p>
+								<p class="fs-5 fs-md-4 fw-bold mb-0">{{ offre.remuneration }}</p>
+							</div>
+							<div class="carousel-item">
+								<p class="text-uppercase text-muted small fw-semibold mb-1">Candidatures reçues</p>
+								<p class="mb-0">
+									<span class="fs-5 fs-md-3 fw-bold">{{ offre.nombreEtudiantPostule }}</span>
+									<span class="text-muted small">personne(s) ont déjà postulé</span>
+								</p>
+							</div>
+							<div class="carousel-item">
+								<p class="text-uppercase text-muted small fw-semibold mb-1">Publié le</p>
+								<p class="fs-6 fs-md-5 mb-0">{{ offre.date|date("d/m/Y") }}</p>
+							</div>
+						</div>
+						<div class="d-flex justify-content-center align-items-center mt-3 gap-2">
+							<button class="btn btn-sm btn-outline-dark rounded-circle" type="button" data-bs-target="#carouselOffre{{ offre.idOffre }}" data-bs-slide="prev">
+								&#8592;
+							</button>
+							<small class="text-muted">Parcourez</small>
+							<button class="btn btn-sm btn-outline-dark rounded-circle" type="button" data-bs-target="#carouselOffre{{ offre.idOffre }}" data-bs-slide="next">
+								&#8594;
+							</button>
+						</div>
 					</div>
-					<div class="carousel-item">
-						<p class="text-uppercase text-muted small fw-semibold mb-1">Niveau d'études requis</p>
-						<p class="fs-5 fw-bold mb-0">{{ offre.exigenceEtude }}</p>
-					</div>
-					<div class="carousel-item">
-						<p class="text-uppercase text-muted small fw-semibold mb-1">Rémunération</p>
-						<p class="fs-4 fw-bold mb-0">{{ offre.remuneration }}</p>
-					</div>
-					<div class="carousel-item">
-						<p class="text-uppercase text-muted small fw-semibold mb-1">Candidatures reçues</p>
-						<p class="mb-0">
-							<span class="fs-3 fw-bold">{{ offre.nombreEtudiantPostule }}</span>
-							<span class="text-muted">personne(s) ont déjà postulé</span>
-						</p>
-					</div>
-					<div class="carousel-item">
-						<p class="text-uppercase text-muted small fw-semibold mb-1">Publié le</p>
-						<p class="fs-5 mb-0">{{ offre.date|date("d/m/Y") }}</p>
+
+					<div class="mt-4 d-flex justify-content-center">
+						<a href="{{ url_for('page-postuler', { 'id': offre.idOffre }) }}" class="btn btn-dark rounded-pill px-4 py-2">
+							Postuler maintenant
+						</a>
 					</div>
 				</div>
-				<div class="d-flex justify-content-between align-items-center mt-3">
-					<button class="btn btn-sm btn-outline-dark rounded-circle" type="button" data-bs-target="#carouselOffre{{ offre.idOffre }}" data-bs-slide="prev">
-						&#8592;
-					</button>
-
-					<button class="btn btn-sm btn-outline-dark rounded-circle" type="button" data-bs-target="#carouselOffre{{ offre.idOffre }}" data-bs-slide="next">
-						&#8594;
-					</button>
-				</div>
-			</div>
-
-			<div class="mt-3 text-end">
-				<a href="{{ url_for('page-postuler', { 'id': offre.idOffre }) }}" class="btn btn-dark rounded-pill px-4">
-					Postuler maintenant
-				</a>
 			</div>
 		</div>
 	{% else %}
@@ -84,8 +87,8 @@
 		</div>
 	{% endfor %}
 
-	<nav>
-		<ul>
+	<nav class="mt-5 mb-4">
+		<ul class="pagination justify-content-center">
 			<li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' : '' }}">
 				<a class="page-link text-dark" href="{{ url_for('Offres', { 'page': pageActuelle + 1 }, filtres) }}">Suivant</a>
 			</li>

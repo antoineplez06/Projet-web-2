@@ -5,38 +5,42 @@
 
 {% block content %}
 
-	<div class="d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+	<div class="d-flex align-items-center justify-content-center min-vh-100">
 
 		{% if not user %}
-			<form action="{{ url_for('connexion') }}" method="POST" class="w-50">
-				<section class="border border-success border-3 rounded-2 px-5 py-3 bg-white shadow-sm">
-					<h1 class="text-center fs-1 mb-4 fw-bold">Connexion</h1>
+			<div class="w-100 px-3 px-md-0">
+				<form action="{{ url_for('connexion') }}" method="POST" class="mx-auto" style="max-width: 450px;">
+					<div class="border border-success border-3 rounded-2 px-4 px-md-5 py-4 py-md-5 bg-white shadow-sm">
+						<h1 class="text-center fs-2 fs-md-1 mb-4 fw-bold">Connexion</h1>
 
-					{% if error %}
-						<div class="alert alert-danger text-center">{{ error }}</div>
-					{% endif %}
+						{% if error %}
+							<div class="alert alert-danger text-center small">{{ error }}</div>
+						{% endif %}
 
-					<div class="input-box position-relative mb-4">
-						<input type="text" name="email" placeholder="Email" class="border border-dark border-2 form-control rounded-pill px-3 py-2" required>
+						<div class="input-box mb-4">
+							<input type="text" name="email" placeholder="Email" class="border border-dark border-2 form-control rounded-pill px-3 py-2" required>
+						</div>
+
+						<div class="input-box mb-4">
+							<input type="password" name="password" placeholder="Mot de passe" class="form-control rounded-pill border-2 border-dark px-3 py-2" required>
+						</div>
+
+						<button type="submit" class="btn btn-success rounded-pill fw-bold w-100">
+							Se connecter
+						</button>
 					</div>
-
-					<div class="input-box mb-4">
-						<input type="password" name="password" placeholder="Mot de passe" class="form-control rounded-pill border-2 border-dark px-3" required>
-					</div>
-
-					<button type="submit" class="btn btn-success rounded-pill fw-bold w-100">
-						Se connecter
-					</button>
-				</section>
-			</form>
+				</form>
+			</div>
 		{% else %}
-			<section class="border border-success border-3 rounded-2 px-5 py-4 bg-white shadow-sm text-center w-50">
-				<h1 class="fs-2 mb-4 fw-bold">Tu es déjà connecté !</h1>
-				<p class="mb-4">Il n'est pas nécessaire de te reconnecter.</p>
-				<a href="{{ url_for('accueil-co') }}" class="btn btn-success rounded-pill fw-bold w-100">
-					Retourner à mon accueil
-				</a>
-			</section>
+			<div class="w-100 px-3 px-md-0">
+				<div class="border border-success border-3 rounded-2 px-4 px-md-5 py-4 py-md-5 bg-white shadow-sm text-center mx-auto" style="max-width: 450px;">
+					<h1 class="fs-2 mb-4 fw-bold">Tu es déjà connecté !</h1>
+					<p class="mb-4 text-muted">Il n'est pas nécessaire de te reconnecter.</p>
+					<a href="{{ url_for('accueil-co') }}" class="btn btn-success rounded-pill fw-bold w-100">
+						Retourner à mon accueil
+					</a>
+				</div>
+			</div>
 		{% endif %}
 
 	</div>
