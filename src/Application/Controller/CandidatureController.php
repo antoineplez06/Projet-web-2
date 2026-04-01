@@ -85,4 +85,30 @@ class CandidatureController
         }
         return $response->withHeader('Location', '/candidatures')->withStatus(302);
     }
+
+    public function updateStatus(Request $request, Response $response, array $args): Response
+    {
+        $idCandidature = (int)$args['id'];
+        $action = $args['action']; // 'accepter' ou 'refuser'
+        $userConnecte = $request->getAttribute('user');
+
+        if (!$userConnecte) {
+            return $response->withHeader('Location', '/connexion')->withStatus(302);
+        }
+
+        $role = strtolower($userConnecte->getRoleValue());
+        if ($role !== 'admin') {
+            return $response->withStatus(403);
+        }
+
+        $candidature = $this->entityManager->getRepository(Candidature::class)->find($idCandidature);
+
+        if ($candidature) {
+            $nouveauStatut = ($action === 'accepter') ? 'Accepté' : 'Refusé';
+            $candidature->setStatut($nouveauStatut);
+            $this->entityManager->flush();
+        }
+
+        return $response->withHeader('Location', '/candidatures')->withStatus(302);
+    }
 }

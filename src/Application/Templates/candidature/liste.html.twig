@@ -164,6 +164,19 @@
 							€</p>
 						<p>{{ offre.description|nl2br }}</p>
 					</div>
+					<div class="modal-footer">
+						{% if userRole == 'admin' %}
+							{% if candidature.statut == 'En cours de traitement' or candidature.statut == 'En attente' %}
+								<form action="/candidatures/accepter/{{ candidature.idCandidature }}" method="POST" class="d-inline">
+									<button type="submit" class="btn btn-success rounded-pill px-4">Accepter la candidature</button>
+								</form>
+								<form action="/candidatures/refuser/{{ candidature.idCandidature }}" method="POST" class="d-inline">
+									<button type="submit" class="btn btn-danger rounded-pill px-4">Refuser la candidature</button>
+								</form>
+							{% endif %}
+						{% endif %}
+						<button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Fermer</button>
+					</div>
 				</div>
 			</div>
 		</div>

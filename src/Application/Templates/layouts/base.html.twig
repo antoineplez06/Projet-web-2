@@ -85,8 +85,8 @@
                         </a>
                     {% endif %}
 
-                    {# Icône Candidatures pour Étudiants ET Pilotes #}
-                    {% if user.roleValue == 'etudiant' or user.roleValue == 'pilote' %}
+                    {# Icône Candidatures pour Étudiants, Pilotes ET Admins #}
+                    {% if user.roleValue == 'etudiant' or user.roleValue == 'pilote' or user.roleValue == 'admin' %}
                         <a href="{{ url_for('candidatures') }}" title="{% if user.roleValue == 'etudiant' %}Mes candidatures{% else %}Candidatures des étudiants{% endif %}">
                             <svg class="Candidatures" height="50" fill="none" stroke="black" stroke-width="30" viewbox="0 0 512 512">
                                 <path d="M160 64 H352 L416 128 V448 H160 Z M352 64 V128 H416 M112 96 L208 288 L176 320 L80 128 Z"/>

@@ -78,4 +78,9 @@ class Candidature
     {
         $this->cv = $cv;
     }
+
+    public function setStatut(string $statut): void
+    {
+        $this->statut = $statut;
+    }
 }
