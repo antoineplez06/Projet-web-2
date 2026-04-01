@@ -9,8 +9,12 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToMany; 
 use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\Common\Collections\ArrayCollection; 
+use Doctrine\Common\Collections\Collection; 
 use App\Application\Domain\Campus;
+use App\Application\Domain\Candidature; 
 
 #[Entity, Table(name: 'offres')]
 class Offre
@@ -30,13 +34,10 @@ class Offre
     #[Column(type: 'string', length: 255)]
     private string $exigenceEtude;
 
-    /**
-     * RELATION : Plusieurs offres pour une seule entreprise
-     * inversedBy="offres" doit correspondre au nom de la variable dans Entreprise.php
-     */
+    
     #[ManyToOne(targetEntity: Entreprise::class, inversedBy: 'offres')]
     #[JoinColumn(name: 'id_entreprise', referencedColumnName: 'id', nullable: false)]
-    private Entreprise $entreprise; // CHANGÉ : de string à Entreprise (Objet)
+    private Entreprise $entreprise;
 
     #[Column(type: 'date_immutable')]
     private DateTimeImmutable $date;
@@ -54,11 +55,14 @@ class Offre
     #[JoinColumn(name: 'id_campus', referencedColumnName: 'id_campus', nullable: false)]
     private Campus $campus;
 
+    #[OneToMany(mappedBy: 'offre', targetEntity: Candidature::class)]
+    private Collection $candidatures;
+
     public function __construct(
         string $nom,
         string $duree,
         string $exigenceEtude,
-        Entreprise $entreprise, // CHANGÉ : On passe l'objet Entreprise
+        Entreprise $entreprise,
         DateTimeImmutable $date,
         float $remuneration,
         string $description,
@@ -73,30 +77,62 @@ class Offre
         $this->description = $description;
         $this->presentielOuDistanciel = $presentielOuDistanciel;
         $this->nombreEtudiantPostule = 0;
-    }
 
+        $this->candidatures = new ArrayCollection();
+    }
 
     // --- GETTERS ---
 
-    public function getIdOffre(): int { return $this->idOffre; }
-    public function getNom(): string { return $this->nom; }
-    public function getDuree(): string { return $this->duree; }
-    public function getNombreEtudiantPostule(): int { return $this->nombreEtudiantPostule; }
-    public function getExigenceEtude(): string { return $this->exigenceEtude; }
+    public function getIdOffre(): int
+    {
+        return $this->idOffre;
+    }
+    public function getNom(): string
+    {
+        return $this->nom;
+    }
+    public function getDuree(): string
+    {
+        return $this->duree;
+    }
+    public function getNombreEtudiantPostule(): int
+    {
+        return $this->nombreEtudiantPostule;
+    }
+    public function getExigenceEtude(): string
+    {
+        return $this->exigenceEtude;
+    }
 
-
-    public function getEntreprise(): Entreprise 
+    public function getEntreprise(): Entreprise
     {
         return $this->entreprise;
     }
 
-    public function getDate(): DateTimeImmutable { return $this->date; }
-    public function getRemuneration(): float { return $this->remuneration; }
-    public function getDescription(): string { return $this->description; }
-    public function getPresentielOuDistanciel(): string { return $this->presentielOuDistanciel; }
+    public function getDate(): DateTimeImmutable
+    {
+        return $this->date;
+    }
+    public function getRemuneration(): float
+    {
+        return $this->remuneration;
+    }
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+    public function getPresentielOuDistanciel(): string
+    {
+        return $this->presentielOuDistanciel;
+    }
     public function getCampus(): Campus
     {
         return $this->campus;
+    }
+
+    public function getCandidatures(): Collection
+    {
+        return $this->candidatures;
     }
 
     // --- SETTERS ---
@@ -113,7 +149,6 @@ class Offre
     {
         $this->exigenceEtude = $exigenceEtude;
     }
-
     public function setDate(DateTimeImmutable $date): void
     {
         $this->date = $date;
@@ -130,15 +165,12 @@ class Offre
     {
         $this->presentielOuDistanciel = $presentielOuDistanciel;
     }
-
     public function setCampus(Campus $campus): void
     {
         $this->campus = $campus;
     }
-
-     public function setEntreprise(Entreprise $entreprise): void 
-    { 
-        $this->entreprise = $entreprise; 
+    public function setEntreprise(Entreprise $entreprise): void
+    {
+        $this->entreprise = $entreprise;
     }
 }
-
