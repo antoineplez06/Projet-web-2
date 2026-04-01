@@ -131,4 +131,7 @@ return function (App $app) {
         ]));
         return $response->withHeader('Content-Type', 'application/json');
     });
+
+    $app->get('/mentionslégales', [HomeController::class, 'footer'])->setName('mentionslégales');
+  
 };

@@ -88,4 +88,11 @@ class HomeController
         // Redirection vers l'accueil public
         return $response->withHeader('Location', '/')->withStatus(302);
     }
+
+     public function footer(Request $request, Response $response, array $args): Response
+    {
+        $view = Twig::fromRequest($request);
+
+        return $view->render($response, 'footer/mentionslégales.html.twig', $this->getCompteurs());
+    }
 }
