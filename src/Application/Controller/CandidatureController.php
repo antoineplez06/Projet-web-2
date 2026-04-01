@@ -62,25 +62,30 @@ class CandidatureController
 
             $candidatureExistante = $this->entityManager->getRepository(Candidature::class)->findOneBy([
                 'offre' => $offre,
-                'etudiant'  => $userConnecte, // à adapter selon le nom de votre propriété
+                'etudiant'  => $userConnecte, 
             ]);
+
             if (!$candidatureExistante) {
                 $candidature = new Candidature($offre, $userConnecte);
 
                 $parsebody = $request->getParsedBody();
                 $lettre = $parsebody['lettre'] ?? null;
 
-                $uploadedFile = $request->getUploadedFiles();
-                $cvFile = $uploadedFile['cv'] ?? null;
+                $uploadedFiles = $request->getUploadedFiles();
+                $cvFile = $uploadedFiles['cv'] ?? null;
                 $nomFichierCv = null;
 
-                if ($cvFile && $cvFile->getError() === UPLOAD_ERR_OK) {
+                if ($cvFile !== null && $cvFile->getError() === UPLOAD_ERR_OK) {
                     $extension = pathinfo($cvFile->getClientFilename(), PATHINFO_EXTENSION);
                     $nomFichierCv = uniqid('cv_' . $userConnecte->getId() . '_') . '.' . $extension;
 
                     $dossierDestination = __DIR__ . '/../../../public/uploads/cv/';
 
-                    $cvFile->moveTo($dossierDestination . $nomFichixerCv);
+                    if (!is_dir($dossierDestination)) {
+                        mkdir($dossierDestination, 0777, true);
+                    }
+
+                    $cvFile->moveTo($dossierDestination . $nomFichierCv);
                 }
 
                 $candidature->setLettreMotivation($lettre);
@@ -91,6 +96,9 @@ class CandidatureController
             }
             return $response->withHeader('Location', '/candidatures')->withStatus(302);
         }
+
+        // RETOUR OBLIGATOIRE si l'offre ou le user n'existe pas
+        return $response->withHeader('Location', '/')->withStatus(404);
     }
     public function updateStatus(Request $request, Response $response, array $args): Response
     {
