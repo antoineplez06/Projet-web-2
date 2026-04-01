@@ -45,7 +45,6 @@ class EntrepriseController
 
         $entreprisesAffichees = $queryBuilder->getQuery()->getResult();
 
-        // Calcul du total pour la pagination (avec filtre)
         $countBuilder = $repository->createQueryBuilder('e')->select('count(e.id)');
         if ($search) {
             $countBuilder->where('e.nom LIKE :search')
@@ -119,7 +118,6 @@ class EntrepriseController
 
         $entreprisesAffichees = $queryBuilder->getQuery()->getResult();
 
-        // Calcul du total pour la pagination (avec filtre)
         $countBuilder = $repository->createQueryBuilder('e')->select('count(e.id)');
         if ($search) {
             $countBuilder->where('e.nom LIKE :search')
@@ -140,7 +138,7 @@ class EntrepriseController
     {
         $view = Twig::fromRequest($request);
         $queryParams = $request->getQueryParams();
-        $search = $queryParams['q'] ?? null; // Récupère le terme de recherche
+        $search = $queryParams['q'] ?? null;  
 
         $page = isset($args['page']) ? (int) $args['page'] : 1;
         $perPage = 5;
@@ -149,7 +147,6 @@ class EntrepriseController
         $repository = $this->entityManager->getRepository(Entreprise::class);
         $queryBuilder = $repository->createQueryBuilder('e');
 
-        // Si une recherche est effectuée
         if ($search) {
             $queryBuilder->where('e.nom LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
@@ -161,7 +158,6 @@ class EntrepriseController
 
         $entreprisesAffichees = $queryBuilder->getQuery()->getResult();
 
-        // Calcul du total pour la pagination (en tenant compte du filtre)
         $countBuilder = $repository->createQueryBuilder('e')
             ->select('count(e.id)');
         if ($search) {
@@ -176,7 +172,7 @@ class EntrepriseController
             'entreprises' => $entreprisesAffichees,
             'pageActuelle' => $page,
             'nombrePages' => $nombrePages,
-            'searchTerm' => $search // On renvoie le terme pour l'afficher dans l'input
+            'searchTerm' => $search 
         ]);
     }
     public function modifier(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
@@ -194,14 +190,12 @@ class EntrepriseController
         if ($request->getMethod() === 'POST') {
             $data = $request->getParsedBody();
 
-            // On remplit l'objet avec les nouvelles valeurs
             $Entreprise->setNom(trim($data['nom'] ?? ''));
             $Entreprise->setAdresse(trim($data['adresse'] ?? ''));
             $Entreprise->setSiret(trim($data['siret'] ?? ''));
             $Entreprise->setDomaine(trim($data['domaine'] ?? ''));
             $Entreprise->setTaille(trim($data['taille'] ?? ''));
 
-            // On sauvegarde tout en base de données
             $this->entityManager->flush();
             $success = true;
 
@@ -239,7 +233,6 @@ class EntrepriseController
             ->withStatus(302);
     }
 
-    // Exemple dans ton EntrepriseController
     public function showOffres(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
@@ -261,23 +254,17 @@ class EntrepriseController
 
     public function noter(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
-        // 1. Récupérer l'id de l'entreprise
         $id = (int)$args['id'];
 
-        // 2. Récupérer la note du formulaire (POST)
         $data = $request->getParsedBody();
         $noteSaisie = isset($data['note']) ? (float)$data['note'] : null;
 
-        // Vérification de sécurité (entre 1 et 5)
         if ($noteSaisie !== null && $noteSaisie >= 1 && $noteSaisie <= 5) {
 
-            // 3. Trouver l'entreprise via Doctrine
             $entreprise = $this->entityManager->getRepository(Entreprise::class)->find($id);
 
             if ($entreprise) {
-                // Logique de calcul :
-                // Si l'entreprise n'a pas encore de note (null ou 0), on met la note directement.
-                // Sinon, on fait une moyenne entre l'ancienne et la nouvelle.
+                
                 $noteActuelle = $entreprise->getNote();
 
                 if (!$noteActuelle || $noteActuelle == 0) {
@@ -286,15 +273,13 @@ class EntrepriseController
                     $nouvelleMoyenne = ($noteActuelle + $noteSaisie) / 2;
                 }
 
-                // On enregistre avec un chiffre après la virgule (ex: 4.5)
                 $entreprise->setNote(round($nouvelleMoyenne, 1));
 
                 $this->entityManager->flush();
             }
         }
 
-        // 4. Redirection vers la page précédente (la liste)
-        // On utilise l'en-tête Location pour rafraîchir proprement
+
         return $response
             ->withHeader('Location', '/entreprise')
             ->withStatus(302);
