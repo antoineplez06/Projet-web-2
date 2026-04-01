@@ -3,6 +3,7 @@
 namespace App\Application\Controller;
 use App\Application\Domain\Entreprise;
 use App\Application\Domain\Campus; 
+use App\Application\Domain\Offre;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -214,13 +215,20 @@ class EntrepriseController
     }
 
         // Exemple dans ton EntrepriseController
-    public function showOffres(int $id, OffreRepository $offreRepository, EntrepriseRepository $entrepriseRepo)
+    public function showOffres(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
-        $entreprise = $entrepriseRepo->find($id);
-        // On récupère uniquement les offres liées à cette entreprise
-        $offres = $offreRepository->findBy(['entreprise' => $entreprise]);
+        $view = Twig::fromRequest($request);
+        $id = (int)$args['id'];
+        
+        $entreprise = $this->entityManager->find(Entreprise::class, $id);
+        
+        if (!$entreprise) {
+            return $response->withStatus(404);
+        }
 
-        return $this->render('entreprise/offres.html.twig', [
+        $offres = $this->entityManager->getRepository(Offre::class)->findBy(['entreprise' => $entreprise]);
+
+        return $view->render($response, 'entreprise/offres.html.twig', [
             'entreprise' => $entreprise,
             'offres' => $offres,
         ]);

@@ -66,6 +66,7 @@ class Entreprise
     public function getDomaine(): string { return $this->domaine; }
     public function getTaille(): string { return $this->taille; }
     public function getNote(): float { return $this->note ?? 0; }
+    public function getOffres(): Collection { return $this->offres; }
 
 
     // --- Setters ---

@@ -1,0 +1,79 @@
+{% extends "layouts/base.html.twig" %}
+
+{% block title %}Offres de {{ entreprise.nom }}{% endblock %}
+
+{% block content %}
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <a href="{{ url_for('liste-entreprises') }}" class="btn btn-outline-dark rounded-pill px-4 mb-3">
+                <i class="bi bi-arrow-left"></i> Retour aux entreprises
+            </a>
+            <h1 class="fw-bold">Stages chez {{ entreprise.nom }}</h1>
+        </div>
+
+        {# --- EN-TÊTE ENTREPRISE (Style liste.html.twig) --- #}
+        <div class="border border-dark border-3 rounded-2 px-5 py-4 w-75 mx-auto mb-5 position-relative bg-white shadow-sm">
+            <h3 class="float-none w-auto fw-bold mb-2">{{ entreprise.nom }}</h3>
+            
+            <div class="mb-3">
+                {% set noteValue = entreprise.note|default(0) %}
+                {% set noteArrondie = noteValue|round %}
+                {% if noteValue > 0 %}
+                    {% for i in 1..5 %}
+                        <i class="bi bi-star{{ i <= noteArrondie ? '-fill' : '' }} text-warning"></i>
+                    {% endfor %}
+                    <span class="ms-2 text-dark fw-bold small">Note :{{ noteValue }}/5</span>
+                {% else %}
+                    <span class="text-muted small"><i>Aucune note</i></span>
+                {% endif %}
+            </div>
+
+            <p class="mb-0 text-muted"><strong>Domaine :</strong> {{ entreprise.domaine }}</p>
+            <p class="mb-0"><strong>Lieu :</strong> {{ entreprise.adresse }}</p>
+            <p class="mt-4 text-muted small">SIRET : <code>{{ entreprise.siret }}</code></p>
+
+            <div class="position-absolute top-0 end-0 mt-3 me-3">
+                <span class="badge border border-dark text-dark bg-light p-2">{{ entreprise.taille }}</span>
+            </div>
+        </div>
+
+        {# --- LISTE DES OFFRES (Même style boxy) --- #}
+        <div class="w-75 mx-auto">
+            {% if offres is not empty %}
+                <h4 class="fw-bold mb-4 border-bottom border-dark pb-2">Offres disponibles ({{ offres|length }})</h4>
+                {% for offre in offres %}
+                    <div class="border border-dark border-2 rounded-2 p-4 mb-4 bg-white shadow-sm position-relative">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h4 class="fw-bold text-dark mb-1">{{ offre.nom }}</h4>
+                                <p class="text-muted mb-0 small">
+                                    <i class="bi bi-calendar3"></i> Publié le {{ offre.date|date("d/m/Y") }}
+                                </p>
+                            </div>
+                            <span class="badge bg-success border border-dark text-white fs-6 p-2">{{ offre.remuneration }} € / mois</span>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-9">
+                                <p class="text-dark small mb-3">{{ offre.description|nl2br }}</p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <span class="badge border border-dark text-dark bg-light">Durée : {{ offre.duree }}</span>
+                                    <span class="badge border border-dark text-dark bg-light">Niveau : {{ offre.exigenceEtude }}</span>
+                                    <span class="badge border border-dark text-dark bg-light">{{ offre.presentielOuDistanciel }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 border-start border-dark text-center d-flex flex-column justify-content-center">
+                                <p class="mb-3 small"><strong>{{ offre.nombreEtudiantPostule|default(0) }}</strong> postulants</p>
+                                <a href="{{ url_for('page-postuler', { 'id': offre.idOffre }) }}" class="btn btn-dark rounded-pill w-100 shadow-sm">Postuler</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="border border-dark border-2 rounded-2 p-5 text-center bg-light">
+                    <h4 class="text-muted italic">Aucune offre pour le moment.</h4>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

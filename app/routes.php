@@ -44,6 +44,7 @@ return function (App $app) {
 
     $app->group('/entreprise', function (RouteCollectorProxy $group) use ($factory) {
         $group->get('[/{page:\d+}]', [EntrepriseController::class, 'liste'])->setName('liste-entreprises');
+        $group->get('/{id:\d+}/offres', [EntrepriseController::class, 'showOffres'])->setName('entreprise-offres');
     })->add(new RoleCheckMiddleware($factory, [Role::ETUDIANT,Role::PILOTE, Role::ADMIN]));
 
     $app->get('/entreprises[/{page:\d+}]', [EntrepriseController::class, 'listean'])->setName('entreprises-an');
