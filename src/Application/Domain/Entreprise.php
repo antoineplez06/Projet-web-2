@@ -32,6 +32,9 @@ class Entreprise
     #[Column(type: 'string', length: 100, nullable: false)]
     private string $taille;
 
+    #[Column(type: 'float', nullable:true)]
+    private float $note;
+
     // --- RELATION : Une entreprise a plusieurs offres ---
     // mappedBy doit correspondre au nom de la propriété "entreprise" dans ton entité Offre
     #[OneToMany(mappedBy: 'entreprise', targetEntity: Offre::class)]
@@ -43,6 +46,7 @@ class Entreprise
         string $siret,
         string $domaine,
         string $taille,
+        float $note = 0
     ) {
         $this->nom = $nom;
         $this->adresse = $adresse;
@@ -50,6 +54,7 @@ class Entreprise
         $this->domaine = $domaine;
         $this->taille = $taille;
         $this->offres = new ArrayCollection(); // INITIALISATION IMPORTANTE
+        $this->note = $note;
     }
 
     // --- Getters ---
@@ -60,15 +65,8 @@ class Entreprise
     public function getSiret(): string { return $this->siret; }
     public function getDomaine(): string { return $this->domaine; }
     public function getTaille(): string { return $this->taille; }
+    public function getNote(): float { return $this->note ?? 0; }
 
-    /**
-     * C'est cette méthode que Twig va appeler avec ent.offres
-     * @return Collection<int, Offre>
-     */
-    public function getOffres(): Collection
-    {
-        return $this->offres;
-    }
 
     // --- Setters ---
     public function setNom(string $nom): self { $this->nom = $nom; return $this; }
@@ -76,4 +74,8 @@ class Entreprise
     public function setSiret(string $siret): self { $this->siret = $siret; return $this; }
     public function setDomaine(string $domaine): self { $this->domaine = $domaine; return $this; }
     public function setTaille(string $taille): self { $this->taille = $taille; return $this; }
+    public function setNote(float $note): self { 
+        $this->note = $note; // Correction ici : il manquait le $ devant this
+        return $this; 
+    }
 }

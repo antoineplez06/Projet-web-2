@@ -21,7 +21,7 @@ class PiloteController
         $this->entityManager = $entityManager;
     }
 
-public function liste(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    public function liste(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
         $queryParams = $request->getQueryParams();
@@ -66,7 +66,7 @@ public function liste(ServerRequestInterface $request, ResponseInterface $respon
             $countBuilder->andWhere('u.nom LIKE :search OR u.prenom LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
         }
-        
+
         $totalItems = $countBuilder->getQuery()->getSingleScalarResult();
         $nombrePages = ceil($totalItems / $perPage);
 
@@ -103,7 +103,7 @@ public function liste(ServerRequestInterface $request, ResponseInterface $respon
                 $dateNaissance = new \DateTimeImmutable(); // Date par défaut si erreur
             }
 
-            $idCampus = $data ['id_campus'] ?? null;
+            $idCampus = $data['id_campus'] ?? null;
             $campusSelectionne = null;
             if ($idCampus) {
                 $campusSelectionne = $this->entityManager->find(Campus::class, (int)$idCampus);
@@ -120,7 +120,7 @@ public function liste(ServerRequestInterface $request, ResponseInterface $respon
                 $dateNaissance,
                 $promo,
                 $role,
-                $campusSelectionne 
+                $campusSelectionne
             );
 
             $this->entityManager->persist($nouveauPilote);
@@ -133,9 +133,13 @@ public function liste(ServerRequestInterface $request, ResponseInterface $respon
                 ->withHeader('Location', $url)
                 ->withStatus(302);
         }
+        
+        $campuses = $this->entityManager->getRepository(Campus::class)->findAll();
+
 
         return $view->render($response, 'pilote/ajout.html.twig', [
-            "success" => $success
+            "success" => $success,
+            "campuses" => $campuses,
         ]);
     }
 
