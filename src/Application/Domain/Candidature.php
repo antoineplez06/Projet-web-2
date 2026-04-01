@@ -20,6 +20,12 @@ class Candidature
     #[Column(type: 'string', length: 50)]
     private string $statut = 'En cours de traitement';
 
+    #[Column(type: 'text', nullable: true)]
+    private ?string $lettreMotivation = null;
+
+    #[Column(type: 'string', length: 255, nullable: true)]
+    private ?string $cv = null;
+
     #[ManyToOne(targetEntity: Offre::class)]
     #[JoinColumn(name: 'idOffre', referencedColumnName: 'idOffre', nullable: false)]
     private Offre $offre;
@@ -50,5 +56,26 @@ class Candidature
     public function getEtudiant(): user
     {
         return $this->etudiant;
+    }
+
+    public function getLettreMotivation(): ?string
+    {
+        return $this->lettreMotivation;
+    }
+
+    public function getCv(): ?string
+    {
+        return $this->cv;
+    }
+
+
+    public function setLettreMotivation(?string $lettre): void
+    {
+        $this->lettreMotivation = $lettre;
+    }
+
+    public function setCv(?string $cv): void
+    {
+        $this->cv = $cv;
     }
 }

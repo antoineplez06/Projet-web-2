@@ -40,17 +40,18 @@
 					{{ offre.date|date("d/m/Y") }}</p>
 
 				<h3 class="border border-dark px-5 py-2 position-absolute top-0 end-0 mt-3 me-3
-					                {% if candidature.statut == 'Refusé' %}
-					                    bg-danger text-white
-					                {% elseif candidature.statut == 'Accepté' %}
-					                    bg-success text-white
-					                {% else %}
-					                    bg-light
-					                {% endif %}" style="font-size: 1.2rem;">
+					                                                                {% if candidature.statut == 'Refusé' %}
+					                                                                    bg-danger text-white
+					                                                                {% elseif candidature.statut == 'Accepté' %}
+					                                                                    bg-success text-white
+					                                                                {% else %}
+					                                                                    bg-light
+					                                                                {% endif %}" style="font-size: 1.2rem;">
 					{{ candidature.statut }}
 				</h3>
 
-				<button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-dark text-white hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.idOffre }}">
+				{# CORRECTION 1 ICI #}
+				<button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-dark text-white hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ candidature.idCandidature }}">
 					Voir l'offre
 				</button>
 			</div>
@@ -93,7 +94,8 @@
 					En cours
 				</h3>
 
-				<button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-dark text-white hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.idOffre }}">
+				{# CORRECTION 2 ICI #}
+				<button class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-dark text-white hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ candidature.idCandidature }}">
 					Voir l'offre
 				</button>
 			</div>
@@ -107,7 +109,9 @@
 	{# --- AJOUT DES MODALS --- #}
 	{% for candidature in candidatures %}
 		{% set offre = candidature.offre %}
-		<div class="modal fade" id="VoirOffre{{ offre.idOffre }}" tabindex="-1" aria-hidden="true">
+
+		{# CORRECTION 3 ICI #}
+		<div class="modal fade" id="VoirOffre{{ candidature.idCandidature }}" tabindex="-1" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header bg-dark text-white">
@@ -116,21 +120,52 @@
 							{{ offre.entreprise.nom }}</h5>
 						<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
 					</div>
-					<div class="modal-body">
+					<div
+						class="modal-body">
+
+						{# --- DOSSIER DE CANDIDATURE (Maintenant visible par TOUT LE MONDE) --- #}
+						<div class="bg-light p-3 rounded mb-4 border">
+							<h5 class="text-primary fw-bold border-bottom pb-2">
+								{% if userRole == 'etudiant' %}
+									Mon dossier de candidature
+								{% else %}
+									Dossier de
+									{{ candidature.etudiant.prenom }}
+									{{ candidature.etudiant.nom }}
+								{% endif %}
+							</h5>
+
+							<h6 class="fw-bold mt-3">Lettre de motivation :</h6>
+							{% if candidature.lettreMotivation %}
+								<p class="bg-white p-3 border rounded" style="white-space: pre-wrap;">{{ candidature.lettreMotivation }}</p>
+							{% else %}
+								<p class="text-muted fst-italic">Aucune lettre fournie.</p>
+							{% endif %}
+
+							<h6 class="fw-bold mt-3">Curriculum Vitae (CV) :</h6>
+							{% if candidature.cv %}
+								<a href="/uploads/cv/{{ candidature.cv }}" target="_blank" class="btn btn-outline-primary">
+									<i class="bi bi-file-earmark-pdf"></i>
+									Télécharger / Voir le CV
+								</a>
+							{% else %}
+								<p class="text-muted fst-italic">Aucun CV fourni.</p>
+							{% endif %}
+						</div>
+						{# ----------------------------------------------------------------- #}
+
+						<h6 class="fw-bold text-secondary">Détails de l'offre :</h6>
 						<p>
-							<strong>Mode :</strong>
-							{{ offre.presentielOuDistanciel }}</p>
+							<strong>Lieu :</strong>
+							{{ offre.lieu }}</p>
 						<p>
 							<strong>Rémunération :</strong>
 							{{ offre.remuneration }}
 							€</p>
-						<hr>
-						<h6 class="fw-bold">Description :</h6>
 						<p>{{ offre.description|nl2br }}</p>
 					</div>
 				</div>
 			</div>
 		</div>
 	{% endfor %}
-
 {% endblock %}
