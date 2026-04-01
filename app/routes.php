@@ -117,7 +117,11 @@ return function (App $app) {
     $app->group('/candidatures', function (RouteCollectorProxy $group) use ($factory) {
         $group->get('', [CandidatureController::class, 'list'])->setName('candidatures');
         $group->post('/enregistrer/{id}', [CandidatureController::class, 'add'])->setName('action-enregistrer-candidature');
-    })->add(new RoleCheckMiddleware($factory, [Role::ETUDIANT,Role::PILOTE, Role::ADMIN]));
+    })->add(new RoleCheckMiddleware($factory, [Role::ETUDIANT, Role::PILOTE, Role::ADMIN]));
+
+    $app->group('/candidatures', function (RouteCollectorProxy $group) use ($factory) {
+        $group->post('/{action:(?:accepter|refuser)}/{id:\d+}', [CandidatureController::class, 'updateStatus'])->setName('candidature-update-status');
+    })->add(new RoleCheckMiddleware($factory, [Role::ADMIN]));
 
     $app->get('/debug-session', function(Request $request, Response $response) {
         $response->getBody()->write(json_encode([
