@@ -1,0 +1,61 @@
+{% extends "layouts/base.html.twig" %}
+
+{% block content %}
+<body class="bg-light">
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            
+            <div class="col-12 col-md-10 col-lg-8">
+                
+                <header class="text-center mb-5">
+                    <h1 class="display-4 fw-bold text-primary">Mentions Légales</h1>
+                    <p class="text-secondary border-top border-bottom py-2 d-inline-block">
+                        Site d'offres de stages et d'alternances
+                    </p>
+                </header>
+
+                <main class="bg-white p-4 p-md-5 shadow-sm rounded">
+                    
+                    <p class="text-muted small mb-4 text-end">Dernière mise à jour : 01/04/2026</p>
+
+                    <section class="mb-5">
+                        <h2 class="h3 text-dark mb-3">1. Édition du site</h2>
+                        <p>Le site <strong>[Nom du Site]</strong> est une plateforme de mise en relation entre recruteurs et candidats.</p>
+                        <div class="p-3 bg-light rounded border-start border-4 border-primary">
+                            <ul class="list-unstyled mb-0">
+                                <li><strong>Responsable :</strong> [Prénom Nom]</li>
+                                <li><strong>Siège :</strong> [Adresse postale complète]</li>
+                                <li><strong>SIRET :</strong> [Numéro SIRET]</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="h3 text-dark mb-3">2. Protection des données</h2>
+                        <p>Les informations collectées (CV, coordonnées) sont traitées conformément au règlement européen (RGPD).</p>
+                        <p class="alert alert-info">
+                            Vous disposez d'un droit d'accès et de suppression de vos données via votre espace candidat.
+                        </p>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="h3 text-dark mb-3">3. Hébergement</h2>
+                        <p>Le site est hébergé par <strong>StageHub</strong>, [Adresse de l'hébergeur].</p>
+                    </section>
+
+                    <section class="mb-4">
+                        <h2 class="h3 text-dark mb-3">4. Responsabilité</h2>
+                        <p>L'éditeur ne peut être tenu responsable du contenu des offres d'alternance ou de stage déposées par des tiers, ni des modalités d'embauche fixées par les recruteurs.</p>
+                    </section>
+
+                </main>
+
+
+            </div>
+        </div>
+    </div>
+
+
+</body>
+{% endblock %}

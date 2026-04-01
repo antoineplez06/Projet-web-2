@@ -132,12 +132,54 @@
             {% block content %}{% endblock %}
         </main>
 
-        <footer id="footer" class="text-center py-3 mt-auto bg-light border-top">
-            {% block footer %}
-                &copy; Copyright 2026 by
-                <a href="https://example.com/" class="text-decoration-none text-dark fw-bold">StageHub</a>.
-            {% endblock %}
-        </footer>
+     <footer id="footer" class="py-4 mt-auto bg-light border-top">
+    <div class="container">
+        {% block footer %}
+            <div class="row align-items-center">
+                
+                <div class="col-12 col-md-4 mb-4 mb-md-0 text-center text-md-start">
+                    <h3 class="mb-3 text-dark" style="font-family: 'Pacifico', cursive; font-size: 1.5rem;">
+                        Explorer
+                    </h3>
+                    <ul class="nav flex-column">
+                        
+                        <li class="nav-item mb-1">
+                            <a class="p-0 text-muted text-decoration-none small" 
+                               href="{% if user %}{{ url_for('accueil-co') }}{% else %}{{ url_for('home') }}{% endif %}">
+                                Page d'accueil
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-1">
+                            <a class="p-0 text-muted text-decoration-none small" 
+                               href="{% if user %}{{ url_for('Offres') }}{% else %}{{ url_for('offres-an') }}{% endif %}">
+                                Offres
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-1">
+                            <a class="p-0 text-muted text-decoration-none small" 
+                               href="{% if user %}{{ url_for('liste-entreprises') }}{% else %}{{ url_for('entreprises-an') }}{% endif %}">
+                                Entreprises
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <div class="col-12 col-md-4 text-center">
+                    <span class="text-muted small">&copy; Copyright 2026 by</span>
+                    <a href="{{ url_for('mentionslégales') }}" class="text-decoration-none text-dark fw-bold ms-1">
+                        StageHub
+                    </a>
+                </div>
+
+                <div class="col-md-4 d-none d-md-block"></div>
+
+            </div>
+        {% endblock %}
+    </div>
+</footer>
 
     </body>
 </html>
