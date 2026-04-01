@@ -39,7 +39,9 @@
 						{% for etu in etudiant %}
 							<tr>
 								<td class="text-truncate">{{ etu.prenom }}</td>
-								<td class="text-truncate"><strong>{{ etu.nom }}</strong></td>
+								<td class="text-truncate">
+									<strong>{{ etu.nom }}</strong>
+								</td>
 								<td class="d-none d-md-table-cell text-truncate small">{{ etu.genre }}</td>
 								<td class="d-none d-lg-table-cell text-truncate small">{{ etu.email }}</td>
 								<td class="d-none d-md-table-cell text-truncate small">{{ etu.campus.ville }}</td>
@@ -63,24 +65,22 @@
 		</div>
 	</div>
 
-	<nav aria-label="Page navigation" class="mt-4">
-		<ul class="pagination pagination-sm justify-content-center">
-
-			<li class="page-item {{ pageActuelle <= 1 ? 'disabled' }}">
-				<a class="page-link" href="{{ url_for('liste-etudiants', { 'page': pageActuelle - 1 }) }}">Précédent</a>
-			</li>
-
-			{% for i in 1..nombrePages %}
-				<li class="page-item {{ i == pageActuelle ? 'active' }}">
-					<a class="page-link" href="{{ url_for('liste-etudiants', { 'page': i }) }}">{{ i }}</a>
+	{% if nombrePages > 1 %}
+		<nav aria-label="Page navigation" class="mt-4">
+			<ul class="pagination justify-content-center">
+				<li class="page-item {{ pageActuelle <= 1 ? 'disabled' }}">
+					<a class="page-link" href="{{ url_for('liste-etudiants', { 'page': pageActuelle - 1 }) }}">Précédent</a>
 				</li>
-			{% endfor %}
-
-			<li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' }}">
-				<a class="page-link" href="{{ url_for('liste-etudiants', { 'page': pageActuelle + 1 }) }}">Suivant</a>
-			</li>
-
-		</ul>
-	</nav>
+				{% for i in 1..nombrePages %}
+					<li class="page-item {{ i == pageActuelle ? 'active' }}">
+						<a class="page-link" href="{{ url_for('liste-etudiants', { 'page': i }) }}">{{ i }}</a>
+					</li>
+				{% endfor %}
+				<li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' }}">
+					<a class="page-link" href="{{ url_for('liste-etudiants', { 'page': pageActuelle + 1 }) }}">Suivant</a>
+				</li>
+			</ul>
+		</nav>
+	{% endif %}
 
 {% endblock %}

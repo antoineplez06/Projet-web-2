@@ -2,17 +2,17 @@
 
 {% block content %}
 
-    <div class="row mb-3 mt-4 justify-content-center px-2">
-        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
-            <form method="GET" action="{{ url_for('Offres') }}" class="d-flex flex-column flex-sm-row gap-2">
-                <input type="text" name="q" class="form-control" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
-                <button type="submit" class="btn btn-outline-secondary flex-shrink-0">Rechercher</button>
-                {% if searchTerm %}
-                    <a href="{{ url_for('Offres') }}" class="btn btn-link">Réinitialiser</a>
-                {% endif %}
-            </form>
-        </div>
-    </div>
+	<div class="row mb-3 mt-4 justify-content-center px-2">
+		<div class="col-12 col-sm-10 col-md-8 col-lg-6">
+			<form method="GET" action="{{ url_for('Offres') }}" class="d-flex flex-column flex-sm-row gap-2">
+				<input type="text" name="q" class="form-control" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
+				<button type="submit" class="btn btn-outline-secondary flex-shrink-0">Rechercher</button>
+				{% if searchTerm %}
+					<a href="{{ url_for('Offres') }}" class="btn btn-link">Réinitialiser</a>
+				{% endif %}
+			</form>
+		</div>
+	</div>
 
 	{% for offre in offres %}
 		<div class="row mt-4 px-2 justify-content-center">
@@ -30,7 +30,8 @@
 							</svg>
 						</a>
 					</div>
-					<hr class="my-3">
+					<hr
+					class="my-3">
 
 					{# ── Carousel des caractéristiques ── #}
 					<div id="carouselOffre{{ offre.idOffre }}" class="carousel slide" data-bs-ride="false">
@@ -87,12 +88,22 @@
 		</div>
 	{% endfor %}
 
-	<nav class="mt-5 mb-4">
-		<ul class="pagination justify-content-center">
-			<li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' : '' }}">
-				<a class="page-link text-dark" href="{{ url_for('Offres', { 'page': pageActuelle + 1 }, filtres) }}">Suivant</a>
-			</li>
-		</ul>
-	</nav>
-
+	{% if nombrePages > 1 %}
+		<nav aria-label="Page navigation" class="mt-4">
+			<ul class="pagination justify-content-center">
+				<li class="page-item {{ pageActuelle <= 1 ? 'disabled' }}">
+					<a class="page-link" href="{{ url_for('Offres', { 'page': pageActuelle - 1 }) }}">Précédent</a>
+				</li>
+				{% for i in 1..nombrePages %}
+					<li class="page-item {{ i == pageActuelle ? 'active' }}">
+						<a class="page-link" href="{{ url_for('Offres', { 'page': i }) }}">{{ i }}</a>
+					</li>
+				{% endfor %}
+				<li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' }}">
+					<a class="page-link" href="{{ url_for('Offres', { 'page': pageActuelle + 1 }) }}">Suivant</a>
+				</li>
+			</ul>
+		</nav>
+	{% endif %}
+s
 {% endblock %}
