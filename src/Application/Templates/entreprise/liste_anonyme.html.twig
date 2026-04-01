@@ -1,73 +1,88 @@
-	{% extends "layouts/base.html.twig" %}
+{% extends "layouts/base.html.twig" %}
 
-	{% block content %}
+{% block content %}
 
-		{# Barre de recherche #}
-		<form class="d-flex mt-4 mx-auto w-50" method="GET" action="">
-			<input class="form-control me-4 border border-dark border-2" type="search" name="search" value="{{ filtres.search|default('') }}" placeholder="Rechercher une entreprise..." aria-label="Rechercher">
-			<button class="btn btn-outline-secondary" type="submit">Rechercher</button>
-		</form>
+	<div class="row mb-3 mt-4 justify-content-center">
+		<div class="col-md-6">
+			<form method="GET" action="{{ url_for('entreprises-an') }}" class="d-flex">
+				<input type="text" name="q" class="form-control me-2" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
+				<button type="submit" class="btn btn-outline-secondary">Rechercher</button>
+				{% if searchTerm %}
+					<a href="{{ url_for('entreprises-an') }}" class="btn btn-link">Réinitialiser</a>
+				{% endif %}
+			</form>
+		</div>
+	</div>
 
-		{% for ent in entreprises %}
-			<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white shadow-sm">
-				<h3 class="float-none w-auto fw-bold">{{ ent.nom }}</h3>
-				<p class="mb-0 text-muted"><strong>Domaine :</strong> {{ ent.domaine }}</p>
-				<p class="mb-0"><strong>Lieu :</strong> {{ ent.adresse }}</p>
-				
-				<p class="mt-4 text-muted small">SIRET : <code>{{ ent.siret }}</code></p>
+	{% for ent in entreprises %}
+		<div class="border border-dark border-3 rounded-2 px-5 py-3 w-50 mx-auto mt-4 position-relative bg-white shadow-sm">
+			<h3 class="float-none w-auto fw-bold">{{ ent.nom }}</h3>
+			<p class="mb-0 text-muted">
+				<strong>Domaine :</strong>
+				{{ ent.domaine }}</p>
+			<p class="mb-0">
+				<strong>Lieu :</strong>
+				{{ ent.adresse }}</p>
 
-				<div class="position-absolute top-0 end-0 mt-3 me-3">
-					<span class="badge border border-dark text-dark bg-light p-2">{{ ent.taille }}</span>
-				</div>
+			<p class="mt-4 text-muted small">SIRET :
+				<code>{{ ent.siret }}</code>
+			</p>
 
-				<button type="button" class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-light hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirEntreprise{{ ent.id }}">
-					Voir l'entreprise
-				</button>
+			<div class="position-absolute top-0 end-0 mt-3 me-3">
+				<span class="badge border border-dark text-dark bg-light p-2">{{ ent.taille }}</span>
+			</div>
 
-				{# Modal de détails #}
-				<div class="modal fade" id="VoirEntreprise{{ ent.id }}" tabindex="-1">
-					<div class="modal-dialog modal-lg">
-						<div class="modal-content">
-							<div class="modal-header">
-								<div class="container-fluid">
-									<div class="row w-100 align-items-center">
-										<div class="col-md-8">
-											<h2 class="fw-bold">{{ ent.nom }}</h2>
-											
-											<p class="mt-0 mb-1 text-muted">{{ ent.adresse }}</p>
-										</div>
-										<div class="col-md-4 text-center">
-											<p class="text-dark fw-bold mb-0">Taille : {{ ent.taille }}</p>
-										</div>
+			<button type="button" class="border border-dark rounded-pill px-4 py-2 position-absolute bottom-0 end-0 mb-3 me-3 bg-light hover-shadow" data-bs-toggle="modal" data-bs-target="#VoirEntreprise{{ ent.id }}">
+				Voir l'entreprise
+			</button>
+
+			{# Modal de détails #}
+			<div class="modal fade" id="VoirEntreprise{{ ent.id }}" tabindex="-1">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header">
+							<div class="container-fluid">
+								<div class="row w-100 align-items-center">
+									<div class="col-md-8">
+										<h2 class="fw-bold">{{ ent.nom }}</h2>
+
+										<p class="mt-0 mb-1 text-muted">{{ ent.adresse }}</p>
+									</div>
+									<div class="col-md-4 text-center">
+										<p class="text-dark fw-bold mb-0">Taille :
+											{{ ent.taille }}</p>
 									</div>
 								</div>
-								<button type="button" class="btn-close position-absolute top-0 end-0 me-3 mt-3" data-bs-dismiss="modal"></button>
 							</div>
+							<button type="button" class="btn-close position-absolute top-0 end-0 me-3 mt-3" data-bs-dismiss="modal"></button>
+						</div>
 
-							<div class="modal-body p-4">
-								<h4 class="fw-bold">Informations légales</h4>
-								<p><strong>SIRET :</strong> {{ ent.siret }}</p>
-								
-								<h4 class="fw-bold mt-4">À propos</h4>
-								{# Affichage de la description avec gestion des sauts de ligne #}
-								<p class="mb-1 text-muted">{{ ent.domaine|default('Aucune description disponible.')|nl2br }}</p>
-							</div>
+						<div class="modal-body p-4">
+							<h4 class="fw-bold">Informations légales</h4>
+							<p>
+								<strong>SIRET :</strong>
+								{{ ent.siret }}</p>
 
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-							</div>
+							<h4 class="fw-bold mt-4">À propos</h4>
+							{# Affichage de la description avec gestion des sauts de ligne #}
+							<p class="mb-1 text-muted">{{ ent.domaine|default('Aucune description disponible.')|nl2br }}</p>
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
 						</div>
 					</div>
 				</div>
 			</div>
-		{% else %}
-			<div class="text-center mt-5">
-				<h4 class="fw-bold text-muted">Aucune entreprise ne correspond à vos critères.</h4>
-			</div>
-		{% endfor %}
+		</div>
+	{% else %}
+		<div class="text-center mt-5">
+			<h4 class="fw-bold text-muted">Aucune entreprise ne correspond à vos critères.</h4>
+		</div>
+	{% endfor %}
 
-		{# Pagination #}
-		{% if nombrePages > 1 %}
+	{# Pagination #}
+	{% if nombrePages > 1 %}
 		<nav aria-label="Page navigation" class="mt-4">
 			<ul class="pagination justify-content-center">
 				<li class="page-item {{ pageActuelle <= 1 ? 'disabled' : '' }}">
@@ -85,6 +100,6 @@
 				</li>
 			</ul>
 		</nav>
-		{% endif %}
+	{% endif %}
 
-	{% endblock %}
+{% endblock %}
