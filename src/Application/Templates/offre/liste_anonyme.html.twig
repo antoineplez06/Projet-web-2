@@ -31,7 +31,7 @@
                     <hr class="my-3">
 
                     {# ── Carousel des caractéristiques ── #}
-                    <div id="carouselOffre{{ offre.id }}" class="carousel slide" data-bs-ride="false">
+                    <div id="carouselOffre{{ offre.idOffre  }}" class="carousel slide" data-bs-ride="false">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
                                 <p class="text-uppercase text-muted small fw-semibold mb-1">Description</p>
@@ -60,11 +60,11 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-center align-items-center mt-3 gap-2">
-                            <button class="btn btn-sm btn-outline-dark rounded-circle" type="button" data-bs-target="#carouselOffre{{ offre.id }}" data-bs-slide="prev">
+                            <button class="btn btn-sm btn-outline-dark rounded-circle" type="button" data-bs-target="#carouselOffre{{ offre.idOffre  }}" data-bs-slide="prev">
                                 &#8592;
                             </button>
                             <small class="text-muted">Parcourez</small>
-                            <button class="btn btn-sm btn-outline-dark rounded-circle" type="button" data-bs-target="#carouselOffre{{ offre.id }}" data-bs-slide="next">
+                            <button class="btn btn-sm btn-outline-dark rounded-circle" type="button" data-bs-target="#carouselOffre{{ offre.idOffre  }}" data-bs-slide="next">
                                 &#8594;
                             </button>
                         </div>

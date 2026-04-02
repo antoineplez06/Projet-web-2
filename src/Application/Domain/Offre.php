@@ -97,7 +97,7 @@ class Offre
     }
     public function getNombreEtudiantPostule(): int
     {
-        return $this->nombreEtudiantPostule;
+        return $this->candidatures->count();
     }
     public function getExigenceEtude(): string
     {
