@@ -1,98 +1,104 @@
 {% extends "layouts/base.html.twig" %}
-
 {% block content %}
+    <div class="row mb-3 mt-4 justify-content-center px-2">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+            <form method="GET" action="{{ url_for('offres-an') }}" class="d-flex flex-column flex-sm-row gap-2">
+                <input type="text" name="q" class="form-control" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
+                <button type="submit" class="btn btn-outline-secondary flex-shrink-0">Rechercher</button>
+                {% if searchTerm %}
+                    <a href="{{ url_for('offres-an') }}" class="btn btn-link">Réinitialiser</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    {% if filtres.search or filtres.lieu or filtres.candidats_max %}
+        <div class="text-center mt-3">
+            <a href="{{ url_for('offres-an') }}" class="btn btn-sm btn-outline-danger">Réinitialiser les filtres</a>
+        </div>
+    {% endif %}
 
-	<div class="row mb-3 mt-4 justify-content-center px-2">
-		<div class="col-12 col-sm-10 col-md-8 col-lg-6">
-			<form method="GET" action="{{ url_for('offres-an') }}" class="d-flex flex-column flex-sm-row gap-2">
-				<input type="text" name="q" class="form-control" placeholder="Rechercher par nom..." value="{{ searchTerm }}">
-				<button type="submit" class="btn btn-outline-secondary flex-shrink-0">Rechercher</button>
-				{% if searchTerm %}
-					<a href="{{ url_for('offres-an') }}" class="btn btn-link">Réinitialiser</a>
-				{% endif %}
-			</form>
-		</div>
-	</div>
+    {% for offre in offres %}
+        <div class="row mt-4 px-2 justify-content-center">
+            <div class="col-12 col-sm-10 col-lg-8 col-xl-7">
+                <div class="border border-dark border-3 rounded-2 px-3 px-md-5 py-3 bg-white shadow-sm">
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                        <div class="flex-grow-1 min-w-0">
+                            <h3 class="fw-bold mb-0 text-break">{{ offre.nom }}</h3>
+                            <p class="mb-0 text-secondary small text-break">{{ offre.entreprise.nom }}</p>
+                            <p class="mb-0 text-muted small">{{ offre.lieu }}</p>
+                        </div>
+                    </div>
+                    <hr class="my-3">
 
-	{% if filtres.search or filtres.lieu or filtres.candidats_max %}
-		<div class="text-center mt-3">
-			<a href="{{ url_for('offres-an') }}" class="btn btn-sm btn-outline-danger">Réinitialiser les filtres</a>
-		</div>
-	{% endif %}
+                    {# ── Carousel des caractéristiques ── #}
+                    <div id="carouselOffre{{ offre.id }}" class="carousel slide" data-bs-ride="false">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <p class="text-uppercase text-muted small fw-semibold mb-1">Description</p>
+                                <p class="mb-0 fs-6 fs-md-5">{{ offre.description|slice(0, 150) }}
+                                    {% if offre.description|length > 150 %}…{% endif %}
+                                </p>
+                            </div>
+                            <div class="carousel-item">
+                                <p class="text-uppercase text-muted small fw-semibold mb-1">Compétences requises</p>
+                                <p class="fs-6 fs-md-5 mb-0">{{ offre.competences }}</p>
+                            </div>
+                            <div class="carousel-item">
+                                <p class="text-uppercase text-muted small fw-semibold mb-1">Rémunération</p>
+                                <p class="fs-5 fs-md-4 fw-bold mb-0">{{ offre.remuneration }}</p>
+                            </div>
+                            <div class="carousel-item">
+                                <p class="text-uppercase text-muted small fw-semibold mb-1">Candidatures reçues</p>
+                                <p class="mb-0">
+                                    <span class="fs-5 fs-md-3 fw-bold">{{ offre.candidats }}</span>
+                                    <span class="text-muted small">personne(s) ont déjà postulé</span>
+                                </p>
+                            </div>
+                            <div class="carousel-item">
+                                <p class="text-uppercase text-muted small fw-semibold mb-1">Publié le</p>
+                                <p class="fs-6 fs-md-5 mb-0">{{ offre.date_publication }}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mt-3 gap-2">
+                            <button class="btn btn-sm btn-outline-dark rounded-circle" type="button" data-bs-target="#carouselOffre{{ offre.id }}" data-bs-slide="prev">
+                                &#8592;
+                            </button>
+                            <small class="text-muted">Parcourez</small>
+                            <button class="btn btn-sm btn-outline-dark rounded-circle" type="button" data-bs-target="#carouselOffre{{ offre.id }}" data-bs-slide="next">
+                                &#8594;
+                            </button>
+                        </div>
+                    </div>
 
-	{% for offre in offres %}
-		<div class="row mt-4 px-2 justify-content-center">
-			<div class="col-12 col-sm-10 col-lg-8 col-xl-7">
-				<div class="border border-dark border-3 rounded-2 px-3 px-md-5 py-3 bg-white shadow-sm">
-					<h3 class="fw-bold mb-0 text-break">{{ offre.nom }}</h3>
-					<p class="mb-0 text-break">{{ offre.entreprise.nom }}</p>
-					<p class="mb-0">{{ offre.lieu }}</p>
-					<p class="mt-4 text-muted small">Publié le :
-						{{ offre.date_publication }}</p>
+                    <div class="mt-4 d-flex justify-content-center">
+                        <a href="{{ url_for('connexion') }}" class="btn btn-dark rounded-pill px-4 py-2">
+                            Se connecter pour postuler
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center mt-5">
+            <h4 class="fw-bold text-muted">Aucune offre ne correspond à vos critères.</h4>
+        </div>
+    {% endfor %}
 
-					<div class="d-flex justify-content-center mt-4">
-						<button type="button" class="btn btn-outline-dark rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.id }}">
-							Voir l'offre
-						</button>
-					</div>
-
-					<div class="modal fade" id="VoirOffre{{ offre.id }}" tabindex="-1">
-						<div class="modal-dialog modal-lg modal-dialog-scrollable">
-							<div class="modal-content">
-								<div class="modal-header flex-column align-items-start border-bottom">
-									<button type="button" class="btn-close align-self-end mb-2" data-bs-dismiss="modal"></button>
-									<div class="w-100">
-										<h2 class="fw-bold text-break">{{ offre.nom }}</h2>
-										<p class="mb-1 text-muted small text-break">{{ offre.entreprise.nom }}</p>
-										<p class="mb-1 text-muted small">{{ offre.lieu }}</p>
-										<p class="mt-2 text-muted small">Publié le :
-											{{ offre.date_publication }}</p>
-										<p class="text-dark fw-bold">{{ offre.candidats }}
-											personne(s) ont déjà postulé</p>
-									</div>
-								</div>
-
-								<div class="modal-body px-3 px-md-4">
-									<h4 class="fw-bold">Description de l'offre</h4>
-									<p class="text-break">{{ offre.description }}</p>
-
-									<h4 class="fw-bold mt-4">Compétences requises</h4>
-									<p class="text-break">{{ offre.competences }}</p>
-
-									<h4 class="fw-bold mt-4">Rémunération</h4>
-									<p>{{ offre.remuneration }}</p>
-								</div>
-
-								<div class="modal-footer">
-									<a href="{{ url_for('connexion') }}" class="btn btn-primary">Se connecter pour postuler</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	{% else %}
-		<div class="text-center mt-5">
-			<h4 class="fw-bold text-muted">Aucune offre ne correspond à vos critères.</h4>
-		</div>
-	{% endfor %}
-	{% if nombrePages > 1 %}
-		<nav aria-label="Page navigation" class="mt-4">
-			<ul class="pagination justify-content-center">
-				<li class="page-item {{ pageActuelle <= 1 ? 'disabled' }}">
-					<a class="page-link" href="{{ url_for('offres-an', { 'page': pageActuelle - 1 }) }}">Précédent</a>
-				</li>
-				{% for i in 1..nombrePages %}
-					<li class="page-item {{ i == pageActuelle ? 'active' }}">
-						<a class="page-link" href="{{ url_for('offres-an', { 'page': i }) }}">{{ i }}</a>
-					</li>
-				{% endfor %}
-				<li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' }}">
-					<a class="page-link" href="{{ url_for('offres-an', { 'page': pageActuelle + 1 }) }}">Suivant</a>
-				</li>
-			</ul>
-		</nav>
-	{% endif %}
-
+    {% if nombrePages > 1 %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {{ pageActuelle <= 1 ? 'disabled' }}">
+                    <a class="page-link" href="{{ url_for('offres-an', { 'page': pageActuelle - 1 }) }}">Précédent</a>
+                </li>
+                {% for i in 1..nombrePages %}
+                    <li class="page-item {{ i == pageActuelle ? 'active' }}">
+                        <a class="page-link" href="{{ url_for('offres-an', { 'page': i }) }}">{{ i }}</a>
+                    </li>
+                {% endfor %}
+                <li class="page-item {{ pageActuelle >= nombrePages ? 'disabled' }}">
+                    <a class="page-link" href="{{ url_for('offres-an', { 'page': pageActuelle + 1 }) }}">Suivant</a>
+                </li>
+            </ul>
+        </nav>
+    {% endif %}
 {% endblock %}
