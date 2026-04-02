@@ -3,7 +3,7 @@
 namespace App\Application\Controller;
 
 use App\Application\Domain\Offre;
-use App\Application\Domain\Campus; // N'oublie pas cet import !
+use App\Application\Domain\Campus; 
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,7 +25,6 @@ class OffreController
         $view = Twig::fromRequest($request);
         $params = $request->getQueryParams();
 
-        // --- 1. Récupération du terme de recherche ---
         $search = $params['q'] ?? null;
 
         $page = isset($args['page']) ? (int) $args['page'] : 1;
@@ -35,7 +34,6 @@ class OffreController
         $repository = $this->entityManager->getRepository(Offre::class);
         $queryBuilder = $repository->createQueryBuilder('o');
 
-        // --- 2. Application du filtre de recherche ---
         if ($search) {
             $queryBuilder->andWhere('o.nom LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
@@ -43,7 +41,7 @@ class OffreController
 
         $user = $_SESSION['user'] ?? null;
 
-        // Application du filtre de campus pour l'étudiant
+
         if ($user && $user->getRoleValue() === 'etudiant') {
             $campusEtudiant = $user->getCampus();
 
@@ -59,17 +57,14 @@ class OffreController
 
         $offresAffichees = $queryBuilder->getQuery()->getResult();
 
-        // Calcul du total pour la pagination
         $countBuilder = $repository->createQueryBuilder('o')
             ->select('count(o.idOffre)');
 
-        // --- 3. Application du filtre de recherche pour le compteur ---
         if ($search) {
             $countBuilder->andWhere('o.nom LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
         }
 
-        // Application du filtre de campus pour le compteur
         if ($user && $user->getRoleValue() === 'etudiant' && $user->getCampus()) {
             $countBuilder->andWhere('o.campus = :campus')
                 ->setParameter('campus', $user->getCampus());
@@ -83,7 +78,7 @@ class OffreController
             'pageActuelle' => $page,
             'nombrePages'  => $nombrePages,
             'filtres'      => $params,
-            'searchTerm'   => $search // On renvoie le terme pour l'afficher dans l'input Twig
+            'searchTerm'   => $search 
         ]);
     }
 
@@ -109,7 +104,7 @@ class OffreController
                 $parsedBody['nom'] ?? '',
                 $parsedBody['duree'] ?? '',
                 $parsedBody['exigence_etude'] ?? '',
-                $entrepriseSelectionnee, // <--- C'EST ICI LA CORRECTION
+                $entrepriseSelectionnee,
                 new DateTimeImmutable($parsedBody['date']),
                 (float) ($parsedBody['remuneration'] ?? 0),
                 $parsedBody['description'] ?? '',
@@ -160,7 +155,6 @@ class OffreController
         $view = Twig::fromRequest($request);
         $params = $request->getQueryParams();
 
-        // --- 1. Récupération du terme de recherche ---
         $search = $params['q'] ?? null;
 
         $page = isset($args['page']) ? (int) $args['page'] : 1;
@@ -170,20 +164,17 @@ class OffreController
         $repository = $this->entityManager->getRepository(Offre::class);
         $queryBuilder = $repository->createQueryBuilder('o');
 
-        // --- 2. Application du filtre de recherche (si l'utilisateur a tapé quelque chose) ---
         if ($search) {
             $queryBuilder->where('o.nom LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
         }
 
-        // --- 3. Tri et Pagination ---
         $queryBuilder->orderBy('o.idOffre', 'DESC')
             ->setFirstResult($offset)
             ->setMaxResults($perPage);
 
         $offresAffichees = $queryBuilder->getQuery()->getResult();
 
-        // --- 4. Calcul du total pour la pagination (en tenant compte de la recherche !) ---
         $countBuilder = $repository->createQueryBuilder('o')
             ->select('count(o.idOffre)');
 
@@ -200,7 +191,7 @@ class OffreController
             'pageActuelle' => $page,
             'nombrePages'  => $nombrePages,
             'filtres'      => $params,
-            'searchTerm'   => $search // On renvoie le terme pour l'afficher dans l'input Twig
+            'searchTerm'   => $search 
         ]);
     }
 
@@ -208,7 +199,7 @@ class OffreController
     {
         $view = Twig::fromRequest($request);
         $queryParams = $request->getQueryParams();
-        $search = $queryParams['q'] ?? null; // Récupère le terme de recherche
+        $search = $queryParams['q'] ?? null; 
 
         $page = isset($args['page']) ? (int) $args['page'] : 1;
         $perPage = 5;
@@ -217,7 +208,6 @@ class OffreController
         $repository = $this->entityManager->getRepository(Offre::class);
         $queryBuilder = $repository->createQueryBuilder('o');
 
-        // Si une recherche est effectuée
         if ($search) {
             $queryBuilder->where('o.nom LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
@@ -229,7 +219,6 @@ class OffreController
 
         $offresAffichees = $queryBuilder->getQuery()->getResult();
 
-        // Calcul du total pour la pagination (en tenant compte du filtre)
         $countBuilder = $repository->createQueryBuilder('o')
             ->select('count(o.idOffre)');
 
@@ -245,7 +234,7 @@ class OffreController
             'offres'       => $offresAffichees,
             'pageActuelle' => $page,
             'nombrePages'  => $nombrePages,
-            'searchTerm'   => $search // On renvoie le terme pour l'afficher dans l'input
+            'searchTerm'   => $search 
         ]);
     }
 
@@ -277,7 +266,6 @@ class OffreController
             $offre->setDescription(trim($data['description'] ?? ''));
             $offre->setPresentielOuDistanciel(trim($data['presentielOuDistanciel'] ?? $data['presentiel_ou_distanciel'] ?? ''));
 
-            // --- GESTION DU CAMPUS (MODIFICATION) ---
             $idCampus = $data['id_campus'] ?? null;
             if ($idCampus) {
                 $campusSelectionne = $this->entityManager->find(Campus::class, (int) $idCampus);
@@ -297,13 +285,12 @@ class OffreController
                 ->withStatus(302);
         }
 
-        // Récupération des campus pour le formulaire de modification
         $campuses = $this->entityManager->getRepository(Campus::class)->findAll();
 
         return $view->render($response, 'offre/modifier.html.twig', [
             'offre' => $offre,
             'success' => $success,
-            'campuses' => $campuses // On envoie la liste des campus ici
+            'campuses' => $campuses 
         ]);
     }
 

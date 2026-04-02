@@ -15,7 +15,6 @@ class HomeController
 {
     private EntityManager $entityManager;
 
-    // Le constructeur reçoit l'EntityManager grâce au container de Slim
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -64,7 +63,6 @@ class HomeController
             session_start();
         }
 
-        // Puisque UserTwigMiddleware ne voit pas la session, on récupère l'user manuellement
         $userId = $_SESSION['user_id'] ?? null;
         $user = null;
         if ($userId) {
@@ -81,11 +79,9 @@ class HomeController
 
     public function deconnexion(Request $request, Response $response): Response
     {
-        // Nettoyage complet de la session
         $_SESSION = [];
         session_destroy();
 
-        // Redirection vers l'accueil public
         return $response->withHeader('Location', '/')->withStatus(302);
     }
 

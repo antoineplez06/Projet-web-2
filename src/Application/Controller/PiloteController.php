@@ -25,7 +25,7 @@ class PiloteController
     {
         $view = Twig::fromRequest($request);
         $queryParams = $request->getQueryParams();
-        $search = $queryParams['q'] ?? null; // Récupère le terme de recherche
+        $search = $queryParams['q'] ?? null; 
 
         $page = isset($args['page']) ? (int) $args['page'] : 1;
         if ($page < 1) {
@@ -38,30 +38,25 @@ class PiloteController
         $repository = $this->entityManager->getRepository(user::class);
         $queryBuilder = $repository->createQueryBuilder('u');
 
-        // 1. Condition obligatoire : on ne veut QUE les pilotes
         $queryBuilder->where('u.role = :role')
             ->setParameter('role', 'pilote');
 
-        // 2. Si une recherche est effectuée (sur nom ou prénom)
         if ($search) {
             $queryBuilder->andWhere('u.nom LIKE :search OR u.prenom LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
         }
 
-        // Tri et Pagination
         $queryBuilder->orderBy('u.id', 'DESC')
             ->setFirstResult($offset)
             ->setMaxResults($perPage);
 
         $piloteAffiches = $queryBuilder->getQuery()->getResult();
 
-        // 3. Calcul du total pour la pagination
         $countBuilder = $repository->createQueryBuilder('u')
             ->select('count(u.id)')
             ->where('u.role = :role')
             ->setParameter('role', 'pilote');
 
-        // On applique le même filtre de recherche pour le compte des pages
         if ($search) {
             $countBuilder->andWhere('u.nom LIKE :search OR u.prenom LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
@@ -74,7 +69,7 @@ class PiloteController
             'pilote'       => $piloteAffiches,
             'pageActuelle' => $page,
             'nombrePages'  => $nombrePages,
-            'searchTerm'   => $search // On renvoie le terme pour l'afficher dans l'input
+            'searchTerm'   => $search 
         ]);
     }
 
@@ -85,22 +80,20 @@ class PiloteController
         $success = false;
 
         if ($request->getMethod() === 'POST') {
-            // 1. Préparation des données (on s'assure qu'elles ne sont pas nulles)
             $prenom = trim($data['prenom'] ?? '');
             $nom = trim($data['nom'] ?? '');
             $tel = trim($data['numeroTelephone'] ?? '');
             $genre = trim($data['genre'] ?? '');
             $email = trim($data['email'] ?? '');
-            $mdp = password_hash(trim($data['motDePasse'] ?? ''), PASSWORD_BCRYPT); // Toujours hasher les MDP !
+            $mdp = password_hash(trim($data['motDePasse'] ?? ''), PASSWORD_BCRYPT);
             $promo = trim($data['promo'] ?? '');
             $role = Role::PILOTE;
 
-            // Gestion de la date de naissance (DateTimeImmutable requis)
             $dateNaissanceRaw = $data['dateNaissance'] ?? 'now';
             try {
                 $dateNaissance = new \DateTimeImmutable($dateNaissanceRaw);
             } catch (\Exception $e) {
-                $dateNaissance = new \DateTimeImmutable(); // Date par défaut si erreur
+                $dateNaissance = new \DateTimeImmutable();
             }
 
             $idCampus = $data['id_campus'] ?? null;
@@ -159,7 +152,6 @@ class PiloteController
         if ($request->getMethod() === 'POST') {
             $data = $request->getParsedBody();
 
-            // On remplit l'objet avec les nouvelles valeurs
             $Pilote->setPrenom(trim($data['prenom'] ?? ''));
             $Pilote->setNom(trim($data['nom'] ?? ''));
             $Pilote->setNumeroTelephone(trim($data['numeroTelephone'] ?? ''));
@@ -167,18 +159,15 @@ class PiloteController
             $Pilote->setEmail(trim($data['email'] ?? ''));
             $Pilote->setPromo(trim($data['promo'] ?? ''));
 
-            // On ajoute la gestion du mot de passe
             if (!empty($data['motDePasse'])) {
                 $Pilote->setMotDePasse($data['motDePasse']);
             }
 
-            // On ajoute la gestion de la date
             if (!empty($data['dateNaissance'])) {
                 $date = new \DateTimeImmutable($data['dateNaissance']);
                 $Pilote->setDateNaissance($date);
             }
 
-            // On sauvegarde tout en base de données
             $this->entityManager->flush();
             $success = true;
 

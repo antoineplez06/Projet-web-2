@@ -2,13 +2,13 @@
 
 namespace App\Application\Domain;
 
-use Doctrine\Common\Collections\ArrayCollection; // AJOUTÉ
-use Doctrine\Common\Collections\Collection;      // AJOUTÉ
+use Doctrine\Common\Collections\ArrayCollection; 
+use Doctrine\Common\Collections\Collection;      
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\OneToMany;             // AJOUTÉ
+use Doctrine\ORM\Mapping\OneToMany;             
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity, Table(name: 'entreprises')]
@@ -35,8 +35,6 @@ class Entreprise
     #[Column(type: 'float', nullable:true)]
     private float $note;
 
-    // --- RELATION : Une entreprise a plusieurs offres ---
-    // mappedBy doit correspondre au nom de la propriété "entreprise" dans ton entité Offre
     #[OneToMany(mappedBy: 'entreprise', targetEntity: Offre::class)]
     private Collection $offres;
 
@@ -53,11 +51,9 @@ class Entreprise
         $this->siret = $siret;
         $this->domaine = $domaine;
         $this->taille = $taille;
-        $this->offres = new ArrayCollection(); // INITIALISATION IMPORTANTE
+        $this->offres = new ArrayCollection(); 
         $this->note = $note;
     }
-
-    // --- Getters ---
 
     public function getId(): int { return $this->id; }
     public function getNom(): string { return $this->nom; }
@@ -69,14 +65,13 @@ class Entreprise
     public function getOffres(): Collection { return $this->offres; }
 
 
-    // --- Setters ---
     public function setNom(string $nom): self { $this->nom = $nom; return $this; }
     public function setAdresse(string $adresse): self { $this->adresse = $adresse; return $this; }
     public function setSiret(string $siret): self { $this->siret = $siret; return $this; }
     public function setDomaine(string $domaine): self { $this->domaine = $domaine; return $this; }
     public function setTaille(string $taille): self { $this->taille = $taille; return $this; }
     public function setNote(float $note): self { 
-        $this->note = $note; // Correction ici : il manquait le $ devant this
+        $this->note = $note; 
         return $this; 
     }
 }

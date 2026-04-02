@@ -26,7 +26,6 @@
 						<span class="badge border border-dark text-dark bg-light p-2 flex-shrink-0">{{ ent.taille }}</span>
 					</div>
 
-					{# --- AFFICHAGE DES ÉTOILES (MOYENNE) --- #}
 					<div class="mb-3">
 						{% set noteValue = ent.note|default(0) %}
 						{% set noteArrondie = noteValue|round %}
@@ -58,7 +57,6 @@
 						<code class="text-break">{{ ent.siret }}</code>
 					</p>
 
-					{# --- SECTION BOUTONS --- #}
 					<div class="d-flex flex-column flex-sm-row gap-2 mt-4">
 						<a href="{{ url_for('entreprise-offres', { 'id': ent.id }) }}" class="btn btn-dark rounded-pill px-3 flex-grow-1">
 							Voir les offres ({{ ent.offres|length }})
@@ -69,7 +67,6 @@
 						</button>
 					</div>
 
-					{# --- MODAL : DÉTAILS ENTREPRISE --- #}
 					<div class="modal fade" id="VoirEntreprise{{ ent.id }}" tabindex="-1">
 						<div class="modal-dialog modal-lg modal-dialog-scrollable">
 							<div class="modal-content">
@@ -100,7 +97,6 @@
 		</div>
 	{% endfor %}
 
-	{# Pagination (Une seule fois !) #}
 	{% if nombrePages > 1 %}
 		<nav aria-label="Page navigation" class="mt-4">
 			<ul class="pagination justify-content-center">

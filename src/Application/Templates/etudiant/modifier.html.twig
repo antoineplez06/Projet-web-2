@@ -10,7 +10,6 @@
                     <h4 class="mb-0">Modifier l'étudiant : {{ etudiant.prenom }} {{ etudiant.nom }}</h4>
                 </div>
                 <div class="card-body">
-                    {# On laisse l'action vide pour poster sur l'URL actuelle qui contient l'ID #}
                     <form action="" method="POST">
 
                         <div class="mb-3">
@@ -25,7 +24,6 @@
 
                         <div class="mb-3">
                             <label for="email" class="form-label">Adresse Mail</label>
-                            {# Attention : ton contrôleur cherche 'email', j'ai corrigé le name ci-dessous #}
                             <input type="email" class="form-control" id="email" name="email" value="{{ etudiant.email }}" required>
                         </div>
 
@@ -45,7 +43,6 @@
 
                         <div class="mb-3">
                             <label for="dateNaissance" class="form-label">Date de Naissance</label>
-                            {# On formate la date pour l'input HTML (Y-m-d) #}
                             <input type="date" class="form-control" id="dateNaissance" name="dateNaissance" value="{{ etudiant.dateNaissance ? etudiant.dateNaissance|date('Y-m-d') : '' }}">
                         </div>
 

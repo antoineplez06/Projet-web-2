@@ -16,19 +16,13 @@ class UserTwigMiddleware
     }
     public function __invoke(Request $request, RequestHandler $handler): Response
     {
-        // Récupérer l'ID utilisateur directement depuis la session
         $user_id = $_SESSION['user_id'] ?? null;
-        // Récupérer l'utilisateur depuis la base de données
         $user = null;
         if ($user_id) {
             $user = $this->em->getRepository(User::class)->find($user_id);
         }
-        //var_dump( $request->getAttribute('session'));
-        //die();
-        // Ajouter la variable globale à Twig
         $this->twig->getEnvironment()->addGlobal('user', $user);
         $request = $request->withAttribute('user', $user);
-        // Continuer le traitement de la requête
         return $handler->handle($request);
     }
 }

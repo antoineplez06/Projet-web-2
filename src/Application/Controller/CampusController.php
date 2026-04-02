@@ -31,7 +31,7 @@ class CampusController
         $repository = $this->entityManager->getRepository(Campus::class);
         $queryBuilder = $repository->createQueryBuilder('c');
 
-        // Si une recherche est effectuée (sur la ville)
+
         if ($search) {
             $queryBuilder->where('c.ville LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
@@ -43,7 +43,7 @@ class CampusController
 
         $campusAffiches = $queryBuilder->getQuery()->getResult();
 
-        // Calcul du total pour la pagination
+
         $countBuilder = $repository->createQueryBuilder('c')
             ->select('count(c.id_campus)');
         if ($search) {
@@ -69,7 +69,7 @@ class CampusController
         $success = false;
 
         if ($request->getMethod() === 'POST') {
-            // Création du campus (le constructeur attend la ville)
+
             $nouveauCampus = new Campus(
                 trim($parsedBody['ville'] ?? '')
             );
@@ -100,14 +100,14 @@ class CampusController
         if ($request->getMethod() === 'POST') {
             $data = $request->getParsedBody();
 
-            // On met à jour la ville
+
             $campus->setVille(trim($data['ville'] ?? ''));
 
             $this->entityManager->flush();
             $success = true;
 
             $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-            $url = $routeParser->urlFor('campus-admin'); // À vérifier avec le nom de ta route
+            $url = $routeParser->urlFor('campus-admin'); 
 
             return $response
                 ->withHeader('Location', $url)
@@ -131,7 +131,7 @@ class CampusController
         }
 
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-        $url = $routeParser->urlFor('campus-admin'); // À vérifier avec le nom de ta route
+        $url = $routeParser->urlFor('campus-admin'); 
 
         return $response
             ->withHeader('Location', $url)

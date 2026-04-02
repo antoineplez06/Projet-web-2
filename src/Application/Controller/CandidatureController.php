@@ -97,13 +97,13 @@ class CandidatureController
             return $response->withHeader('Location', '/candidatures')->withStatus(302);
         }
 
-        // RETOUR OBLIGATOIRE si l'offre ou le user n'existe pas
+  
         return $response->withHeader('Location', '/')->withStatus(404);
     }
     public function updateStatus(Request $request, Response $response, array $args): Response
     {
         $idCandidature = (int)$args['id'];
-        $action = $args['action']; // 'accepter' ou 'refuser'
+        $action = $args['action']; 
         $userConnecte = $request->getAttribute('user');
 
         if (!$userConnecte) {

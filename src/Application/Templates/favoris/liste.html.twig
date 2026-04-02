@@ -4,7 +4,6 @@
 	<h1 class="text-center mt-4 fw-bold">Ma Wishlist</h1>
 
 	{% for favori in favoris %}
-		{# On accède à l'offre via favori.offre #}
 		{% set offre = favori.offre %}
 
 		<div class="row mt-4 px-2 justify-content-center">
@@ -19,7 +18,6 @@
 								{{ offre.date|date("d/m/Y") }}</p>
 						</div>
 
-						{# Bouton pour retirer de la wishlist #}
 						<div class="dropdown flex-shrink-0">
 							<a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="text-decoration-none">
 								<svg class="Wishlist" height="40" fill="red" stroke="black" stroke-width="30" viewbox="0 0 512 512" role="button" style="cursor: pointer;">
@@ -42,14 +40,12 @@
 						</div>
 					</div>
 
-					{# Bouton Voir l'offre #}
 					<div class="d-flex justify-content-center mt-4">
 						<button type="button" class="btn btn-outline-dark rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#VoirOffre{{ offre.idOffre }}">
 							Voir l'offre
 						</button>
 					</div>
 
-					{# Modal de détails #}
 					<div class="modal fade" id="VoirOffre{{ offre.idOffre }}" tabindex="-1">
 						<div class="modal-dialog modal-lg modal-dialog-scrollable">
 							<div class="modal-content">

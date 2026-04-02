@@ -41,7 +41,6 @@
 								</a>
 								<ul
 									class="dropdown-menu">
-									{# --- SECTION OFFRES --- #}
 									<li>
 										{% if not user %}
 											<a class="dropdown-item" href="{{ url_for('offres-an') }}">Offres</a>
@@ -57,7 +56,6 @@
 
 									<li><hr class="dropdown-divider"></li>
 
-									{# --- SECTION ENTREPRISES --- #}
 									<li>
 										{% if not user %}
 											<a class="dropdown-item" href="{{ url_for('entreprises-an') }}">Entreprises</a>
@@ -71,7 +69,6 @@
 										</li>
 									{% endif %}
 
-									{# --- AUTRES MENUS --- #}
 									{% if user and (user.roleValue == 'pilote' or user.roleValue == 'admin') %}
 										<li><hr class="dropdown-divider"></li>
 										<li>

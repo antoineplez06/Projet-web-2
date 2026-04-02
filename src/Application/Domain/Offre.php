@@ -81,7 +81,6 @@ class Offre
         $this->candidatures = new ArrayCollection();
     }
 
-    // --- GETTERS ---
 
     public function getIdOffre(): int
     {
@@ -135,7 +134,6 @@ class Offre
         return $this->candidatures;
     }
 
-    // --- SETTERS ---
 
     public function setNom(string $nom): void
     {

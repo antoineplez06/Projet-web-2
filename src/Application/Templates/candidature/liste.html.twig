@@ -2,7 +2,6 @@
 
 {% block content %}
 
-	{# --- ADAPTATION DU TITRE SELON LE RÔLE --- #}
 	{% if userRole == 'etudiant' %}
 		<h1 class="mt-3 fw-bold text-center fs-3 fs-md-2">Mes candidatures</h1>
 	{% else %}
@@ -23,7 +22,6 @@
 				<div class="col-12 col-sm-10 col-lg-8 col-xl-7">
 					<div
 						class="border border-dark border-3 rounded-2 px-3 px-md-5 py-3 bg-white shadow-sm position-relative">
-						{# --- AFFICHAGE DU NOM DU CANDIDAT (SI PILOTE/ADMIN) --- #}
 						{% if userRole != 'etudiant' %}
 							<p class="text-primary fw-bold mb-2">
 								Candidat :
@@ -72,7 +70,6 @@
 				<div class="col-12 col-sm-10 col-lg-8 col-xl-7">
 					<div
 						class="border border-dark border-3 rounded-2 px-3 px-md-5 py-3 bg-white shadow-sm position-relative">
-						{# --- AFFICHAGE DU NOM DU CANDIDAT (SI PILOTE/ADMIN) --- #}
 						{% if userRole != 'etudiant' %}
 							<p class="text-primary fw-bold mb-2">
 								Candidat :
@@ -109,7 +106,6 @@
 		<p class="text-muted text-center mt-3">Aucune candidature en cours.</p>
 	{% endif %}
 
-	{# --- MODALS --- #}
 	{% for candidature in candidatures %}
 		{% set offre = candidature.offre %}
 
@@ -125,7 +121,6 @@
 					<div
 						class="modal-body px-3 px-md-4">
 
-						{# --- DOSSIER DE CANDIDATURE --- #}
 						<div class="bg-light p-3 rounded mb-4 border">
 							<h5 class="text-primary fw-bold border-bottom pb-2">
 								{% if userRole == 'etudiant' %}
